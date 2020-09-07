@@ -145,7 +145,7 @@ remove samples, replace with zeroes, or replace with average allele counts." />
 remove samples, replace with zeroes, or replace with average allele counts.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>missingno</span>(<span class='no'>pop</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"loci"</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>freq</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>missingno</span>(<span class='kw'>pop</span>, type = <span class='st'>"loci"</span>, cutoff = <span class='fl'>0.05</span>, quiet = <span class='fl'>FALSE</span>, freq = <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -190,7 +190,7 @@ instead.</p></td>
  ALL OF THESE ARE TO BE USED WITH CAUTION.</p> 
 <p>Using this function with polyploid data (where missing data is coded as "0")
  may give spurious results.</p> 
-<p></p><h3>Treatment types</h3>
+<p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Treatment types</h3>
 <p></p><ul>
 <li><p><code>"ignore"</code> - does not remove or replace missing data.</p></li>
 <li><p><code>"loci"</code> - removes all loci containing missing data in the entire
@@ -209,13 +209,17 @@ instead.</p></td>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/adegenet/man/tab.html'>tab</a></code>, <code><a href='poppr.html'>poppr</a></code>, <code><a href='poppr.amova.html'>poppr.amova</a></code>,
- <code><a href='genetic_distance.html'>nei.dist</a></code>, <code><a href='aboot.html'>aboot</a></code></p></div>
+ <code><a href='nei.dist.html'>nei.dist</a></code>, <code><a href='aboot.html'>aboot</a></code></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>nancycats</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>nancycats</span>)
 
-<span class='no'>nancy.locina</span> <span class='kw'>&lt;-</span> <span class='fu'>missingno</span>(<span class='no'>nancycats</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"loci"</span>)</div><div class='output co'>#&gt; <span class='message'></span>
+<span class='kw'>nancy.locina</span> <span class='op'>&lt;-</span> <span class='fu'>missingno</span>(<span class='kw'>nancycats</span>, type = <span class='st'>"loci"</span>)
+</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Found 617 missing values.</span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>2 loci contained missing values greater than 5%</span>
@@ -225,7 +229,8 @@ instead.</p></td>
 <span class='co'>## 2 loci contained missing values greater than 5%.</span>
 <span class='co'>## Removing 2 loci : fca8 fca45 </span>
 
-<span class='no'>nancy.genona</span> <span class='kw'>&lt;-</span> <span class='fu'>missingno</span>(<span class='no'>nancycats</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"geno"</span>)</div><div class='output co'>#&gt; <span class='message'></span>
+<span class='kw'>nancy.genona</span> <span class='op'>&lt;-</span> <span class='fu'>missingno</span>(<span class='kw'>nancycats</span>, type = <span class='st'>"geno"</span>)
+</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Found 617 missing values.</span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>38 genotypes contained missing values greater than 5%</span>
@@ -241,15 +246,17 @@ instead.</p></td>
 <span class='co'>## N282 N283 N288 N291 N292 N293 N294 N295 N296 N297 N281 N289 N290  </span>
 
 <span class='co'># Replacing all NA with "0" (see tab in the adegenet package).</span>
-<span class='no'>nancy.0</span> <span class='kw'>&lt;-</span> <span class='fu'>missingno</span>(<span class='no'>nancycats</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"0"</span>)</div><div class='output co'>#&gt; <span class='message'></span>
+<span class='kw'>nancy.0</span> <span class='op'>&lt;-</span> <span class='fu'>missingno</span>(<span class='kw'>nancycats</span>, type = <span class='st'>"0"</span>)
+</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'> Replaced 617 missing values.</span></div><div class='input'>
 <span class='co'>## Replaced 617 missing values </span>
 
 <span class='co'># Replacing all NA with the mean of each column (see tab in the</span>
 <span class='co'># adegenet package).</span>
-<span class='no'>nancy.mean</span> <span class='kw'>&lt;-</span> <span class='fu'>missingno</span>(<span class='no'>nancycats</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"mean"</span>)</div><div class='output co'>#&gt; <span class='message'></span>
+<span class='kw'>nancy.mean</span> <span class='op'>&lt;-</span> <span class='fu'>missingno</span>(<span class='kw'>nancycats</span>, type = <span class='st'>"mean"</span>)
+</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'> Replaced 617 missing values.</span></div><div class='input'>
-## Replaced 617 missing values 
+<span class='co'>## Replaced 617 missing values </span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -266,7 +273,7 @@ instead.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

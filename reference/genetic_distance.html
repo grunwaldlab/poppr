@@ -145,17 +145,17 @@ be applicable for distances between individuals." />
 be applicable for distances between individuals.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>nei.dist</span>(<span class='no'>x</span>, <span class='kw'>warning</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+    <pre class="usage"><span class='fu'>nei.dist</span>(<span class='kw'>x</span>, warning = <span class='fl'>TRUE</span>)
 
-<span class='fu'>edwards.dist</span>(<span class='no'>x</span>)
+<span class='fu'>edwards.dist</span>(<span class='kw'>x</span>)
 
-<span class='fu'>rogers.dist</span>(<span class='no'>x</span>)
+<span class='fu'>rogers.dist</span>(<span class='kw'>x</span>)
 
-<span class='fu'>reynolds.dist</span>(<span class='no'>x</span>)
+<span class='fu'>reynolds.dist</span>(<span class='kw'>x</span>)
 
-<span class='fu'>provesti.dist</span>(<span class='no'>x</span>)
+<span class='fu'>provesti.dist</span>(<span class='kw'>x</span>)
 
-<span class='no'>prevosti.dist</span></pre>
+<span class='kw'>prevosti.dist</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -233,11 +233,17 @@ Elsevier Science B.V. 20, pp274-288.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='aboot.html'>aboot</a></code> <code><a href='diss.dist.html'>diss.dist</a></code> <code><a href='poppr.amova.html'>poppr.amova</a></code></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar (poppr adaptation)
+Thibaut Jombart (adegenet adaptation)
+Daniel Chessel (ade4)</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>nancycats</span>)
-(<span class='no'>nan9</span>   <span class='kw'>&lt;-</span> <span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='no'>nancycats</span>, <span class='fl'>9</span>))</div><div class='output co'>#&gt; /// GENIND OBJECT /////////
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>nancycats</span>)
+(<span class='kw'>nan9</span>   <span class='op'>&lt;-</span> <span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='kw'>nancycats</span>, <span class='fl'>9</span>))
+</div><div class='output co'>#&gt; /// GENIND OBJECT /////////
 #&gt; 
 #&gt;  // 9 individuals; 9 loci; 43 alleles; size: 16.8 Kb
 #&gt; 
@@ -253,7 +259,8 @@ Elsevier Science B.V. 20, pp274-288.</p>
 #&gt;  // Optional content
 #&gt;    @pop: population of each individual (group size range: 9-9)
 #&gt;    @other: a list containing: xy 
-#&gt; </div><div class='input'>(<span class='no'>neinan</span> <span class='kw'>&lt;-</span> <span class='fu'>nei.dist</span>(<span class='no'>nan9</span>))</div><div class='output co'>#&gt;           N104      N105      N106      N107      N108      N109      N111
+#&gt; </div><div class='input'>(<span class='kw'>neinan</span> <span class='op'>&lt;-</span> <span class='fu'>nei.dist</span>(<span class='kw'>nan9</span>))
+</div><div class='output co'>#&gt;           N104      N105      N106      N107      N108      N109      N111
 #&gt; N105 1.0579046                                                            
 #&gt; N106 0.5219437 0.5990190                                                  
 #&gt; N107 0.2009995 0.6263815 0.2350018                                        
@@ -270,7 +277,8 @@ Elsevier Science B.V. 20, pp274-288.</p>
 #&gt; N109          
 #&gt; N111          
 #&gt; N112          
-#&gt; N113 1.5251102</div><div class='input'>(<span class='no'>ednan</span>  <span class='kw'>&lt;-</span> <span class='fu'>edwards.dist</span>(<span class='no'>nan9</span>))</div><div class='output co'>#&gt;           N104      N105      N106      N107      N108      N109      N111
+#&gt; N113 1.5251102</div><div class='input'>(<span class='kw'>ednan</span>  <span class='op'>&lt;-</span> <span class='fu'>edwards.dist</span>(<span class='kw'>nan9</span>))
+</div><div class='output co'>#&gt;           N104      N105      N106      N107      N108      N109      N111
 #&gt; N105 0.7517229                                                            
 #&gt; N106 0.6127062 0.6387116                                                  
 #&gt; N107 0.3913906 0.6808143 0.4463299                                        
@@ -287,7 +295,8 @@ Elsevier Science B.V. 20, pp274-288.</p>
 #&gt; N109          
 #&gt; N111          
 #&gt; N112          
-#&gt; N113 0.8687726</div><div class='input'>(<span class='no'>rodnan</span> <span class='kw'>&lt;-</span> <span class='fu'>rogers.dist</span>(<span class='no'>nan9</span>))</div><div class='output co'>#&gt;           N104      N105      N106      N107      N108      N109      N111
+#&gt; N113 0.8687726</div><div class='input'>(<span class='kw'>rodnan</span> <span class='op'>&lt;-</span> <span class='fu'>rogers.dist</span>(<span class='kw'>nan9</span>))
+</div><div class='output co'>#&gt;           N104      N105      N106      N107      N108      N109      N111
 #&gt; N105 0.5813390                                                            
 #&gt; N106 0.4295584 0.5000000                                                  
 #&gt; N107 0.2222222 0.5081258 0.2222222                                        
@@ -304,7 +313,8 @@ Elsevier Science B.V. 20, pp274-288.</p>
 #&gt; N109          
 #&gt; N111          
 #&gt; N112          
-#&gt; N113 0.6829183</div><div class='input'>(<span class='no'>reynan</span> <span class='kw'>&lt;-</span> <span class='fu'>reynolds.dist</span>(<span class='no'>nan9</span>))</div><div class='output co'>#&gt;           N104      N105      N106      N107      N108      N109      N111
+#&gt; N113 0.6829183</div><div class='input'>(<span class='kw'>reynan</span> <span class='op'>&lt;-</span> <span class='fu'>reynolds.dist</span>(<span class='kw'>nan9</span>))
+</div><div class='output co'>#&gt;           N104      N105      N106      N107      N108      N109      N111
 #&gt; N105 0.7934920                                                            
 #&gt; N106 0.6255432 0.6915641                                                  
 #&gt; N107 0.4588315 0.6770032 0.4364358                                        
@@ -321,7 +331,8 @@ Elsevier Science B.V. 20, pp274-288.</p>
 #&gt; N109          
 #&gt; N111          
 #&gt; N112          
-#&gt; N113 0.7620008</div><div class='input'>(<span class='no'>pronan</span> <span class='kw'>&lt;-</span> <span class='fu'>prevosti.dist</span>(<span class='no'>nan9</span>))</div><div class='output co'>#&gt;           N104      N105      N106      N107      N108      N109      N111
+#&gt; N113 0.7620008</div><div class='input'>(<span class='kw'>pronan</span> <span class='op'>&lt;-</span> <span class='fu'>prevosti.dist</span>(<span class='kw'>nan9</span>))
+</div><div class='output co'>#&gt;           N104      N105      N106      N107      N108      N109      N111
 #&gt; N105 0.6111111                                                            
 #&gt; N106 0.4444444 0.5000000                                                  
 #&gt; N107 0.2222222 0.5555556 0.2222222                                        
@@ -355,7 +366,7 @@ Elsevier Science B.V. 20, pp274-288.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

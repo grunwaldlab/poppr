@@ -146,14 +146,14 @@ genlight or <a href='genclone-class.html'>snpclone</a> objects.</p>
     </div>
 
     <pre class="usage"><span class='fu'>bitwise.dist</span>(
-  <span class='no'>x</span>,
-  <span class='kw'>percent</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>mat</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>missing_match</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>scale_missing</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>euclidean</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>differences_only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>0L</span>
+  <span class='kw'>x</span>,
+  percent = <span class='fl'>TRUE</span>,
+  mat = <span class='fl'>FALSE</span>,
+  missing_match = <span class='fl'>TRUE</span>,
+  scale_missing = <span class='fl'>FALSE</span>,
+  euclidean = <span class='fl'>FALSE</span>,
+  differences_only = <span class='fl'>FALSE</span>,
+  threads = <span class='fl'>0L</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -239,17 +239,21 @@ function to work:</p><ol>
 </ol>
 
 <p>If the user supplies a genind or
-<a href='genclone-class.html'>genclone</a> object, <code><a href='genetic_distance.html'>prevosti.dist()</a></code> will be used for
+<a href='genclone-class.html'>genclone</a> object, <code><a href='nei.dist.html'>prevosti.dist()</a></code> will be used for
 calculation.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='diss.dist.html'>diss.dist()</a></code>, <a href='genclone-class.html'>snpclone</a>,
 genlight, <code><a href='win.ia.html'>win.ia()</a></code>,  <code><a href='samp.ia.html'>samp.ia()</a></code></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar, Jonah C. Brooks</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>999</span>)
-<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>glSim</span>(<span class='kw'>n.ind</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>n.snp.nonstruc</span> <span class='kw'>=</span> <span class='fl'>5e2</span>, <span class='kw'>n.snp.struc</span> <span class='kw'>=</span> <span class='fl'>5e2</span>, <span class='kw'>ploidy</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='no'>x</span></div><div class='output co'>#&gt;  /// GENLIGHT OBJECT /////////
+<span class='kw'>x</span> <span class='op'>&lt;-</span> <span class='fu'>glSim</span>(n.ind = <span class='fl'>10</span>, n.snp.nonstruc = <span class='fl'>5e2</span>, n.snp.struc = <span class='fl'>5e2</span>, ploidy = <span class='fl'>2</span>)
+<span class='kw'>x</span>
+</div><div class='output co'>#&gt;  /// GENLIGHT OBJECT /////////
 #&gt; 
 #&gt;  // 10 genotypes,  1,000 binary SNPs, size: 20.6 Kb
 #&gt;  0 (0 %) missing data
@@ -262,8 +266,10 @@ genlight, <code><a href='win.ia.html'>win.ia()</a></code>,  <code><a href='samp.
 #&gt;    @pop: population of each individual (group size range: 4-6)
 #&gt;    @other: a list containing: ancestral.pops 
 #&gt; </div><div class='input'><span class='co'># Assess fraction of different alleles</span>
-<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>xd</span> <span class='kw'>&lt;-</span> <span class='fu'>bitwise.dist</span>(<span class='no'>x</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.001   0.000   0.001 </div><div class='input'><span class='no'>xd</span></div><div class='output co'>#&gt;         1      2      3      4      5      6      7      8      9
+<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='kw'>xd</span> <span class='op'>&lt;-</span> <span class='fu'>bitwise.dist</span>(<span class='kw'>x</span>, threads = <span class='fl'>1L</span>))
+</div><div class='output co'>#&gt;    user  system elapsed 
+#&gt;       0       0       0 </div><div class='input'><span class='kw'>xd</span>
+</div><div class='output co'>#&gt;         1      2      3      4      5      6      7      8      9
 #&gt; 2  0.2230                                                        
 #&gt; 3  0.2260 0.2280                                                 
 #&gt; 4  0.2250 0.2170 0.2040                                          
@@ -274,8 +280,10 @@ genlight, <code><a href='win.ia.html'>win.ia()</a></code>,  <code><a href='samp.
 #&gt; 9  0.3920 0.4030 0.4080 0.3970 0.2135 0.2125 0.2005 0.2150       
 #&gt; 10 0.3935 0.3905 0.4015 0.3885 0.2230 0.2160 0.2120 0.2265 0.2195</div><div class='input'>
 <span class='co'># Calculate Euclidean distance</span>
-<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>xdt</span> <span class='kw'>&lt;-</span> <span class='fu'>bitwise.dist</span>(<span class='no'>x</span>, <span class='kw'>euclidean</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale_missing</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;       0       0       0 </div><div class='input'><span class='no'>xdt</span></div><div class='output co'>#&gt;           1        2        3        4        5        6        7        8
+<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='kw'>xdt</span> <span class='op'>&lt;-</span> <span class='fu'>bitwise.dist</span>(<span class='kw'>x</span>, euclidean = <span class='fl'>TRUE</span>, scale_missing = <span class='fl'>TRUE</span>, threads = <span class='fl'>1L</span>))
+</div><div class='output co'>#&gt;    user  system elapsed 
+#&gt;   0.001   0.000   0.000 </div><div class='input'><span class='kw'>xdt</span>
+</div><div class='output co'>#&gt;           1        2        3        4        5        6        7        8
 #&gt; 2  23.40940                                                               
 #&gt; 3  23.74868 24.04163                                                      
 #&gt; 4  23.36664 23.10844 22.31591                                             
@@ -303,20 +311,22 @@ genlight, <code><a href='win.ia.html'>win.ia()</a></code>,  <code><a href='samp.
 <span class='co'># with 10% missing data:</span>
 
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>999</span>)
-<span class='no'>mat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>:<span class='fl'>2</span>, <span class='fl'>NA</span>),
-                     <span class='fl'>100000</span> * <span class='fl'>50</span>,
-                     <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                     <span class='kw'>prob</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.3</span>, <span class='fl'>0.3</span>, <span class='fl'>0.3</span>, <span class='fl'>0.1</span>)),
-              <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>50</span>)
-<span class='no'>glite</span> <span class='kw'>&lt;-</span> <span class='fu'>new</span>(<span class='st'>"genlight"</span>, <span class='no'>mat</span>, <span class='kw'>ploidy</span> <span class='kw'>=</span> <span class='fl'>2</span>)
+<span class='kw'>mat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span><span class='op'>:</span><span class='fl'>2</span>, <span class='fl'>NA</span>), 
+                     <span class='fl'>100000</span> <span class='op'>*</span> <span class='fl'>50</span>, 
+                     replace = <span class='fl'>TRUE</span>, 
+                     prob = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.3</span>, <span class='fl'>0.3</span>, <span class='fl'>0.3</span>, <span class='fl'>0.1</span>)),
+              nrow = <span class='fl'>50</span>)
+<span class='kw'>glite</span> <span class='op'>&lt;-</span> <span class='fu'>new</span>(<span class='st'>"genlight"</span>, <span class='kw'>mat</span>, ploidy = <span class='fl'>2</span>)
 
 <span class='co'># Default Euclidean distance </span>
-<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/dist.html'>dist</a></span>(<span class='no'>glite</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   2.837   0.076   2.935 </div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/dist.html'>dist</a></span>(<span class='kw'>glite</span>))
+</div><div class='output co'>#&gt;    user  system elapsed 
+#&gt;   2.369   0.073   2.474 </div><div class='input'>
 <span class='co'># Bitwise dist</span>
-<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='fu'>bitwise.dist</span>(<span class='no'>glite</span>, <span class='kw'>euclidean</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale_missing</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.946   0.004   0.953 </div><div class='input'>
-# }
+<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='fu'>bitwise.dist</span>(<span class='kw'>glite</span>, euclidean = <span class='fl'>TRUE</span>, scale_missing = <span class='fl'>TRUE</span>))
+</div><div class='output co'>#&gt;    user  system elapsed 
+#&gt;   0.910   0.007   0.949 </div><div class='input'>
+<span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -333,7 +343,7 @@ genlight, <code><a href='win.ia.html'>win.ia()</a></code>,  <code><a href='samp.
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

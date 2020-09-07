@@ -144,12 +144,12 @@
     </div>
 
     <pre class="usage"><span class='fu'>private_alleles</span>(
-  <span class='no'>gid</span>,
-  <span class='kw'>form</span> <span class='kw'>=</span> <span class='no'>alleles</span> ~ <span class='no'>.</span>,
-  <span class='kw'>report</span> <span class='kw'>=</span> <span class='st'>"table"</span>,
-  <span class='kw'>level</span> <span class='kw'>=</span> <span class='st'>"population"</span>,
-  <span class='kw'>count.alleles</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>gid</span>,
+  form = <span class='kw'>alleles</span> <span class='op'>~</span> <span class='kw'>.</span>,
+  report = <span class='st'>"table"</span>,
+  level = <span class='st'>"population"</span>,
+  count.alleles = <span class='fl'>TRUE</span>,
+  drop = <span class='fl'>FALSE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -204,11 +204,15 @@ side of the formula can be either "allele", "locus", or "loci". The right
 hand of the equation, by default is ".". If you change it, it must
 correspond to strata located in the <code><a href='https://rdrr.io/pkg/adegenet/man/strata-methods.html'>adegenet::strata()</a></code> slot.
 Note, that the right hand side is disabled for genpop objects.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Pinf</span>) <span class='co'># Load P. infestans data.</span>
-<span class='fu'>private_alleles</span>(<span class='no'>Pinf</span>)</div><div class='output co'>#&gt;               Pi02.150 Pi02.152 Pi02.154 Pi02.156 Pi02.166 Pi02.170 D13.104
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Pinf</span>) <span class='co'># Load P. infestans data.</span>
+<span class='fu'>private_alleles</span>(<span class='kw'>Pinf</span>)
+</div><div class='output co'>#&gt;               Pi02.150 Pi02.152 Pi02.154 Pi02.156 Pi02.166 Pi02.170 D13.104
 #&gt; South America        0        0        1        0        0        0       0
 #&gt; North America        3        2        0        2        2        1       2
 #&gt;               D13.108 D13.110 D13.132 D13.148 D13.150 D13.152 D13.154 D13.158
@@ -231,7 +235,8 @@ Note, that the right hand side is disabled for genpop objects.</p>
 #&gt; North America        7        2        1        2        1        3        1</div><div class='input'>
 <span class='co'># \dontrun{</span>
 <span class='co'># Analyze private alleles based on the country of interest:</span>
-<span class='fu'>private_alleles</span>(<span class='no'>Pinf</span>, <span class='no'>alleles</span> ~ <span class='no'>Country</span>)</div><div class='output co'>#&gt;          Pi02.150 Pi02.152 Pi02.154 Pi02.156 Pi02.166 Pi02.170 D13.104 D13.110
+<span class='fu'>private_alleles</span>(<span class='kw'>Pinf</span>, <span class='kw'>alleles</span> <span class='op'>~</span> <span class='kw'>Country</span>)
+</div><div class='output co'>#&gt;          Pi02.150 Pi02.152 Pi02.154 Pi02.156 Pi02.166 Pi02.170 D13.104 D13.110
 #&gt; Colombia        0        0        0        0        0        0       0       0
 #&gt; Ecuador         0        0        0        0        0        0       0       0
 #&gt; Mexico          3        2        0        2        2        1       2       5
@@ -267,19 +272,22 @@ Note, that the right hand side is disabled for genpop objects.</p>
 #&gt; Mexico          1
 #&gt; Peru            0</div><div class='input'>
 <span class='co'># Number of observed alleles per locus</span>
-<span class='fu'>private_alleles</span>(<span class='no'>Pinf</span>, <span class='no'>locus</span> ~ <span class='no'>Country</span>, <span class='kw'>count.alleles</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;          Pi02 D13 Pi33 Pi4B Pi16 G11 Pi56 Pi70 Pi89
+<span class='fu'>private_alleles</span>(<span class='kw'>Pinf</span>, <span class='kw'>locus</span> <span class='op'>~</span> <span class='kw'>Country</span>, count.alleles = <span class='fl'>TRUE</span>)
+</div><div class='output co'>#&gt;          Pi02 D13 Pi33 Pi4B Pi16 G11 Pi56 Pi70 Pi89
 #&gt; Colombia    0   0    0    0    0   0    0    0    0
 #&gt; Ecuador     0   0    0    0    0   1    0    0    0
 #&gt; Mexico     10  30    1    0   14  33    2    0   40
 #&gt; Peru        1   7    0    2    0  12    0    4    0</div><div class='input'>
 <span class='co'># Get raw number of private alleles per locus.</span>
-(<span class='no'>pal</span> <span class='kw'>&lt;-</span> <span class='fu'>private_alleles</span>(<span class='no'>Pinf</span>, <span class='no'>locus</span> ~ <span class='no'>Country</span>, <span class='kw'>count.alleles</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='output co'>#&gt;          Pi02 D13 Pi33 Pi4B Pi16 G11 Pi56 Pi70 Pi89
+(<span class='kw'>pal</span> <span class='op'>&lt;-</span> <span class='fu'>private_alleles</span>(<span class='kw'>Pinf</span>, <span class='kw'>locus</span> <span class='op'>~</span> <span class='kw'>Country</span>, count.alleles = <span class='fl'>FALSE</span>))
+</div><div class='output co'>#&gt;          Pi02 D13 Pi33 Pi4B Pi16 G11 Pi56 Pi70 Pi89
 #&gt; Colombia    0   0    0    0    0   0    0    0    0
 #&gt; Ecuador     0   0    0    0    0   1    0    0    0
 #&gt; Mexico      5  12    1    0    3   7    1    0    9
 #&gt; Peru        1   2    0    1    0   4    0    1    0</div><div class='input'>
 <span class='co'># Get percentages.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/sweep.html'>sweep</a></span>(<span class='no'>pal</span>, <span class='fl'>2</span>, <span class='fu'>nAll</span>(<span class='no'>Pinf</span>)[<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='no'>pal</span>)], <span class='kw'>FUN</span> <span class='kw'>=</span> <span class='st'>"/"</span>)</div><div class='output co'>#&gt;                Pi02        D13      Pi33  Pi4B      Pi16        G11 Pi56 Pi70
+<span class='fu'><a href='https://rdrr.io/r/base/sweep.html'>sweep</a></span>(<span class='kw'>pal</span>, <span class='fl'>2</span>, <span class='fu'>nAll</span>(<span class='kw'>Pinf</span>)[<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='kw'>pal</span>)], FUN = <span class='st'>"/"</span>)
+</div><div class='output co'>#&gt;                Pi02        D13      Pi33  Pi4B      Pi16        G11 Pi56 Pi70
 #&gt; Colombia 0.00000000 0.00000000 0.0000000 0.000 0.0000000 0.00000000 0.00 0.00
 #&gt; Ecuador  0.00000000 0.00000000 0.0000000 0.000 0.0000000 0.04545455 0.00 0.00
 #&gt; Mexico   0.45454545 0.46153846 0.3333333 0.000 0.4285714 0.31818182 0.25 0.00
@@ -290,9 +298,10 @@ Note, that the right hand side is disabled for genpop objects.</p>
 #&gt; Mexico   0.75
 #&gt; Peru     0.00</div><div class='input'>
 <span class='co'># An example of how these data can be displayed.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'>"ggplot2"</span>)
-<span class='no'>Pinfpriv</span> <span class='kw'>&lt;-</span> <span class='fu'>private_alleles</span>(<span class='no'>Pinf</span>, <span class='kw'>report</span> <span class='kw'>=</span> <span class='st'>"data.frame"</span>)
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='no'>Pinfpriv</span>) + <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_tile</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>population</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>allele</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>count</span>))</div><div class='img'><img src='private_alleles-1.png' alt='' width='700' height='433' /></div><div class='input'># }
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'><a href='http://ggplot2.tidyverse.org'>"ggplot2"</a></span>)
+<span class='kw'>Pinfpriv</span> <span class='op'>&lt;-</span> <span class='fu'>private_alleles</span>(<span class='kw'>Pinf</span>, report = <span class='st'>"data.frame"</span>)
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='kw'>Pinfpriv</span>) <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_tile</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(x = <span class='kw'>population</span>, y = <span class='kw'>allele</span>, fill = <span class='kw'>count</span>))
+</div><div class='img'><img src='private_alleles-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -309,7 +318,7 @@ Note, that the right hand side is disabled for genpop objects.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

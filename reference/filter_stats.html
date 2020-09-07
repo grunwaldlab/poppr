@@ -146,17 +146,17 @@ for mlg.filter utilizing all of the algorithms.</p>
     </div>
 
     <pre class="usage"><span class='fu'>filter_stats</span>(
-  <span class='no'>x</span>,
-  <span class='kw'>distance</span> <span class='kw'>=</span> <span class='no'>bitwise.dist</span>,
-  <span class='kw'>threshold</span> <span class='kw'>=</span> <span class='fl'>1e+06</span> + <span class='no'>.Machine</span>$<span class='no'>double.eps</span>^<span class='fl'>0.5</span>,
-  <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"All"</span>,
-  <span class='kw'>missing</span> <span class='kw'>=</span> <span class='st'>"ignore"</span>,
-  <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>nclone</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>hist</span> <span class='kw'>=</span> <span class='st'>"Scott"</span>,
-  <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>,
-  <span class='no'>...</span>
+  <span class='kw'>x</span>,
+  distance = <span class='kw'>bitwise.dist</span>,
+  threshold = <span class='fl'>1e+06</span> <span class='op'>+</span> <span class='kw'>.Machine</span><span class='op'>$</span><span class='kw'>double.eps</span><span class='op'>^</span><span class='fl'>0.5</span>,
+  stats = <span class='st'>"All"</span>,
+  missing = <span class='st'>"ignore"</span>,
+  plot = <span class='fl'>FALSE</span>,
+  cols = <span class='kw'>NULL</span>,
+  nclone = <span class='kw'>NULL</span>,
+  hist = <span class='st'>"Scott"</span>,
+  threads = <span class='fl'>1L</span>,
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -241,13 +241,18 @@ poppr version 2.4.1, this is by default set to 1.</p></td>
 
     <div class='dont-index'><p><code><a href='mlg.filter.html'>mlg.filter</a></code> <code><a href='cutoff_predictor.html'>cutoff_predictor</a></code> 
   <code><a href='bitwise.dist.html'>bitwise.dist</a></code> <code><a href='diss.dist.html'>diss.dist</a></code></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar, Jonah C. Brooks</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'># Basic usage example: Bruvo's Distance --------------------------------</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Pinf</span>)
-<span class='no'>pinfreps</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fix_replen.html'>fix_replen</a></span>(<span class='no'>Pinf</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>6</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>2</span>))
-<span class='no'>bres</span> <span class='kw'>&lt;-</span> <span class='fu'>filter_stats</span>(<span class='no'>Pinf</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='no'>bruvo.dist</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='no'>pinfreps</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>)</div><div class='img'><img src='filter_stats-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>bres</span>) <span class='co'># shows all of the statistics</span></div><div class='output co'>#&gt; $farthest
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Pinf</span>)
+<span class='kw'>pinfreps</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fix_replen.html'>fix_replen</a></span>(<span class='kw'>Pinf</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>6</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>2</span>))
+<span class='kw'>bres</span> <span class='op'>&lt;-</span> <span class='fu'>filter_stats</span>(<span class='kw'>Pinf</span>, distance = <span class='kw'>bruvo.dist</span>, replen = <span class='kw'>pinfreps</span>, plot = <span class='fl'>TRUE</span>, threads = <span class='fl'>1L</span>)
+</div><div class='img'><img src='filter_stats-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='kw'>bres</span>) <span class='co'># shows all of the statistics</span>
+</div><div class='output co'>#&gt; $farthest
 #&gt; $farthest$MLGS
 #&gt;  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 #&gt; [39] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
@@ -341,8 +346,10 @@ poppr version 2.4.1, this is by default set to 1.</p></td>
 #&gt; 
 #&gt; </div><div class='input'>
 <span class='co'># Use these results with cutoff_filter()</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>thresh</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cutoff_predictor.html'>cutoff_predictor</a></span>(<span class='no'>bres</span>$<span class='no'>farthest</span>$<span class='no'>THRESHOLDS</span>))</div><div class='output co'>#&gt; [1] 0.1132221</div><div class='input'><span class='fu'><a href='mlg.filter.html'>mlg.filter</a></span>(<span class='no'>Pinf</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='no'>bruvo.dist</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='no'>pinfreps</span>) <span class='kw'>&lt;-</span> <span class='no'>thresh</span>
-<span class='no'>Pinf</span></div><div class='output co'>#&gt; 
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='kw'>thresh</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cutoff_predictor.html'>cutoff_predictor</a></span>(<span class='kw'>bres</span><span class='op'>$</span><span class='kw'>farthest</span><span class='op'>$</span><span class='kw'>THRESHOLDS</span>))
+</div><div class='output co'>#&gt; [1] 0.1132221</div><div class='input'><span class='fu'><a href='mlg.filter.html'>mlg.filter</a></span>(<span class='kw'>Pinf</span>, distance = <span class='kw'>bruvo.dist</span>, replen = <span class='kw'>pinfreps</span>) <span class='op'>&lt;-</span> <span class='kw'>thresh</span>
+<span class='kw'>Pinf</span> 
+</div><div class='output co'>#&gt; 
 #&gt; This is a genclone object
 #&gt; -------------------------
 #&gt; Genotype information:
@@ -357,9 +364,12 @@ poppr version 2.4.1, this is by default set to 1.</p></td>
 #&gt;     2 strata - Continent, Country
 #&gt;     2 populations defined - South America, North America</div><div class='input'>
 <span class='co'># Different distances will give different results -----------------------</span>
-<span class='no'>nres</span> <span class='kw'>&lt;-</span> <span class='fu'>filter_stats</span>(<span class='no'>Pinf</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='no'>nei.dist</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>, <span class='kw'>missing</span> <span class='kw'>=</span> <span class='st'>"mean"</span>)</div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'> Replaced 167 missing values.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: @tab does not contain integers; as of adegenet_2.0-0, numeric values are no longer used</span></div><div class='output co'>#&gt; <span class='warning'>Warning: @tab does not contain integers; as of adegenet_2.0-0, numeric values are no longer used</span></div><div class='img'><img src='filter_stats-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>thresh</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cutoff_predictor.html'>cutoff_predictor</a></span>(<span class='no'>nres</span>$<span class='no'>farthest</span>$<span class='no'>THRESHOLDS</span>))</div><div class='output co'>#&gt; [1] 0.01949039</div><div class='input'><span class='fu'><a href='mlg.filter.html'>mlg.filter</a></span>(<span class='no'>Pinf</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='no'>nei.dist</span>, <span class='kw'>missing</span> <span class='kw'>=</span> <span class='st'>"mean"</span>) <span class='kw'>&lt;-</span> <span class='no'>thresh</span>
-<span class='no'>Pinf</span></div><div class='output co'>#&gt; 
+<span class='kw'>nres</span> <span class='op'>&lt;-</span> <span class='fu'>filter_stats</span>(<span class='kw'>Pinf</span>, distance = <span class='kw'>nei.dist</span>, plot = <span class='fl'>TRUE</span>, threads = <span class='fl'>1L</span>, missing = <span class='st'>"mean"</span>)
+</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'> Replaced 167 missing values.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: @tab does not contain integers; as of adegenet_2.0-0, numeric values are no longer used</span></div><div class='output co'>#&gt; <span class='warning'>Warning: @tab does not contain integers; as of adegenet_2.0-0, numeric values are no longer used</span></div><div class='img'><img src='filter_stats-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='kw'>thresh</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cutoff_predictor.html'>cutoff_predictor</a></span>(<span class='kw'>nres</span><span class='op'>$</span><span class='kw'>farthest</span><span class='op'>$</span><span class='kw'>THRESHOLDS</span>))
+</div><div class='output co'>#&gt; [1] 0.01949039</div><div class='input'><span class='fu'><a href='mlg.filter.html'>mlg.filter</a></span>(<span class='kw'>Pinf</span>, distance = <span class='kw'>nei.dist</span>, missing = <span class='st'>"mean"</span>) <span class='op'>&lt;-</span> <span class='kw'>thresh</span>
+<span class='kw'>Pinf</span> 
+</div><div class='output co'>#&gt; 
 #&gt; This is a genclone object
 #&gt; -------------------------
 #&gt; Genotype information:
@@ -388,7 +398,7 @@ poppr version 2.4.1, this is by default set to 1.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

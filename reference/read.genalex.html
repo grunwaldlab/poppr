@@ -148,13 +148,13 @@ output is a <a href='genclone-class.html'>genclone-class</a> or genind-class obj
     </div>
 
     <pre class="usage"><span class='fu'>read.genalex</span>(
-  <span class='no'>genalex</span>,
-  <span class='kw'>ploidy</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>geo</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>region</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>genclone</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>","</span>,
-  <span class='kw'>recode</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>genalex</span>,
+  ploidy = <span class='fl'>2</span>,
+  geo = <span class='fl'>FALSE</span>,
+  region = <span class='fl'>FALSE</span>,
+  genclone = <span class='fl'>TRUE</span>,
+  sep = <span class='st'>","</span>,
+  recode = <span class='fl'>FALSE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -211,7 +211,7 @@ input. If <code>region = TRUE</code>, a second column will be inserted and label
 "Region". If you have more than two strata within your data set, you should
 run the command <code><a href='https://rdrr.io/pkg/adegenet/man/strata-methods.html'>adegenet::splitStrata()</a></code> on your data set to define the
 unique stratifications.</p>
-<h3>FOR POLYPLOID (&gt; 2n) DATA SETS</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>FOR POLYPLOID (&gt; 2n) DATA SETS</h3>
 <p>The genind object has
 an all-or-none approach to missing data. If a sample has missing data at a
 particular locus, then the entire locus is considered missing. This works
@@ -240,18 +240,24 @@ names will be saved in the <code>other</code> slot under <code>original_names</c
 
     <div class='dont-index'><p><code><a href='genind2genalex.html'>genind2genalex()</a></code>, <code><a href='clonecorrect.html'>clonecorrect()</a></code>, <a href='genclone-class.html'>genclone</a>,
 genind, <code><a href='recode_polyploids.html'>recode_polyploids()</a></code></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'># \dontrun{</span>
-<span class='no'>Aeut</span> <span class='kw'>&lt;-</span> <span class='fu'>read.genalex</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"files/rootrot.csv"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"poppr"</span>))
+<span class='kw'>Aeut</span> <span class='op'>&lt;-</span> <span class='fu'>read.genalex</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"files/rootrot.csv"</span>, package=<span class='st'>"poppr"</span>))
 
-<span class='no'>genalex2</span> <span class='kw'>&lt;-</span> <span class='fu'>read.genalex</span>(<span class='st'>"genalex2.csv"</span>, <span class='kw'>geo</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: cannot open file 'genalex2.csv': No such file or directory</span></div><div class='output co'>#&gt; <span class='error'>Error in file(con, "r"): cannot open the connection</span></div><div class='input'><span class='co'># A genalex file with geographic coordinate data.</span>
+<span class='kw'>genalex2</span> <span class='op'>&lt;-</span> <span class='fu'>read.genalex</span>(<span class='st'>"genalex2.csv"</span>, geo=<span class='fl'>TRUE</span>)
+</div><div class='output co'>#&gt; <span class='warning'>Warning: cannot open file 'genalex2.csv': No such file or directory</span></div><div class='output co'>#&gt; <span class='error'>Error in file(con, "r"): cannot open the connection</span></div><div class='input'><span class='co'># A genalex file with geographic coordinate data.</span>
 
-<span class='no'>genalex3</span> <span class='kw'>&lt;-</span> <span class='fu'>read.genalex</span>(<span class='st'>"genalex3.csv"</span>, <span class='kw'>region</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: cannot open file 'genalex3.csv': No such file or directory</span></div><div class='output co'>#&gt; <span class='error'>Error in file(con, "r"): cannot open the connection</span></div><div class='input'><span class='co'># A genalex file with regional information.</span>
+<span class='kw'>genalex3</span> <span class='op'>&lt;-</span> <span class='fu'>read.genalex</span>(<span class='st'>"genalex3.csv"</span>, region=<span class='fl'>TRUE</span>) 
+</div><div class='output co'>#&gt; <span class='warning'>Warning: cannot open file 'genalex3.csv': No such file or directory</span></div><div class='output co'>#&gt; <span class='error'>Error in file(con, "r"): cannot open the connection</span></div><div class='input'><span class='co'># A genalex file with regional information.</span>
 
-<span class='no'>genalex4</span> <span class='kw'>&lt;-</span> <span class='fu'>read.genalex</span>(<span class='st'>"genalex4.csv"</span>, <span class='kw'>region</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>geo</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: cannot open file 'genalex4.csv': No such file or directory</span></div><div class='output co'>#&gt; <span class='error'>Error in file(con, "r"): cannot open the connection</span></div><div class='input'># A genalex file with both regional and geographic information.
-# }
+<span class='kw'>genalex4</span> <span class='op'>&lt;-</span> <span class='fu'>read.genalex</span>(<span class='st'>"genalex4.csv"</span>, region=<span class='fl'>TRUE</span>, geo=<span class='fl'>TRUE</span>) 
+</div><div class='output co'>#&gt; <span class='warning'>Warning: cannot open file 'genalex4.csv': No such file or directory</span></div><div class='output co'>#&gt; <span class='error'>Error in file(con, "r"): cannot open the connection</span></div><div class='input'><span class='co'># A genalex file with both regional and geographic information.</span>
+<span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -268,7 +274,7 @@ genind, <code><a href='recode_polyploids.html'>recode_polyploids()</a></code></p
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

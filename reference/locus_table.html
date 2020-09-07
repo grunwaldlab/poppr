@@ -144,11 +144,11 @@
     </div>
 
     <pre class="usage"><span class='fu'>locus_table</span>(
-  <span class='no'>x</span>,
-  <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"simpson"</span>,
-  <span class='kw'>lev</span> <span class='kw'>=</span> <span class='st'>"allele"</span>,
-  <span class='kw'>population</span> <span class='kw'>=</span> <span class='st'>"ALL"</span>,
-  <span class='kw'>information</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+  <span class='kw'>x</span>,
+  index = <span class='st'>"simpson"</span>,
+  lev = <span class='st'>"allele"</span>,
+  population = <span class='st'>"ALL"</span>,
+  information = <span class='fl'>TRUE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -226,11 +226,15 @@ Technical Journal, 27:379-423,623-656, 1948</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/vegan/man/diversity.html'>vegan::diversity()</a></code>, <code><a href='poppr.html'>poppr()</a></code></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>nancycats</span>)
-<span class='fu'>locus_table</span>(<span class='no'>nancycats</span>[<span class='kw'>pop</span> <span class='kw'>=</span> <span class='fl'>5</span>])</div><div class='output co'>#&gt; <span class='message'></span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>nancycats</span>)
+<span class='fu'>locus_table</span>(<span class='kw'>nancycats</span>[pop = <span class='fl'>5</span>])
+</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>allele = Number of observed alleles</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>1-D = Simpson index</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Hexp = Nei's 1978 gene diversity</span></div><div class='output co'>#&gt; <span class='message'>------------------------------------------</span></div><div class='output co'>#&gt;        summary
@@ -248,8 +252,9 @@ Technical Journal, 27:379-423,623-656, 1948</p>
 <span class='co'># Analyze locus statistics for the North American population of P. infestans.</span>
 <span class='co'># Note that due to the unknown dosage of alleles, many of these statistics</span>
 <span class='co'># will be artificially inflated for polyploids.</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Pinf</span>)
-<span class='fu'>locus_table</span>(<span class='no'>Pinf</span>, <span class='kw'>population</span> <span class='kw'>=</span> <span class='st'>"North America"</span>)</div><div class='output co'>#&gt; <span class='message'></span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Pinf</span>)
+<span class='fu'>locus_table</span>(<span class='kw'>Pinf</span>, population = <span class='st'>"North America"</span>)
+</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>allele = Number of observed alleles</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>1-D = Simpson index</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Hexp = Nei's 1978 gene diversity</span></div><div class='output co'>#&gt; <span class='message'>------------------------------------------</span></div><div class='output co'>#&gt;       summary
@@ -265,7 +270,7 @@ Technical Journal, 27:379-423,623-656, 1948</p>
 #&gt;   Pi63  3.000  0.310  0.313    0.568
 #&gt;   Pi70  2.000  0.203  0.205    0.595
 #&gt;   Pi89 11.000  0.627  0.634    0.549
-#&gt;   mean  7.364  0.497  0.503    0.607</div><div class='input'># }
+#&gt;   mean  7.364  0.497  0.503    0.607</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -282,7 +287,7 @@ Technical Journal, 27:379-423,623-656, 1948</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

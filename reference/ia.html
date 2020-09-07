@@ -164,32 +164,32 @@ resample.ia() calculates the index of association on a
     </div>
 
     <pre class="usage"><span class='fu'>ia</span>(
-  <span class='no'>gid</span>,
-  <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>missing</span> <span class='kw'>=</span> <span class='st'>"ignore"</span>,
-  <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>hist</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"rbarD"</span>,
-  <span class='kw'>valuereturn</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>gid</span>,
+  sample = <span class='fl'>0</span>,
+  method = <span class='fl'>1</span>,
+  quiet = <span class='fl'>FALSE</span>,
+  missing = <span class='st'>"ignore"</span>,
+  plot = <span class='fl'>TRUE</span>,
+  hist = <span class='fl'>TRUE</span>,
+  index = <span class='st'>"rbarD"</span>,
+  valuereturn = <span class='fl'>FALSE</span>
 )
 
 <span class='fu'>pair.ia</span>(
-  <span class='no'>gid</span>,
-  <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>0L</span>,
-  <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>low</span> <span class='kw'>=</span> <span class='st'>"blue"</span>,
-  <span class='kw'>high</span> <span class='kw'>=</span> <span class='st'>"red"</span>,
-  <span class='kw'>limits</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"rbarD"</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='fl'>1L</span>
+  <span class='kw'>gid</span>,
+  sample = <span class='fl'>0L</span>,
+  quiet = <span class='fl'>FALSE</span>,
+  plot = <span class='fl'>TRUE</span>,
+  low = <span class='st'>"blue"</span>,
+  high = <span class='st'>"red"</span>,
+  limits = <span class='kw'>NULL</span>,
+  index = <span class='st'>"rbarD"</span>,
+  method = <span class='fl'>1L</span>
 )
 
-<span class='fu'>resample.ia</span>(<span class='no'>gid</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>999</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>use_psex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+<span class='fu'>resample.ia</span>(<span class='kw'>gid</span>, n = <span class='kw'>NULL</span>, reps = <span class='fl'>999</span>, quiet = <span class='fl'>FALSE</span>, use_psex = <span class='fl'>FALSE</span>, <span class='kw'>...</span>)
 
-<span class='fu'>jack.ia</span>(<span class='no'>gid</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>999</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+<span class='fu'>jack.ia</span>(<span class='kw'>gid</span>, n = <span class='kw'>NULL</span>, reps = <span class='fl'>999</span>, quiet = <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -283,11 +283,11 @@ of psex. Defaults to <code>FALSE</code>.</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     
-<h3>for <code>pair.ia</code></h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>for <code>pair.ia</code></h3>
 <p>A matrix with two columns and choose(nLoc(gid), 2) rows representing the
-  values for Ia and rbarD per locus pair.</p><p></p><h3>If no sampling has occurred:</h3>
+  values for Ia and rbarD per locus pair.</p><p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>If no sampling has occurred:</h3>
 <p>A named number vector of length 2 giving the Index of Association, "Ia";
-  and the Standardized Index of Association, "rbarD"</p><p></p><h3>If there is sampling:</h3>
+  and the Standardized Index of Association, "rbarD"</p><p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>If there is sampling:</h3>
 <p>A a named number vector of length 4
   with the following values:</p><ul>
 <li><p>Ia - numeric. The index of association.</p></li>
@@ -298,7 +298,7 @@ of psex. Defaults to <code>FALSE</code>.</p></td>
 <li><p>p.rD - A factor indicating the p-value resulting from a
     one-sided permutation test based on the number of samples indicated in
     the original call.</p></li>
-</ul><p></p><p></p><h3>If there is sampling and valureturn = TRUE</h3>
+</ul><p></p><p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>If there is sampling and valureturn = TRUE</h3>
 <p>A list with the following elements:</p><ul>
 <li><p>index The above vector</p></li>
 <li><p>samples A data frame with s by 2 column data frame where s is the
@@ -306,7 +306,7 @@ of psex. Defaults to <code>FALSE</code>.</p></td>
     rbarD, respectively.</p></li>
 </ul><p></p>
 
-<h3>resample.ia()</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>resample.ia()</h3>
 <p>a data frame with the index of association and standardized index of
 association in columns. Number of rows represents the number of reps.</p>
 
@@ -388,17 +388,24 @@ association in columns. Number of rows represents the number of reps.</p>
     <div class='dont-index'><p><code><a href='poppr.html'>poppr</a></code>, <code><a href='missingno.html'>missingno</a></code>, 
   <code>import2genind</code>, <code><a href='read.genalex.html'>read.genalex</a></code>, 
   <code><a href='clonecorrect.html'>clonecorrect</a></code>, <code><a href='win.ia.html'>win.ia</a></code>, <code><a href='samp.ia.html'>samp.ia</a></code></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>nancycats</span>)
-<span class='fu'>ia</span>(<span class='no'>nancycats</span>)</div><div class='output co'>#&gt;         Ia      rbarD 
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>nancycats</span>)
+<span class='fu'>ia</span>(<span class='kw'>nancycats</span>)
+</div><div class='output co'>#&gt;         Ia      rbarD 
 #&gt; 0.17207262 0.02178965 </div><div class='input'>
 <span class='co'># Pairwise over all loci:</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>partial_clone</span>)
-<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>pair.ia</span>(<span class='no'>partial_clone</span>)</div><div class='img'><img src='ia-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>res</span>, <span class='kw'>low</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='kw'>high</span> <span class='kw'>=</span> <span class='st'>"green"</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"Ia"</span>)</div><div class='img'><img src='ia-2.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>partial_clone</span>)
+<span class='kw'>res</span> <span class='op'>&lt;-</span> <span class='fu'>pair.ia</span>(<span class='kw'>partial_clone</span>)
+</div><div class='img'><img src='ia-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span>(<span class='kw'>res</span>, low = <span class='st'>"black"</span>, high = <span class='st'>"green"</span>, index = <span class='st'>"Ia"</span>)
+</div><div class='img'><img src='ia-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Resampling</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Pinf</span>)
-<span class='fu'>resample.ia</span>(<span class='no'>Pinf</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>99</span>)</div><div class='output co'>#&gt;           Ia      rbarD
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Pinf</span>)
+<span class='fu'>resample.ia</span>(<span class='kw'>Pinf</span>, reps = <span class='fl'>99</span>)
+</div><div class='output co'>#&gt;           Ia      rbarD
 #&gt; 1  0.6501982 0.07093833
 #&gt; 2  0.8256286 0.09057133
 #&gt; 3  0.4231684 0.04623043
@@ -501,7 +508,9 @@ association in columns. Number of rows represents the number of reps.</p>
 <span class='co'># \dontrun{</span>
 
 <span class='co'># Pairwise IA with p-values (this will take about a minute)</span>
-<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>pair.ia</span>(<span class='no'>partial_clone</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>999</span>)</div><div class='img'><img src='ia-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>res</span>)</div><div class='output co'>#&gt;                           Ia  p.Ia       rbarD  p.rD
+<span class='kw'>res</span> <span class='op'>&lt;-</span> <span class='fu'>pair.ia</span>(<span class='kw'>partial_clone</span>, sample = <span class='fl'>999</span>)
+</div><div class='img'><img src='ia-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='kw'>res</span>)
+</div><div class='output co'>#&gt;                           Ia  p.Ia       rbarD  p.rD
 #&gt; Locus_1:Locus_2 -0.007935313 0.498 -0.00827841 0.499
 #&gt; Locus_1:Locus_3  0.269326856 0.001  0.27484539 0.001
 #&gt; Locus_1:Locus_4  0.320892032 0.001  0.33749005 0.001
@@ -509,26 +518,32 @@ association in columns. Number of rows represents the number of reps.</p>
 #&gt; Locus_1:Locus_6  0.133939476 0.032  0.13782217 0.030
 #&gt; Locus_1:Locus_7  0.504438856 0.001  0.54150373 0.001</div><div class='input'>
 <span class='co'># Plot the results of resampling rbarD. </span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'>"ggplot2"</span>)
-<span class='no'>Pinf.resamp</span> <span class='kw'>&lt;-</span> <span class='fu'>resample.ia</span>(<span class='no'>Pinf</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>999</span>)
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='no'>Pinf.resamp</span>[<span class='fl'>2</span>], <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>rbarD</span>)) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_histogram.html'>geom_histogram</a></span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_abline.html'>geom_vline</a></span>(<span class='kw'>xintercept</span> <span class='kw'>=</span> <span class='fu'>ia</span>(<span class='no'>Pinf</span>)[<span class='fl'>2</span>]) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_abline.html'>geom_vline</a></span>(<span class='kw'>xintercept</span> <span class='kw'>=</span> <span class='fu'>ia</span>(<span class='fu'><a href='clonecorrect.html'>clonecorrect</a></span>(<span class='no'>Pinf</span>))[<span class='fl'>2</span>], <span class='kw'>linetype</span> <span class='kw'>=</span> <span class='fl'>2</span>) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>xlab</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/expression.html'>expression</a></span>(<span class='fu'><a href='https://rdrr.io/r/grDevices/plotmath.html'>bar</a></span>(<span class='no'>r</span>)[<span class='no'>d</span>]))</div><div class='output co'>#&gt; <span class='message'>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></div><div class='img'><img src='ia-4.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'><a href='http://ggplot2.tidyverse.org'>"ggplot2"</a></span>)
+<span class='kw'>Pinf.resamp</span> <span class='op'>&lt;-</span> <span class='fu'>resample.ia</span>(<span class='kw'>Pinf</span>, reps = <span class='fl'>999</span>)
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='kw'>Pinf.resamp</span>[<span class='fl'>2</span>], <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(x = <span class='kw'>rbarD</span>)) <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_histogram.html'>geom_histogram</a></span>() <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_abline.html'>geom_vline</a></span>(xintercept = <span class='fu'>ia</span>(<span class='kw'>Pinf</span>)[<span class='fl'>2</span>]) <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_abline.html'>geom_vline</a></span>(xintercept = <span class='fu'>ia</span>(<span class='fu'><a href='clonecorrect.html'>clonecorrect</a></span>(<span class='kw'>Pinf</span>))[<span class='fl'>2</span>], linetype = <span class='fl'>2</span>) <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>xlab</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/expression.html'>expression</a></span>(<span class='fu'><a href='https://rdrr.io/r/grDevices/plotmath.html'>bar</a></span>(<span class='kw'>r</span>)[<span class='kw'>d</span>]))
+</div><div class='output co'>#&gt; <span class='message'>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></div><div class='img'><img src='ia-4.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Get the indices back and plot the distributions.</span>
-<span class='no'>nansamp</span> <span class='kw'>&lt;-</span> <span class='fu'>ia</span>(<span class='no'>nancycats</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>999</span>, <span class='kw'>valuereturn</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='ia-5.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>nansamp</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"Ia"</span>)</div><div class='img'><img src='ia-6.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>nansamp</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"rbarD"</span>)</div><div class='img'><img src='ia-7.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='kw'>nansamp</span> <span class='op'>&lt;-</span> <span class='fu'>ia</span>(<span class='kw'>nancycats</span>, sample = <span class='fl'>999</span>, valuereturn = <span class='fl'>TRUE</span>)
+</div><div class='img'><img src='ia-5.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span>(<span class='kw'>nansamp</span>, index = <span class='st'>"Ia"</span>)
+</div><div class='img'><img src='ia-6.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span>(<span class='kw'>nansamp</span>, index = <span class='st'>"rbarD"</span>)
+</div><div class='img'><img src='ia-7.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># You can also adjust the parameters for how large to display the text</span>
 <span class='co'># so that it's easier to export it for publication/presentations.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'>"ggplot2"</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>nansamp</span>, <span class='kw'>labsize</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>linesize</span> <span class='kw'>=</span> <span class='fl'>2</span>) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span>() +                                      <span class='co'># adding a theme</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>rel</a></span>(<span class='fl'>5</span>))) +       <span class='co'># changing text size</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span>(<span class='kw'>plot.title</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>rel</a></span>(<span class='fl'>4</span>))) + <span class='co'># changing title size</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>ggtitle</a></span>(<span class='st'>"Index of Association of nancycats"</span>)      <span class='co'># adding a new title</span></div><div class='img'><img src='ia-8.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'><a href='http://ggplot2.tidyverse.org'>"ggplot2"</a></span>)
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span>(<span class='kw'>nansamp</span>, labsize = <span class='fl'>5</span>, linesize = <span class='fl'>2</span>) <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span>() <span class='op'>+</span>                                      <span class='co'># adding a theme</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span>(text = <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span>(size = <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>rel</a></span>(<span class='fl'>5</span>))) <span class='op'>+</span>       <span class='co'># changing text size</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span>(plot.title = <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span>(size = <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>rel</a></span>(<span class='fl'>4</span>))) <span class='op'>+</span> <span class='co'># changing title size</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>ggtitle</a></span>(<span class='st'>"Index of Association of nancycats"</span>)      <span class='co'># adding a new title</span>
+</div><div class='img'><img src='ia-8.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Get the index for each population.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='fu'>seppop</span>(<span class='no'>nancycats</span>), <span class='no'>ia</span>)</div><div class='output co'>#&gt; $P01
+<span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='fu'>seppop</span>(<span class='kw'>nancycats</span>), <span class='kw'>ia</span>)
+</div><div class='output co'>#&gt; $P01
 #&gt;         Ia      rbarD 
 #&gt; 0.16564272 0.02105965 
 #&gt; 
@@ -596,7 +611,8 @@ association in columns. Number of rows represents the number of reps.</p>
 #&gt;          Ia       rbarD 
 #&gt; -0.09055833 -0.01378538 
 #&gt; </div><div class='input'><span class='co'># With sampling</span>
-<span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='fu'>seppop</span>(<span class='no'>nancycats</span>), <span class='no'>ia</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>999</span>)</div><div class='img'><img src='ia-9.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-10.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-11.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-12.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-13.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-14.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-15.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-16.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-17.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-18.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-19.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-20.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-21.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-22.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-23.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-24.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-25.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $P01
+<span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='fu'>seppop</span>(<span class='kw'>nancycats</span>), <span class='kw'>ia</span>, sample = <span class='fl'>999</span>)
+</div><div class='img'><img src='ia-9.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-10.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-11.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-12.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-13.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-14.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-15.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-16.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-17.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-18.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-19.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-20.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-21.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-22.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-23.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-24.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-25.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $P01
 #&gt;         Ia       p.Ia      rbarD       p.rD 
 #&gt; 0.16564272 0.24100000 0.02105965 0.24100000 
 #&gt; 
@@ -666,25 +682,28 @@ association in columns. Number of rows represents the number of reps.</p>
 #&gt; </div><div class='input'>
 <span class='co'># Plot pairwise ia for all populations in a grid with cowplot</span>
 <span class='co'># Set up the library and data</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'>"cowplot"</span>)</div><div class='output co'>#&gt; <span class='message'></span>
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'><a href='https://wilkelab.org/cowplot'>"cowplot"</a></span>)
+</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>********************************************************</span></div><div class='output co'>#&gt; <span class='message'>Note: As of version 1.0.0, cowplot does not change the</span></div><div class='output co'>#&gt; <span class='message'>  default ggplot2 theme anymore. To recover the previous</span></div><div class='output co'>#&gt; <span class='message'>  behavior, execute:</span>
-#&gt; <span class='message'>  theme_set(theme_cowplot())</span></div><div class='output co'>#&gt; <span class='message'>********************************************************</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>monpop</span>)
-<span class='fu'>splitStrata</span>(<span class='no'>monpop</span>) <span class='kw'>&lt;-</span> ~<span class='no'>Tree</span>/<span class='no'>Year</span>/<span class='no'>Symptom</span>
-<span class='fu'>setPop</span>(<span class='no'>monpop</span>)      <span class='kw'>&lt;-</span> ~<span class='no'>Tree</span>
+#&gt; <span class='message'>  theme_set(theme_cowplot())</span></div><div class='output co'>#&gt; <span class='message'>********************************************************</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>monpop</span>)
+<span class='fu'>splitStrata</span>(<span class='kw'>monpop</span>) <span class='op'>&lt;-</span> <span class='op'>~</span><span class='kw'>Tree</span><span class='op'>/</span><span class='kw'>Year</span><span class='op'>/</span><span class='kw'>Symptom</span>
+<span class='fu'>setPop</span>(<span class='kw'>monpop</span>)      <span class='op'>&lt;-</span> <span class='op'>~</span><span class='kw'>Tree</span>
 
 <span class='co'># Need to set up a list in which to store the plots.</span>
-<span class='no'>plotlist</span>        <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/vector.html'>vector</a></span>(<span class='kw'>mode</span> <span class='kw'>=</span> <span class='st'>"list"</span>, <span class='kw'>length</span> <span class='kw'>=</span> <span class='fu'>nPop</span>(<span class='no'>monpop</span>))
-<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>plotlist</span>) <span class='kw'>&lt;-</span> <span class='fu'>popNames</span>(<span class='no'>monpop</span>)
+<span class='kw'>plotlist</span>        <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/vector.html'>vector</a></span>(mode = <span class='st'>"list"</span>, length = <span class='fu'>nPop</span>(<span class='kw'>monpop</span>))
+<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='kw'>plotlist</span>) <span class='op'>&lt;-</span> <span class='fu'>popNames</span>(<span class='kw'>monpop</span>)
 
 <span class='co'># Loop throgh the populations, calculate pairwise ia, plot, and then</span>
 <span class='co'># capture the plot in the list</span>
-<span class='kw'>for</span> (<span class='no'>i</span> <span class='kw'>in</span> <span class='fu'>popNames</span>(<span class='no'>monpop</span>)){
-  <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>pair.ia</span>(<span class='no'>monpop</span>[<span class='kw'>pop</span> <span class='kw'>=</span> <span class='no'>i</span>], <span class='kw'>limits</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>0.15</span>, <span class='fl'>1</span>)) <span class='co'># subset, calculate, and plot</span>
-  <span class='no'>plotlist</span><span class='kw'>[[</span><span class='no'>i</span>]] <span class='kw'>&lt;-</span> <span class='kw pkg'>ggplot2</span><span class='kw ns'>::</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/last_plot.html'>last_plot</a></span>() <span class='co'># save the last plot</span>
-}</div><div class='img'><img src='ia-26.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-27.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-28.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-29.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'>for</span> (<span class='kw'>i</span> <span class='co'>in</span> <span class='fu'>popNames</span>(<span class='kw'>monpop</span>)){
+  <span class='kw'>x</span> <span class='op'>&lt;-</span> <span class='fu'>pair.ia</span>(<span class='kw'>monpop</span>[pop = <span class='kw'>i</span>], limits = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='op'>-</span><span class='fl'>0.15</span>, <span class='fl'>1</span>)) <span class='co'># subset, calculate, and plot</span>
+  <span class='kw'>plotlist</span>[[<span class='kw'>i</span>]] <span class='op'>&lt;-</span> <span class='kw'>ggplot2</span>::<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/last_plot.html'>last_plot</a></span>() <span class='co'># save the last plot</span>
+}
+</div><div class='img'><img src='ia-26.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-27.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-28.png' alt='' width='700' height='433' /></div><div class='img'><img src='ia-29.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Use the plot_grid function to plot.</span>
-<span class='fu'><a href='https://rdrr.io/pkg/cowplot/man/plot_grid.html'>plot_grid</a></span>(<span class='kw'>plotlist</span> <span class='kw'>=</span> <span class='no'>plotlist</span>, <span class='kw'>labels</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"Tree"</span>, <span class='fu'>popNames</span>(<span class='no'>monpop</span>)))</div><div class='img'><img src='ia-30.png' alt='' width='700' height='433' /></div><div class='input'>
-# }
+<span class='fu'><a href='https://rdrr.io/pkg/cowplot/man/plot_grid.html'>plot_grid</a></span>(plotlist = <span class='kw'>plotlist</span>, labels = <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"Tree"</span>, <span class='fu'>popNames</span>(<span class='kw'>monpop</span>)))
+</div><div class='img'><img src='ia-30.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -701,7 +720,7 @@ association in columns. Number of rows represents the number of reps.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

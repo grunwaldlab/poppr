@@ -143,11 +143,11 @@
     <p>Check for validity of a genclone or snpclone object</p>
     </div>
 
-    <pre class="usage"><span class='fu'>is.snpclone</span>(<span class='no'>x</span>)
+    <pre class="usage"><span class='fu'>is.snpclone</span>(<span class='kw'>x</span>)
 
-<span class='fu'>is.clone</span>(<span class='no'>x</span>)
+<span class='fu'>is.clone</span>(<span class='kw'>x</span>)
 
-<span class='fu'>is.genclone</span>(<span class='no'>x</span>)</pre>
+<span class='fu'>is.genclone</span>(<span class='kw'>x</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -163,10 +163,14 @@
     <p>a <a href='genclone-class.html'>genclone</a> object will always be a valid 
 genind object and a <a href='genclone-class.html'>snpclone</a> object will always
 be a valid genlight object.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>(<span class='no'>sc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snpclone-coercion-methods.html'>as.snpclone</a></span>(<span class='fu'>glSim</span>(<span class='fl'>100</span>, <span class='fl'>1e3</span>, <span class='kw'>ploid</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>),
-                   <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>n.cores</span> <span class='kw'>=</span> <span class='fl'>1L</span>))</div><div class='output co'>#&gt;  ||| SNPCLONE OBJECT |||||||||
+    <pre class="examples"><div class='input'>(<span class='kw'>sc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='as.snpclone.html'>as.snpclone</a></span>(<span class='fu'>glSim</span>(<span class='fl'>100</span>, <span class='fl'>1e3</span>, ploid=<span class='fl'>2</span>, parallel = <span class='fl'>FALSE</span>), 
+                   parallel = <span class='fl'>FALSE</span>, n.cores = <span class='fl'>1L</span>))
+</div><div class='output co'>#&gt;  ||| SNPCLONE OBJECT |||||||||
 #&gt; 
 #&gt;  || 100 genotypes,  1,000 binary SNPs, size: 182.6 Kb
 #&gt;  0 (0 %) missing data
@@ -179,9 +183,12 @@ be a valid genlight object.</p>
 #&gt;  || Optional content
 #&gt;    @other: a list containing: ancestral.pops 
 #&gt; 
-#&gt; NULL</div><div class='input'><span class='fu'>is.snpclone</span>(<span class='no'>sc</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>is.clone</span>(<span class='no'>sc</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>nancycats</span>)
-<span class='no'>nanclone</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='coercion-methods.html'>as.genclone</a></span>(<span class='no'>nancycats</span>)
-<span class='fu'>is.genclone</span>(<span class='no'>nanclone</span>)</div><div class='output co'>#&gt; [1] TRUE</div></pre>
+#&gt; NULL</div><div class='input'><span class='fu'>is.snpclone</span>(<span class='kw'>sc</span>)
+</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>is.clone</span>(<span class='kw'>sc</span>)
+</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>nancycats</span>)
+<span class='kw'>nanclone</span> <span class='op'>&lt;-</span> <span class='fu'><a href='bootgen2genind.html'>as.genclone</a></span>(<span class='kw'>nancycats</span>)
+<span class='fu'>is.genclone</span>(<span class='kw'>nanclone</span>)
+</div><div class='output co'>#&gt; [1] TRUE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -197,7 +204,7 @@ be a valid genlight object.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

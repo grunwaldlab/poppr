@@ -6,8 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Shuffle individuals in a <code><a href='genclone-class.html'>genclone</a></code> or
-<code>genind</code> object independently over each locus. — shufflepop • poppr</title>
+<title>Shuffle individuals in a genclone or
+genind object independently over each locus. — shufflepop • poppr</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -47,8 +47,8 @@
 
 
 
-<meta property="og:title" content="Shuffle individuals in a <code><a href='genclone-class.html'>genclone</a></code> or
-<code>genind</code> object independently over each locus. — shufflepop" />
+<meta property="og:title" content="Shuffle individuals in a genclone or
+genind object independently over each locus. — shufflepop" />
 <meta property="og:description" content="Shuffle individuals in a genclone or
 genind object independently over each locus." />
 <meta property="og:image" content="/logo.png" />
@@ -148,7 +148,7 @@ genind object independently over each locus." />
 <code>genind</code> object independently over each locus.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>shufflepop</span>(<span class='no'>pop</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+    <pre class="usage"><span class='fu'>shufflepop</span>(<span class='kw'>pop</span>, method = <span class='fl'>1</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -192,13 +192,17 @@ object</p></td>
 
     <p>Paul-Michael Agapow and Austin Burt. 2001. Indices of multilocus
   linkage disequilibrium. <em>Molecular Ecology Notes</em>, 1(1-2):101-102</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># load the microbov dataset</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>microbov</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>microbov</span>)
 <span class='co'># Let's look at a single population for now. Howsabout Zebu</span>
-<span class='no'>Zebu</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='no'>microbov</span>, <span class='st'>"Zebu"</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>Zebu</span>)</div><div class='output co'>#&gt; 
+<span class='kw'>Zebu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='kw'>microbov</span>, <span class='st'>"Zebu"</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='kw'>Zebu</span>)
+</div><div class='output co'>#&gt; 
 #&gt; // Number of individuals: 50
 #&gt; // Group sizes: 50
 #&gt; // Number of alleles per locus: 7 6 8 5 7 6 5 5 9 6 10 9 10 9 9 5 5 10 9 9 11 8 10 8 6 8 8 8 13 6
@@ -210,7 +214,8 @@ object</p></td>
 <span class='co'># heterozygosity as we go through each method.</span>
 
 <span class='co'># Permute Alleles: maintain allelic state; heterozygosity varies.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='fu'>shufflepop</span>(<span class='no'>Zebu</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='fl'>1</span>))</div><div class='output co'>#&gt; 
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='fu'>shufflepop</span>(<span class='kw'>Zebu</span>, method=<span class='fl'>1</span>))
+</div><div class='output co'>#&gt; 
 #&gt; // Number of individuals: 50
 #&gt; // Group sizes: 50
 #&gt; // Number of alleles per locus: 7 6 8 5 7 6 5 5 9 6 10 9 10 9 9 5 5 10 9 9 11 8 10 8 6 8 8 8 13 6
@@ -219,7 +224,8 @@ object</p></td>
 #&gt; // Observed heterozygosity: 0.66 0.66 0.76 0.76 0.69 0.58 0.64 0.7 0.75 0.8 0.76 0.82 0.73 0.7 0.7 0.78 0.66 0.8 0.8 0.66 0.9 0.41 0.79 0.84 0.72 0.62 0.6 0.64 0.84 0.42
 #&gt; // Expected heterozygosity: 0.71 0.61 0.74 0.73 0.75 0.64 0.58 0.6 0.66 0.76 0.81 0.83 0.75 0.78 0.82 0.76 0.59 0.78 0.83 0.63 0.82 0.42 0.8 0.8 0.73 0.61 0.74 0.65 0.83 0.44</div><div class='input'><span class='co'># \dontrun{</span>
 <span class='co'># Parametric Bootstrap: do not maintain allelic state or heterozygosity</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='fu'>shufflepop</span>(<span class='no'>Zebu</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='fl'>2</span>))</div><div class='output co'>#&gt; 
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='fu'>shufflepop</span>(<span class='kw'>Zebu</span>, method=<span class='fl'>2</span>))
+</div><div class='output co'>#&gt; 
 #&gt; // Number of individuals: 50
 #&gt; // Group sizes: 50
 #&gt; // Number of alleles per locus: 7 6 8 5 7 6 4 5 8 6 10 9 8 9 8 5 5 8 9 9 11 6 8 8 6 8 6 7 12 5
@@ -228,7 +234,8 @@ object</p></td>
 #&gt; // Observed heterozygosity: 0.68 0.64 0.62 0.74 0.76 0.62 0.58 0.6 0.58 0.68 0.82 0.92 0.74 0.78 0.84 0.76 0.6 0.74 0.74 0.62 0.84 0.44 0.7 0.9 0.66 0.68 0.84 0.66 0.78 0.4
 #&gt; // Expected heterozygosity: 0.76 0.64 0.67 0.74 0.76 0.59 0.61 0.57 0.7 0.74 0.81 0.84 0.74 0.75 0.81 0.77 0.55 0.78 0.79 0.64 0.8 0.38 0.77 0.79 0.69 0.62 0.73 0.66 0.83 0.45</div><div class='input'>
 <span class='co'># Non-Parametric Bootstrap: do not maintain allelic state or heterozygosity.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='fu'>shufflepop</span>(<span class='no'>Zebu</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='fl'>3</span>))</div><div class='output co'>#&gt; 
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='fu'>shufflepop</span>(<span class='kw'>Zebu</span>, method=<span class='fl'>3</span>))
+</div><div class='output co'>#&gt; 
 #&gt; // Number of individuals: 50
 #&gt; // Group sizes: 50
 #&gt; // Number of alleles per locus: 7 6 8 5 7 6 5 5 9 6 10 9 10 9 9 5 5 10 9 9 11 8 10 8 6 8 8 8 13 6
@@ -237,14 +244,15 @@ object</p></td>
 #&gt; // Observed heterozygosity: 0.9 0.9 0.84 0.78 0.76 0.76 0.84 0.84 0.86 0.92 0.92 0.9 0.96 0.96 0.82 0.72 0.86 0.86 0.92 0.88 0.9 0.86 0.84 0.92 0.82 0.84 0.84 0.84 0.86 0.84
 #&gt; // Expected heterozygosity: 0.86 0.83 0.86 0.8 0.85 0.82 0.79 0.79 0.88 0.82 0.89 0.88 0.89 0.88 0.88 0.79 0.8 0.89 0.88 0.88 0.9 0.87 0.89 0.87 0.82 0.87 0.86 0.87 0.9 0.82</div><div class='input'>
 <span class='co'># Multilocus Style: maintain allelic state and heterozygosity.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='fu'>shufflepop</span>(<span class='no'>Zebu</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='fl'>4</span>))</div><div class='output co'>#&gt; 
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='fu'>shufflepop</span>(<span class='kw'>Zebu</span>, method=<span class='fl'>4</span>))
+</div><div class='output co'>#&gt; 
 #&gt; // Number of individuals: 50
 #&gt; // Group sizes: 50
 #&gt; // Number of alleles per locus: 7 6 8 5 7 6 5 5 9 6 10 9 10 9 9 5 5 10 9 9 11 8 10 8 6 8 8 8 13 6
 #&gt; // Number of alleles per group: 235
 #&gt; // Percentage of missing data: 0.87 %
 #&gt; // Observed heterozygosity: 0.54 0.58 0.7 0.67 0.48 0.6 0.46 0.5 0.71 0.8 0.74 0.86 0.78 0.72 0.9 0.82 0.62 0.74 0.82 0.64 0.8 0.41 0.6 0.76 0.58 0.52 0.76 0.66 0.82 0.4
-#&gt; // Expected heterozygosity: 0.71 0.61 0.74 0.73 0.75 0.64 0.58 0.6 0.66 0.76 0.81 0.83 0.75 0.78 0.82 0.76 0.59 0.78 0.83 0.63 0.82 0.42 0.8 0.8 0.73 0.61 0.74 0.65 0.83 0.44</div><div class='input'># }
+#&gt; // Expected heterozygosity: 0.71 0.61 0.74 0.73 0.75 0.64 0.58 0.6 0.66 0.76 0.81 0.83 0.75 0.78 0.82 0.76 0.59 0.78 0.83 0.63 0.82 0.42 0.8 0.8 0.73 0.61 0.74 0.65 0.83 0.44</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -261,7 +269,7 @@ object</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

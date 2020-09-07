@@ -95,7 +95,7 @@
       <h1 data-toc-skip>Analysis of Multilocus Genotypes and Lineages in poppr 2.8.6.99.18</h1>
                         <h4 class="author">Zhian N. Kamvar and Niklaus J. Grünwald</h4>
             
-            <h4 class="date">2020-06-29</h4>
+            <h4 class="date">2020-09-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/grunwaldlab/poppr/blob/master/vignettes/mlg.Rmd"><code>vignettes/mlg.Rmd</code></a></small>
       <div class="hidden name"><code>mlg.Rmd</code></div>
@@ -144,10 +144,12 @@
 </tr>
 </tbody>
 </table>
-<p>The first is a simply naïve construction where all alleles must match to make a unique multilocus genotype. New in version 2.0 is the ability to use genetic distance to collapse multilocus genotypes or define custom multilocus lineages based on other information. You can use the function <code><a href="../reference/mll-method.html">mll()</a></code> to display and switch between different multilocus genotypes/lineages.</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"poppr"</span>)
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">monpop</span>)
-<span class="no">monpop</span></pre></body></html></div>
+<p>The first is a simply naïve construction where all alleles must match to make a unique multilocus genotype. New in version 2.0 is the ability to use genetic distance to collapse multilocus genotypes or define custom multilocus lineages based on other information. You can use the function <code><a href="../reference/mll.html">mll()</a></code> to display and switch between different multilocus genotypes/lineages.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st"><a href="https://grunwaldlab.github.io/poppr">"poppr"</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="kw">monpop</span>)
+<span class="kw">monpop</span>
+</pre></div>
 <pre><code>## 
 ## This is a genclone object
 ## -------------------------
@@ -162,7 +164,9 @@
 ##      1 stratum - Pop
 ##     12 populations defined - 
 ## 7_09_BB, 26_09_BB, 26_09_FR, ..., 45_10_FR, 26_11_BB, 26_11_FR</code></pre>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fu"><a href="../reference/mll-method.html">mll</a></span>(<span class="no">monpop</span>, <span class="st">"original"</span>), <span class="fl">20</span>) <span class="co"># Showing the definitions for the first 20 samples</span></pre></body></html></div>
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fu"><a href="../reference/mll.html">mll</a></span>(<span class="kw">monpop</span>, <span class="st">"original"</span>), <span class="fl">20</span>) <span class="co"># Showing the definitions for the first 20 samples</span>
+</pre></div>
 <pre><code>## Warning: 
 ##  The @mlg slot does not contain an MLG class object.
 ##  Returning the original mlgs. Please use:
@@ -172,9 +176,11 @@
 ##  to convert your object.</code></pre>
 <pre><code>##  [1] 260 179 169 168 167 221 152 133 144  78  78  79  81  44  41  40  40  38 119
 ## [20] 118</code></pre>
-<p>Notice how we got a warning. This is because the <code>monpop</code> data set was created before <code><a href="../reference/mll-method.html">mll()</a></code> was implemented. Luckily, this warning gives us information on how to fix it.</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="fu"><a href="../reference/mll-method.html">mll</a></span>(<span class="no">monpop</span>) <span class="kw">&lt;-</span> <span class="st">"original"</span>
-<span class="no">monpop</span></pre></body></html></div>
+<p>Notice how we got a warning. This is because the <code>monpop</code> data set was created before <code><a href="../reference/mll.html">mll()</a></code> was implemented. Luckily, this warning gives us information on how to fix it.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit">
+<span class="fu"><a href="../reference/mll.html">mll</a></span>(<span class="kw">monpop</span>) <span class="op">&lt;-</span> <span class="st">"original"</span>
+<span class="kw">monpop</span>
+</pre></div>
 <pre><code>## 
 ## This is a genclone object
 ## -------------------------
@@ -190,8 +196,10 @@
 ##     12 populations defined - 
 ## 7_09_BB, 26_09_BB, 26_09_FR, ..., 45_10_FR, 26_11_BB, 26_11_FR</code></pre>
 <p>We can see that the description says 264 <strong>original</strong> multilocus genotypes . This is how we know what the current MLG definition is for our object. Let’ see what happens when we change it.</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="../reference/mll-method.html">mll</a></span>(<span class="no">monpop</span>) <span class="kw">&lt;-</span> <span class="st">"custom"</span>
-<span class="no">monpop</span></pre></body></html></div>
+<div class="sourceCode" id="cb8"><pre class="downlit">
+<span class="fu"><a href="../reference/mll.html">mll</a></span>(<span class="kw">monpop</span>) <span class="op">&lt;-</span> <span class="st">"custom"</span>
+<span class="kw">monpop</span>
+</pre></div>
 <pre><code>## 
 ## This is a genclone object
 ## -------------------------
@@ -207,7 +215,9 @@
 ##     12 populations defined - 
 ## 7_09_BB, 26_09_BB, 26_09_FR, ..., 45_10_FR, 26_11_BB, 26_11_FR</code></pre>
 <p>Now it says 264 <strong>custom</strong> multilocus genotypes . Of course, if we look at the MLGs, we will see that they appear to be the same as our original definition:</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fu"><a href="../reference/mll-method.html">mll</a></span>(<span class="no">monpop</span>, <span class="st">"custom"</span>), <span class="fl">20</span>) <span class="co"># Showing the definitions for the first 20 samples</span></pre></body></html></div>
+<div class="sourceCode" id="cb10"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fu"><a href="../reference/mll.html">mll</a></span>(<span class="kw">monpop</span>, <span class="st">"custom"</span>), <span class="fl">20</span>) <span class="co"># Showing the definitions for the first 20 samples</span>
+</pre></div>
 <pre><code>##  [1] 260 179 169 168 167 221 152 133 144 78  78  79  81  44  41  40  40  38  119
 ## [20] 118
 ## 264 Levels: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 ... 264</code></pre>
@@ -216,8 +226,10 @@
 <h2 class="hasAnchor">
 <a href="#na%C3%AFve-original" class="anchor"></a>Naïve (“original”)</h2>
 <p>This is the default way <em>poppr</em> calculates multilocus genotypes. You see it immediately when you load a genclone object. Let’s use the example <code>monpop</code> from <span class="citation">(Everhart and Scherm 2015)</span>. First, we need to reset the data to our original MLGs.</p>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu"><a href="../reference/mll-method.html">mll</a></span>(<span class="no">monpop</span>) <span class="kw">&lt;-</span> <span class="st">"original"</span>
-<span class="no">monpop</span></pre></body></html></div>
+<div class="sourceCode" id="cb12"><pre class="downlit">
+<span class="fu"><a href="../reference/mll.html">mll</a></span>(<span class="kw">monpop</span>) <span class="op">&lt;-</span> <span class="st">"original"</span>
+<span class="kw">monpop</span>
+</pre></div>
 <pre><code>## 
 ## This is a genclone object
 ## -------------------------
@@ -235,16 +247,18 @@
 <p>You notice that there are 694 samples, yet only 264 multilocus genotypes in the data set over 13 loci. In this sub-section, I will demonstrate how these MLGs are constructed.</p>
 <p>The naïve definition simply takes strings of alleles and compares them for equality. This method is quick and easily interpretable, but means that things like genotyping error, hyper-variable loci, and missing data all contribute to a unique genotype that might not be truly unique <span class="citation">(Kamvar, Brooks, and Grünwald 2015)</span>.</p>
 <p>To give an example, let’s imagine that we have five samples with alleles typed at two loci.</p>
-<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">grid_example</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fl">4</span>,
+<div class="sourceCode" id="cb14"><pre class="downlit">
+<span class="kw">grid_example</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fl">4</span>,
                          <span class="fl">1</span>, <span class="fl">1</span>,
                          <span class="fl">5</span>, <span class="fl">1</span>,
                          <span class="fl">9</span>, <span class="fl">1</span>,
                          <span class="fl">9</span>, <span class="fl">4</span>),
-                       <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">2</span>,
-                       <span class="kw">byrow</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span>(<span class="no">grid_example</span>) <span class="kw">&lt;-</span> <span class="no">LETTERS</span>[<span class="fl">1</span>:<span class="fl">5</span>]
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="no">grid_example</span>) <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>)
-<span class="no">grid_example</span></pre></body></html></div>
+                       ncol = <span class="fl">2</span>,
+                       byrow = <span class="fl">TRUE</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span>(<span class="kw">grid_example</span>) <span class="op">&lt;-</span> <span class="kw">LETTERS</span>[<span class="fl">1</span><span class="op">:</span><span class="fl">5</span>]
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="kw">grid_example</span>) <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>)
+<span class="kw">grid_example</span>
+</pre></div>
 <pre><code>##   x y
 ## A 1 4
 ## B 1 1
@@ -252,26 +266,34 @@
 ## D 9 1
 ## E 9 4</code></pre>
 <p>We notice how they all have different multilocus genotypes. Indeed, if we analyze them, we see that there are five multilocus genotypes.</p>
-<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"poppr"</span>)
-<span class="no">x</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/coercion-methods.html">as.genclone</a></span>(<span class="fu">df2genind</span>(<span class="no">grid_example</span>, <span class="kw">ploidy</span> <span class="kw">=</span> <span class="fl">1</span>))
-<span class="fu">tab</span>(<span class="no">x</span>)  <span class="co"># Look at the multilocus genotype table</span></pre></body></html></div>
+<div class="sourceCode" id="cb16"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st"><a href="https://grunwaldlab.github.io/poppr">"poppr"</a></span>)
+<span class="kw">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bootgen2genind.html">as.genclone</a></span>(<span class="fu">df2genind</span>(<span class="kw">grid_example</span>, ploidy = <span class="fl">1</span>))
+<span class="fu">tab</span>(<span class="kw">x</span>)  <span class="co"># Look at the multilocus genotype table</span>
+</pre></div>
 <pre><code>##   x.1 x.5 x.9 y.4 y.1
 ## A   1   0   0   1   0
 ## B   1   0   0   0   1
 ## C   0   1   0   0   1
 ## D   0   0   1   0   1
 ## E   0   0   1   1   0</code></pre>
-<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="fu"><a href="../reference/mll-method.html">nmll</a></span>(<span class="no">x</span>) <span class="co"># count the number of multilocus genotypes</span></pre></body></html></div>
+<div class="sourceCode" id="cb18"><pre class="downlit">
+<span class="fu"><a href="../reference/mll.html">nmll</a></span>(<span class="kw">x</span>) <span class="co"># count the number of multilocus genotypes</span>
+</pre></div>
 <pre><code>## [1] 5</code></pre>
-<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="fu"><a href="../reference/mll-method.html">mll</a></span>(<span class="no">x</span>)  <span class="co"># show the multilocus genotype definitions</span></pre></body></html></div>
+<div class="sourceCode" id="cb20"><pre class="downlit">
+<span class="fu"><a href="../reference/mll.html">mll</a></span>(<span class="kw">x</span>)  <span class="co"># show the multilocus genotype definitions</span>
+</pre></div>
 <pre><code>## [1] 5 4 3 1 2</code></pre>
-<p>What we did above was to analyze the <strong>tab</strong> slot of the object showing the counts of alleles per sample across the two loci. We can clearly see by eye that no two samples are alike. The <code><a href="../reference/mll-method.html">nmll()</a></code> function counts the <strong>n</strong>umber of <strong>m</strong>ulti<strong>l</strong>ocus <strong>l</strong>ineages in the sample. the <code><a href="../reference/mll-method.html">mll()</a></code> function displays the assignment of the multilocus lineages in the sample.</p>
+<p>What we did above was to analyze the <strong>tab</strong> slot of the object showing the counts of alleles per sample across the two loci. We can clearly see by eye that no two samples are alike. The <code><a href="../reference/mll.html">nmll()</a></code> function counts the <strong>n</strong>umber of <strong>m</strong>ulti<strong>l</strong>ocus <strong>l</strong>ineages in the sample. the <code><a href="../reference/mll.html">mll()</a></code> function displays the assignment of the multilocus lineages in the sample.</p>
 <blockquote>
-<p>Note: we used <code><a href="../reference/mll-method.html">mll()</a></code> to show us our multilocus lineages. Later on, we will use this same function to switch between different definitions. See ?mll for details.</p>
+<p>Note: we used <code><a href="../reference/mll.html">mll()</a></code> to show us our multilocus lineages. Later on, we will use this same function to switch between different definitions. See ?mll for details.</p>
 </blockquote>
 <p>Now let’s say we included another sample with partial missing data. Let’s say it was typed as allele “5” at the <strong>x</strong> locus, but missing the allele at the <strong>y</strong> locus.</p>
-<div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="no">x</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/coercion-methods.html">as.genclone</a></span>(<span class="fu">df2genind</span>(<span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span>(<span class="no">grid_example</span>, <span class="kw">new</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">5</span>, <span class="fl">NA</span>)), <span class="kw">ploidy</span> <span class="kw">=</span> <span class="fl">1</span>))
-<span class="fu">tab</span>(<span class="no">x</span>)  <span class="co"># Note the missing data at locus 2.</span></pre></body></html></div>
+<div class="sourceCode" id="cb22"><pre class="downlit">
+<span class="kw">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bootgen2genind.html">as.genclone</a></span>(<span class="fu">df2genind</span>(<span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span>(<span class="kw">grid_example</span>, new = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">5</span>, <span class="fl">NA</span>)), ploidy = <span class="fl">1</span>))
+<span class="fu">tab</span>(<span class="kw">x</span>)  <span class="co"># Note the missing data at locus 2.</span>
+</pre></div>
 <pre><code>##     x.1 x.5 x.9 y.4 y.1
 ## A     1   0   0   1   0
 ## B     1   0   0   0   1
@@ -279,18 +301,24 @@
 ## D     0   0   1   0   1
 ## E     0   0   1   1   0
 ## new   0   1   0  NA  NA</code></pre>
-<div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="fu"><a href="../reference/mll-method.html">nmll</a></span>(<span class="no">x</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb24"><pre class="downlit">
+<span class="fu"><a href="../reference/mll.html">nmll</a></span>(<span class="kw">x</span>)
+</pre></div>
 <pre><code>## [1] 6</code></pre>
-<div class="sourceCode" id="cb26"><html><body><pre class="r"><span class="fu"><a href="../reference/mll-method.html">mll</a></span>(<span class="no">x</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb26"><pre class="downlit">
+<span class="fu"><a href="../reference/mll.html">mll</a></span>(<span class="kw">x</span>)
+</pre></div>
 <pre><code>## [1] 6 5 3 1 2 4</code></pre>
 <p>Now we see that we have 6 multilocus genotypes even though one of them contains missing data.</p>
 <p>Let’s also imagine that we included yet another sample that had a low-frequency allele at locus <strong>y</strong>, “2”, but had the allele “5” at locus <strong>x</strong>.</p>
-<div class="sourceCode" id="cb28"><html><body><pre class="r"><span class="no">grid_new</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span>(<span class="no">grid_example</span>,
-                  <span class="kw">new</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">5</span>, <span class="fl">NA</span>),
-                  <span class="kw">mut</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">5</span>, <span class="fl">2</span>)
+<div class="sourceCode" id="cb28"><pre class="downlit">
+<span class="kw">grid_new</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span>(<span class="kw">grid_example</span>,
+                  new = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">5</span>, <span class="fl">NA</span>),
+                  mut = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">5</span>, <span class="fl">2</span>)
                   )
-<span class="no">x</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/coercion-methods.html">as.genclone</a></span>(<span class="fu">df2genind</span>(<span class="no">grid_new</span>, <span class="kw">ploidy</span> <span class="kw">=</span> <span class="fl">1</span>))
-<span class="fu">tab</span>(<span class="no">x</span>)</pre></body></html></div>
+<span class="kw">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bootgen2genind.html">as.genclone</a></span>(<span class="fu">df2genind</span>(<span class="kw">grid_new</span>, ploidy = <span class="fl">1</span>))
+<span class="fu">tab</span>(<span class="kw">x</span>)
+</pre></div>
 <pre><code>##     x.1 x.5 x.9 y.4 y.1 y.2
 ## A     1   0   0   1   0   0
 ## B     1   0   0   0   1   0
@@ -299,26 +327,36 @@
 ## E     0   0   1   1   0   0
 ## new   0   1   0  NA  NA  NA
 ## mut   0   1   0   0   0   1</code></pre>
-<div class="sourceCode" id="cb30"><html><body><pre class="r"><span class="fu"><a href="../reference/mll-method.html">nmll</a></span>(<span class="no">x</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb30"><pre class="downlit">
+<span class="fu"><a href="../reference/mll.html">nmll</a></span>(<span class="kw">x</span>)
+</pre></div>
 <pre><code>## [1] 7</code></pre>
-<div class="sourceCode" id="cb32"><html><body><pre class="r"><span class="fu"><a href="../reference/mll-method.html">mll</a></span>(<span class="no">x</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb32"><pre class="downlit">
+<span class="fu"><a href="../reference/mll.html">mll</a></span>(<span class="kw">x</span>)
+</pre></div>
 <pre><code>## [1] 7 6 4 1 2 5 3</code></pre>
 <p>Again, we get completely different genotypes, but notice how the genotypes we added are closer to the genotype that shares the 5 allele. The reason this happens is because the naïve algorithm reports the rank of the concatenated alleles like so:</p>
-<div class="sourceCode" id="cb34"><html><body><pre class="r">(<span class="no">xt</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(<span class="fu">tab</span>(<span class="no">x</span>), <span class="fl">1</span>, <span class="no">paste</span>, <span class="kw">collapse</span> <span class="kw">=</span> <span class="st">""</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb34"><pre class="downlit">
+(<span class="kw">xt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(<span class="fu">tab</span>(<span class="kw">x</span>), <span class="fl">1</span>, <span class="kw">paste</span>, collapse = <span class="st">""</span>))
+</pre></div>
 <pre><code>##           A           B           C           D           E         new 
 ##    "100100"    "100010"    "010010"    "001010"    "001100" "010NANANA" 
 ##         mut 
 ##    "010001"</code></pre>
-<div class="sourceCode" id="cb36"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/rank.html">rank</a></span>(<span class="no">xt</span>, <span class="kw">ties.method</span> <span class="kw">=</span> <span class="st">"first"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb36"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/rank.html">rank</a></span>(<span class="kw">xt</span>, ties.method = <span class="st">"first"</span>)
+</pre></div>
 <pre><code>##   A   B   C   D   E new mut 
 ##   7   6   4   1   2   5   3</code></pre>
 <p>Even though we have reason to believe that the samples “new” and “mut” might actually have the genotype x.5 and y.1 (the MLG of sample C), the algorithm sees them as different. If we calculate the pairwise euclidean distances between samples, we see that “new”, “mut” and, “C” are very similar to each other:</p>
-<div class="sourceCode" id="cb38"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"phangorn"</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"ape"</span>)
-<span class="no">raw_dist</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">x</span>){
-  <span class="fu"><a href="https://rdrr.io/r/stats/dist.html">dist</a></span>(<span class="fu">genind2df</span>(<span class="no">x</span>, <span class="kw">usepop</span> <span class="kw">=</span> <span class="fl">FALSE</span>))
+<div class="sourceCode" id="cb38"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st"><a href="https://github.com/KlausVigo/phangorn">"phangorn"</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st"><a href="http://ape-package.ird.fr">"ape"</a></span>)
+<span class="kw">raw_dist</span> <span class="op">&lt;-</span> <span class="fu">function</span>(<span class="kw">x</span>){
+  <span class="fu"><a href="https://rdrr.io/r/stats/dist.html">dist</a></span>(<span class="fu">genind2df</span>(<span class="kw">x</span>, usepop = <span class="fl">FALSE</span>))
 }
-(<span class="no">xdis</span> <span class="kw">&lt;-</span> <span class="fu">raw_dist</span>(<span class="no">x</span>))</pre></body></html></div>
+(<span class="kw">xdis</span> <span class="op">&lt;-</span> <span class="fu">raw_dist</span>(<span class="kw">x</span>))
+</pre></div>
 <pre><code>##            A        B        C        D        E      new
 ## B   3.000000                                             
 ## C   5.000000 4.000000                                    
@@ -326,7 +364,9 @@
 ## E   8.000000 8.544004 5.000000 3.000000                  
 ## new 5.656854 5.656854 0.000000 5.656854 5.656854         
 ## mut 4.472136 4.123106 1.000000 4.123106 4.472136 0.000000</code></pre>
-<div class="sourceCode" id="cb40"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/ape/man/plot.phylo.html">plot.phylo</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/phangorn/man/upgma.html">upgma</a></span>(<span class="no">xdis</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb40"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/pkg/ape/man/plot.phylo.html">plot.phylo</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/phangorn/man/upgma.html">upgma</a></span>(<span class="kw">xdis</span>))
+</pre></div>
 <p><img src="mlg_files/figure-html/unnamed-chunk-12-1.png" width="480" style="display: block; margin: auto;"></p>
 <p>Therefore, we might want to consider “new”, “mut” and, “C” to be the same Multilocus Lineage (MLL). In the next section, you will see how to collapse multilocus genotypes by genetic distance.</p>
 </div>
@@ -338,7 +378,9 @@
 <h3 class="hasAnchor">
 <a href="#main-usage" class="anchor"></a>Main usage</h3>
 <p>To use <code><a href="../reference/mlg.filter.html">mlg.filter()</a></code>, you need to define a thresold. This threshold defines the minimum distance to consider two genotypes unique, so anything below that will be clustered into the same MLG. In practice, it’s used like this (using the data and the euclidean distance described above):</p>
-<div class="sourceCode" id="cb41"><html><body><pre class="r"><span class="no">x</span> <span class="co"># We have 7 MLGs before filtering</span></pre></body></html></div>
+<div class="sourceCode" id="cb41"><pre class="downlit">
+<span class="kw">x</span> <span class="co"># We have 7 MLGs before filtering</span>
+</pre></div>
 <pre><code>## 
 ## This is a genclone object
 ## -------------------------
@@ -352,8 +394,10 @@
 ## 
 ##    0 strata. 
 ##    0 populations defined.</code></pre>
-<div class="sourceCode" id="cb43"><html><body><pre class="r"><span class="fu"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(<span class="no">x</span>, <span class="kw">distance</span> <span class="kw">=</span> <span class="no">xdis</span>) <span class="kw">&lt;-</span> <span class="fl">1</span> + <span class="no">.Machine</span>$<span class="no">double.eps</span>^<span class="fl">0.5</span>
-<span class="no">x</span> <span class="co"># Now we have 5 MLGs</span></pre></body></html></div>
+<div class="sourceCode" id="cb43"><pre class="downlit">
+<span class="fu"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(<span class="kw">x</span>, distance = <span class="kw">xdis</span>) <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">+</span> <span class="kw">.Machine</span><span class="op">$</span><span class="kw">double.eps</span><span class="op">^</span><span class="fl">0.5</span>
+<span class="kw">x</span> <span class="co"># Now we have 5 MLGs</span>
+</pre></div>
 <pre><code>## 
 ## This is a genclone object
 ## -------------------------
@@ -368,46 +412,62 @@
 ## 
 ##    0 strata. 
 ##    0 populations defined.</code></pre>
-<div class="sourceCode" id="cb45"><html><body><pre class="r"><span class="fu"><a href="../reference/mll-method.html">mll</a></span>(<span class="no">x</span>) <span class="kw">&lt;-</span> <span class="st">"original"</span> <span class="co"># We'll reset to the naive definition</span></pre></body></html></div>
+<div class="sourceCode" id="cb45"><pre class="downlit">
+<span class="fu"><a href="../reference/mll.html">mll</a></span>(<span class="kw">x</span>) <span class="op">&lt;-</span> <span class="st">"original"</span> <span class="co"># We'll reset to the naive definition</span>
+</pre></div>
 <p>Here, we told <code><a href="../reference/mlg.filter.html">mlg.filter()</a></code> to set the threshold to 1 plus a very tiny number (this will be explained in the next section) based off of the distance matrix <strong>xdis</strong>. This is a way to manipulate the object in place. In this section, there will be examples of retrieving the MLGs and other statistics from the function as well as how to use different distance functions and reset the MLGs.</p>
 </div>
 <div id="thresholds" class="section level3">
 <h3 class="hasAnchor">
 <a href="#thresholds" class="anchor"></a>Thresholds</h3>
 <p>As we saw above, in order to collapse all three new samples into the original 5 MLGs, we had to set a threshold of <em>just above</em> 1. To show you why, we will use the function to return to us the MLGs it created and the thresholds that were passed to cluster MLLs (by using the <code>stats</code> argument).</p>
-<div class="sourceCode" id="cb46"><html><body><pre class="r"><span class="fu"><a href="../reference/mll-method.html">mll</a></span>(<span class="no">x</span>, <span class="st">"original"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb46"><pre class="downlit">
+<span class="fu"><a href="../reference/mll.html">mll</a></span>(<span class="kw">x</span>, <span class="st">"original"</span>)
+</pre></div>
 <pre><code>## [1] 7 6 4 1 2 5 3</code></pre>
-<div class="sourceCode" id="cb48"><html><body><pre class="r"><span class="fu"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(<span class="no">x</span>, <span class="kw">distance</span> <span class="kw">=</span> <span class="no">xdis</span>, <span class="kw">threshold</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">stats</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mlg"</span>, <span class="st">"thresholds"</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb48"><pre class="downlit">
+<span class="fu"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(<span class="kw">x</span>, distance = <span class="kw">xdis</span>, threshold = <span class="fl">1</span>, stats = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mlg"</span>, <span class="st">"thresholds"</span>))
+</pre></div>
 <pre><code>## $MLGS
 ## [1] 7 6 4 1 2 3 3
 ## 
 ## $THRESHOLDS
 ## [1] 0</code></pre>
 <p>In our output, we can see that MLG 5 has collapsed into MLG 3. This occured as soon as our threshold passed 0. Take a look at what happens when we add a very small number to 1.</p>
-<div class="sourceCode" id="cb50"><html><body><pre class="r">(<span class="no">e</span> <span class="kw">&lt;-</span> <span class="no">.Machine</span>$<span class="no">double.eps</span>^<span class="fl">0.5</span>) <span class="co"># A very tiny number</span></pre></body></html></div>
+<div class="sourceCode" id="cb50"><pre class="downlit">
+(<span class="kw">e</span> <span class="op">&lt;-</span> <span class="kw">.Machine</span><span class="op">$</span><span class="kw">double.eps</span><span class="op">^</span><span class="fl">0.5</span>) <span class="co"># A very tiny number</span>
+</pre></div>
 <pre><code>## [1] 1.490116e-08</code></pre>
-<div class="sourceCode" id="cb52"><html><body><pre class="r"><span class="fu"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(<span class="no">x</span>, <span class="kw">distance</span> <span class="kw">=</span> <span class="no">xdis</span>, <span class="kw">threshold</span> <span class="kw">=</span> <span class="fl">1</span> + <span class="no">e</span>, <span class="kw">stats</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mlg"</span>, <span class="st">"thresholds"</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb52"><pre class="downlit">
+<span class="fu"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(<span class="kw">x</span>, distance = <span class="kw">xdis</span>, threshold = <span class="fl">1</span> <span class="op">+</span> <span class="kw">e</span>, stats = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mlg"</span>, <span class="st">"thresholds"</span>))
+</pre></div>
 <pre><code>## $MLGS
 ## [1] 7 6 4 1 2 4 4
 ## 
 ## $THRESHOLDS
 ## [1] 0 1</code></pre>
 <p>Now that we have set the threshold to <em>just above</em> 1, we have 5 unique MLLs since MLG 3 collapsed into MLG 4. Because of the way clustering happens, it’s important to point out what happens when you attempt to use a threshold of 0.</p>
-<div class="sourceCode" id="cb54"><html><body><pre class="r"><span class="fu"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(<span class="no">x</span>, <span class="kw">distance</span> <span class="kw">=</span> <span class="no">xdis</span>, <span class="kw">threshold</span> <span class="kw">=</span> <span class="fl">0</span>, <span class="kw">stats</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mlg"</span>, <span class="st">"thresholds"</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb54"><pre class="downlit">
+<span class="fu"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(<span class="kw">x</span>, distance = <span class="kw">xdis</span>, threshold = <span class="fl">0</span>, stats = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mlg"</span>, <span class="st">"thresholds"</span>))
+</pre></div>
 <pre><code>## $MLGS
 ## [1] 7 6 4 1 2 5 3
 ## 
 ## $THRESHOLDS
 ## numeric(0)</code></pre>
-<div class="sourceCode" id="cb56"><html><body><pre class="r"><span class="fu"><a href="../reference/mll-method.html">mll</a></span>(<span class="no">x</span>, <span class="st">"original"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb56"><pre class="downlit">
+<span class="fu"><a href="../reference/mll.html">mll</a></span>(<span class="kw">x</span>, <span class="st">"original"</span>)
+</pre></div>
 <pre><code>## [1] 7 6 4 1 2 5 3</code></pre>
 <p>Notice that all the MLGs are the same as the originally defined MLGs. Using a threshold of zero allows two MLGs separated by zero genetic distance to remain mutually unique.</p>
 </div>
 <div id="setting-the-genotypes" class="section level3">
 <h3 class="hasAnchor">
 <a href="#setting-the-genotypes" class="anchor"></a>Setting the genotypes</h3>
-<p>As demonstrated at the beginning of this section, if we wanted to reassign our sample genotypes to the collapsed version, all we would have to do is use the <code><a href="../reference/mlg.filter.html">mlg.filter()</a></code> commands above, but use the <code>&lt;-</code> operator to specify the threshold. Note that I will be using <code><a href="../reference/mlg.html">mlg.table()</a></code> to show the distribution of the multilocus genotypes before and after filtering.</p>
-<div class="sourceCode" id="cb58"><html><body><pre class="r"><span class="no">x</span></pre></body></html></div>
+<p>As demonstrated at the beginning of this section, if we wanted to reassign our sample genotypes to the collapsed version, all we would have to do is use the <code><a href="../reference/mlg.filter.html">mlg.filter()</a></code> commands above, but use the <code><a href="https://rdrr.io/r/base/assignOps.html">&lt;-</a></code> operator to specify the threshold. Note that I will be using <code><a href="../reference/mlg.html">mlg.table()</a></code> to show the distribution of the multilocus genotypes before and after filtering.</p>
+<div class="sourceCode" id="cb58"><pre class="downlit">
+<span class="kw">x</span>
+</pre></div>
 <pre><code>## 
 ## This is a genclone object
 ## -------------------------
@@ -421,12 +481,16 @@
 ## 
 ##    0 strata. 
 ##    0 populations defined.</code></pre>
-<div class="sourceCode" id="cb60"><html><body><pre class="r"><span class="fu"><a href="../reference/mlg.html">mlg.table</a></span>(<span class="no">x</span>) <span class="co"># Before: 7 MLGs</span></pre></body></html></div>
+<div class="sourceCode" id="cb60"><pre class="downlit">
+<span class="fu"><a href="../reference/mlg.html">mlg.table</a></span>(<span class="kw">x</span>) <span class="co"># Before: 7 MLGs</span>
+</pre></div>
 <p><img src="mlg_files/figure-html/unnamed-chunk-17-1.png" width="700" style="display: block; margin: auto;"></p>
 <pre><code>##       MLG.1 MLG.2 MLG.3 MLG.4 MLG.5 MLG.6 MLG.7
 ## Total     1     1     1     1     1     1     1</code></pre>
-<div class="sourceCode" id="cb62"><html><body><pre class="r"><span class="fu"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(<span class="no">x</span>, <span class="kw">distance</span> <span class="kw">=</span> <span class="no">xdis</span>) <span class="kw">&lt;-</span> <span class="fl">1</span> + <span class="no">e</span>
-<span class="no">x</span></pre></body></html></div>
+<div class="sourceCode" id="cb62"><pre class="downlit">
+<span class="fu"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(<span class="kw">x</span>, distance = <span class="kw">xdis</span>) <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">+</span> <span class="kw">e</span>
+<span class="kw">x</span>
+</pre></div>
 <pre><code>## 
 ## This is a genclone object
 ## -------------------------
@@ -441,7 +505,9 @@
 ## 
 ##    0 strata. 
 ##    0 populations defined.</code></pre>
-<div class="sourceCode" id="cb64"><html><body><pre class="r"><span class="fu"><a href="../reference/mlg.html">mlg.table</a></span>(<span class="no">x</span>) <span class="co"># After: 5 MLGs</span></pre></body></html></div>
+<div class="sourceCode" id="cb64"><pre class="downlit">
+<span class="fu"><a href="../reference/mlg.html">mlg.table</a></span>(<span class="kw">x</span>) <span class="co"># After: 5 MLGs</span>
+</pre></div>
 <p><img src="mlg_files/figure-html/unnamed-chunk-17-2.png" width="700" style="display: block; margin: auto;"></p>
 <pre><code>##       MLG.1 MLG.2 MLG.4 MLG.6 MLG.7
 ## Total     1     1     3     1     1</code></pre>
@@ -468,8 +534,10 @@
 </table>
 <p>Genclone and snpclone objects will always remember what parameters were used for filtering multilocus genotypes, but the only catch is that, if you use your own supplied distance (matrix or function), you must be very careful not to delete it or change the object name.</p>
 <p>This means that you don’t always have to specify the distance when assigning a threshold:</p>
-<div class="sourceCode" id="cb66"><html><body><pre class="r"><span class="fu"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(<span class="no">x</span>) <span class="kw">&lt;-</span> <span class="fl">4.51</span>
-<span class="no">x</span></pre></body></html></div>
+<div class="sourceCode" id="cb66"><pre class="downlit">
+<span class="fu"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(<span class="kw">x</span>) <span class="op">&lt;-</span> <span class="fl">4.51</span>
+<span class="kw">x</span>
+</pre></div>
 <pre><code>## 
 ## This is a genclone object
 ## -------------------------
@@ -484,20 +552,26 @@
 ## 
 ##    0 strata. 
 ##    0 populations defined.</code></pre>
-<div class="sourceCode" id="cb68"><html><body><pre class="r"><span class="fu"><a href="../reference/mlg.html">mlg.table</a></span>(<span class="no">x</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb68"><pre class="downlit">
+<span class="fu"><a href="../reference/mlg.html">mlg.table</a></span>(<span class="kw">x</span>)
+</pre></div>
 <p><img src="mlg_files/figure-html/unnamed-chunk-18-1.png" width="700" style="display: block; margin: auto;"></p>
 <pre><code>##       MLG.1 MLG.4 MLG.6
 ## Total     2     3     2</code></pre>
 <blockquote>
 <p>DANGER! DANGER! While this is a convenient function, if you use a matrix or function that was created by you, you <strong>must not delete it or change its name</strong>. Only the name of the matrix/function is stored, so if you delete the matrix/function used to inform your filtering, you will get an error:</p>
 </blockquote>
-<div class="sourceCode" id="cb70"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span>(<span class="no">xdis</span>) <span class="co"># NOOOOOO!</span>
-<span class="fu"><a href="https://rdrr.io/r/base/try.html">try</a></span>(<span class="fu"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(<span class="no">x</span>) <span class="kw">&lt;-</span> <span class="fl">1</span> + <span class="no">e</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb70"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span>(<span class="kw">xdis</span>) <span class="co"># NOOOOOO!</span>
+<span class="fu"><a href="https://rdrr.io/r/base/try.html">try</a></span>(<span class="fu"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(<span class="kw">x</span>) <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">+</span> <span class="kw">e</span>)
+</pre></div>
 <pre><code>## Error : cannot evaluate distance function, it might be missing.</code></pre>
 <pre><code>##  Error: cannot evaluate distance function, it might be missing.</code></pre>
 <p>Basically, your object thinks that there should be a matrix called <strong>xdis</strong>, but it can’t find it anywhere. But don’t worry, we can restore it if we have the function available. We will use the <code>raw_dist()</code> function that we defined earlier.</p>
-<div class="sourceCode" id="cb73"><html><body><pre class="r"><span class="fu"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(<span class="no">x</span>, <span class="kw">distance</span> <span class="kw">=</span> <span class="no">raw_dist</span>) <span class="kw">&lt;-</span> <span class="fl">1</span> + <span class="no">e</span>
-<span class="no">x</span></pre></body></html></div>
+<div class="sourceCode" id="cb73"><pre class="downlit">
+<span class="fu"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(<span class="kw">x</span>, distance = <span class="kw">raw_dist</span>) <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">+</span> <span class="kw">e</span>
+<span class="kw">x</span>
+</pre></div>
 <pre><code>## 
 ## This is a genclone object
 ## -------------------------
@@ -516,7 +590,9 @@
 <blockquote>
 <p>The arguments to your distance function will be stored in the object as well!</p>
 </blockquote>
-<div class="sourceCode" id="cb75"><html><body><pre class="r"><span class="fu"><a href="../reference/bruvo.dist.html">bruvo.dist</a></span>(<span class="no">x</span>, <span class="kw">replen</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fl">1</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb75"><pre class="downlit">
+<span class="fu"><a href="../reference/bruvo.dist.html">bruvo.dist</a></span>(<span class="kw">x</span>, replen = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fl">1</span>))
+</pre></div>
 <pre><code>##             A         B         C         D         E       new
 ## B   0.4375000                                                  
 ## C   0.9062500 0.4687500                                        
@@ -524,8 +600,10 @@
 ## E   0.4980469 0.9355469 0.9062500 0.4375000                    
 ## new 0.9375000 0.9375000 0.0000000 0.9375000 0.9375000          
 ## mut 0.8437500 0.7187500 0.2500000 0.7187500 0.8437500 0.0000000</code></pre>
-<div class="sourceCode" id="cb77"><html><body><pre class="r"><span class="fu"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(<span class="no">x</span>, <span class="kw">distance</span> <span class="kw">=</span> <span class="no">bruvo.dist</span>, <span class="kw">replen</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fl">1</span>)) <span class="kw">&lt;-</span> <span class="fl">0.44</span>
-<span class="no">x</span></pre></body></html></div>
+<div class="sourceCode" id="cb77"><pre class="downlit">
+<span class="fu"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(<span class="kw">x</span>, distance = <span class="kw">bruvo.dist</span>, replen = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fl">1</span>)) <span class="op">&lt;-</span> <span class="fl">0.44</span>
+<span class="kw">x</span>
+</pre></div>
 <pre><code>## 
 ## This is a genclone object
 ## -------------------------
@@ -540,13 +618,19 @@
 ## 
 ##    0 strata. 
 ##    0 populations defined.</code></pre>
-<p>Of course, our multilocus genotypes are not changed forever, they are just stored in a different place. We can access the original, naïve multilocus genotypes by using the <code><a href="../reference/mll-method.html">mll()</a></code> function:</p>
-<div class="sourceCode" id="cb79"><html><body><pre class="r"><span class="fu"><a href="../reference/mll-method.html">mll</a></span>(<span class="no">x</span>, <span class="st">"original"</span>)</pre></body></html></div>
+<p>Of course, our multilocus genotypes are not changed forever, they are just stored in a different place. We can access the original, naïve multilocus genotypes by using the <code><a href="../reference/mll.html">mll()</a></code> function:</p>
+<div class="sourceCode" id="cb79"><pre class="downlit">
+<span class="fu"><a href="../reference/mll.html">mll</a></span>(<span class="kw">x</span>, <span class="st">"original"</span>)
+</pre></div>
 <pre><code>## [1] 7 6 4 1 2 5 3</code></pre>
-<div class="sourceCode" id="cb81"><html><body><pre class="r"><span class="fu"><a href="../reference/mll-method.html">mll</a></span>(<span class="no">x</span>) <span class="co"># contracted</span></pre></body></html></div>
+<div class="sourceCode" id="cb81"><pre class="downlit">
+<span class="fu"><a href="../reference/mll.html">mll</a></span>(<span class="kw">x</span>) <span class="co"># contracted</span>
+</pre></div>
 <pre><code>## [1] 6 6 4 1 1 4 4</code></pre>
-<div class="sourceCode" id="cb83"><html><body><pre class="r"><span class="fu"><a href="../reference/mll-method.html">mll</a></span>(<span class="no">x</span>) <span class="kw">&lt;-</span> <span class="st">"original"</span>
-<span class="fu"><a href="../reference/mll-method.html">mll</a></span>(<span class="no">x</span>) <span class="co"># original</span></pre></body></html></div>
+<div class="sourceCode" id="cb83"><pre class="downlit">
+<span class="fu"><a href="../reference/mll.html">mll</a></span>(<span class="kw">x</span>) <span class="op">&lt;-</span> <span class="st">"original"</span>
+<span class="fu"><a href="../reference/mll.html">mll</a></span>(<span class="kw">x</span>) <span class="co"># original</span>
+</pre></div>
 <pre><code>## [1] 7 6 4 1 2 5 3</code></pre>
 </div>
 <div id="tie-breakers-algorithms" class="section level3">
@@ -560,8 +644,10 @@
 </ul>
 <p>You can specify which algorithm you want to use in clustering with the <code>algorithm</code> argument. Each of these algorithms have different behaviors when it comes to collapsing multilocus genotypes. In short, farthest neighbor is the most conservative, nearest neighbor can have a chaining effect, and average neighbor is somewhere in between. Your choice of algorithm really depends on the biology of your organism.</p>
 <p>To help visualize this, there is the function <code><a href="../reference/filter_stats.html">filter_stats()</a></code>, which will plot the output of the filtering algorithm. For simplicity, we will use the <code>Pinf</code> data set representing <em>Phytophthora infestans</em> samples from Mexico and South America <span class="citation">(Goss et al. 2009)</span>.</p>
-<div class="sourceCode" id="cb85"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">Pinf</span>)
-<span class="no">Pinf</span></pre></body></html></div>
+<div class="sourceCode" id="cb85"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="kw">Pinf</span>)
+<span class="kw">Pinf</span>
+</pre></div>
 <pre><code>## 
 ## This is a genclone object
 ## -------------------------
@@ -575,8 +661,10 @@
 ## 
 ##     2 strata - Continent, Country
 ##     2 populations defined - South America, North America</code></pre>
-<div class="sourceCode" id="cb87"><html><body><pre class="r"><span class="no">pinfreps</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/fix_replen.html">fix_replen</a></span>(<span class="no">Pinf</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">6</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">2</span>))
-<span class="no">pinf_filtered</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/filter_stats.html">filter_stats</a></span>(<span class="no">Pinf</span>, <span class="kw">distance</span> <span class="kw">=</span> <span class="no">bruvo.dist</span>, <span class="kw">replen</span> <span class="kw">=</span> <span class="no">pinfreps</span>, <span class="kw">plot</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb87"><pre class="downlit">
+<span class="kw">pinfreps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fix_replen.html">fix_replen</a></span>(<span class="kw">Pinf</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">6</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">2</span>))
+<span class="kw">pinf_filtered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/filter_stats.html">filter_stats</a></span>(<span class="kw">Pinf</span>, distance = <span class="kw">bruvo.dist</span>, replen = <span class="kw">pinfreps</span>, plot = <span class="fl">TRUE</span>)
+</pre></div>
 <p><img src="mlg_files/figure-html/plot_replen-1.png" width="700" style="display: block; margin: auto;"></p>
 <p>We can see that the different algorithms behave similarly for small thresholds, but begin to differ over larger thresholds.</p>
 <p>This function is useful for finding all thresholds at which MLLs are collapsed, which can help with choosing a threshold that collapses putative clones in our sample into lineages.</p>
@@ -587,11 +675,17 @@
 <p>After you have chosen a genetic distance and a filtering algorithm, you must then decide on the threshold to represent the <strong>minimum genetic distance at which two individuals would be considered from different clonal lineages</strong>.</p>
 <p>One method described in the literature of choosing a threshold is to look for an initial, small peak in the histogram of pairwise genetic distances and set the threshold to be between that peak and the larger peak `<span class="citation">(Arnaud-Haond et al. 2007, @bailleul2016rclone)</span>. This initial peak likely represents clones differentiated by a small set of random mutations. You can see this in the figure above at a threshold of ~0.11 for the “farthest neighbor” algorithm.</p>
 <p>However, if this peak is not obvious, then another method is to look for the largest gap between all putative thresholds. For this, you can use the <code><a href="../reference/cutoff_predictor.html">cutoff_predictor()</a></code> function with the output of <code><a href="../reference/filter_stats.html">filter_stats()</a></code>. It should be noted that this method is not a perfect solution. If we take the results from above, we can find the threshold for each algorithm:</p>
-<div class="sourceCode" id="cb88"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">farthest_thresh</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cutoff_predictor.html">cutoff_predictor</a></span>(<span class="no">pinf_filtered</span>$<span class="no">farthest</span>$<span class="no">THRESHOLDS</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb88"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">farthest_thresh</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cutoff_predictor.html">cutoff_predictor</a></span>(<span class="kw">pinf_filtered</span><span class="op">$</span><span class="kw">farthest</span><span class="op">$</span><span class="kw">THRESHOLDS</span>))
+</pre></div>
 <pre><code>## [1] 0.1132221</code></pre>
-<div class="sourceCode" id="cb90"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">average_thresh</span>  <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cutoff_predictor.html">cutoff_predictor</a></span>(<span class="no">pinf_filtered</span>$<span class="no">average</span>$<span class="no">THRESHOLDS</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb90"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">average_thresh</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cutoff_predictor.html">cutoff_predictor</a></span>(<span class="kw">pinf_filtered</span><span class="op">$</span><span class="kw">average</span><span class="op">$</span><span class="kw">THRESHOLDS</span>))
+</pre></div>
 <pre><code>## [1] 0.1084407</code></pre>
-<div class="sourceCode" id="cb92"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">nearest_thresh</span>  <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cutoff_predictor.html">cutoff_predictor</a></span>(<span class="no">pinf_filtered</span>$<span class="no">nearest</span>$<span class="no">THRESHOLDS</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb92"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">nearest_thresh</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cutoff_predictor.html">cutoff_predictor</a></span>(<span class="kw">pinf_filtered</span><span class="op">$</span><span class="kw">nearest</span><span class="op">$</span><span class="kw">THRESHOLDS</span>))
+</pre></div>
 <pre><code>## [1] 0.1092773</code></pre>
 <p>Now we can define multilocus lineages for <em>P. infestans</em> with the following criteria:</p>
 <table class="table"><tbody>
@@ -611,8 +705,10 @@
 <td align="left">Farthest neighbor</td>
 </tr>
 </tbody></table>
-<div class="sourceCode" id="cb94"><html><body><pre class="r"><span class="fu"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(<span class="no">Pinf</span>, <span class="kw">distance</span> <span class="kw">=</span> <span class="no">bruvo.dist</span>, <span class="kw">replen</span> <span class="kw">=</span> <span class="no">pinfreps</span>, <span class="kw">algorithm</span> <span class="kw">=</span> <span class="st">"f"</span>) <span class="kw">&lt;-</span> <span class="no">farthest_thresh</span>
-<span class="no">Pinf</span></pre></body></html></div>
+<div class="sourceCode" id="cb94"><pre class="downlit">
+<span class="fu"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(<span class="kw">Pinf</span>, distance = <span class="kw">bruvo.dist</span>, replen = <span class="kw">pinfreps</span>, algorithm = <span class="st">"f"</span>) <span class="op">&lt;-</span> <span class="kw">farthest_thresh</span>
+<span class="kw">Pinf</span>
+</pre></div>
 <pre><code>## 
 ## This is a genclone object
 ## -------------------------
@@ -636,18 +732,24 @@
 <h2 class="hasAnchor">
 <a href="#custom-custom" class="anchor"></a>Custom (“custom”)</h2>
 <p>Sometimes multilocus genotypes are defined by more than just genetic data and it would be useful to be able to analyze these genotype definitions. Luckily, there is a way to do this. <em>Poppr</em> has support for custom multilocus genotypes. For example, we have a simulated data set that has 50 samples with 26 multilocus genotypes.</p>
-<div class="sourceCode" id="cb96"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">partial_clone</span>)
-<span class="no">pc</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/coercion-methods.html">as.genclone</a></span>(<span class="no">partial_clone</span>)
-<span class="fu"><a href="../reference/mll-method.html">mll</a></span>(<span class="no">pc</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb96"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="kw">partial_clone</span>)
+<span class="kw">pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bootgen2genind.html">as.genclone</a></span>(<span class="kw">partial_clone</span>)
+<span class="fu"><a href="../reference/mll.html">mll</a></span>(<span class="kw">pc</span>)
+</pre></div>
 <pre><code>##  [1]  8  9 23 24 22 21 10  3 22 11 24  9 25  4 12  2 14  1  9  9  9 26  7 13 23
 ## [26]  3 17 22  6 20 22 12  5 25 13 21 15 13 13 13  2 19 18 13 23 16  1 11 25  4</code></pre>
 <p>Let’s change the MLGs to letters instead of numbers. We will use <code><a href="../reference/mll.custom.html">mll.custom()</a></code> to do this.</p>
-<div class="sourceCode" id="cb98"><html><body><pre class="r"><span class="no">LETTERS</span>[<span class="fu"><a href="../reference/mll-method.html">mll</a></span>(<span class="no">pc</span>)]  <span class="co"># The new MLGs</span></pre></body></html></div>
+<div class="sourceCode" id="cb98"><pre class="downlit">
+<span class="kw">LETTERS</span>[<span class="fu"><a href="../reference/mll.html">mll</a></span>(<span class="kw">pc</span>)]  <span class="co"># The new MLGs</span>
+</pre></div>
 <pre><code>##  [1] "H" "I" "W" "X" "V" "U" "J" "C" "V" "K" "X" "I" "Y" "D" "L" "B" "N" "A" "I"
 ## [20] "I" "I" "Z" "G" "M" "W" "C" "Q" "V" "F" "T" "V" "L" "E" "Y" "M" "U" "O" "M"
 ## [39] "M" "M" "B" "S" "R" "M" "W" "P" "A" "K" "Y" "D"</code></pre>
-<div class="sourceCode" id="cb100"><html><body><pre class="r"><span class="fu"><a href="../reference/mll.custom.html">mll.custom</a></span>(<span class="no">pc</span>) <span class="kw">&lt;-</span> <span class="no">LETTERS</span>[<span class="fu"><a href="../reference/mll-method.html">mll</a></span>(<span class="no">pc</span>)]
-<span class="fu"><a href="../reference/mlg.html">mlg.table</a></span>(<span class="no">pc</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb100"><pre class="downlit">
+<span class="fu"><a href="../reference/mll.custom.html">mll.custom</a></span>(<span class="kw">pc</span>) <span class="op">&lt;-</span> <span class="kw">LETTERS</span>[<span class="fu"><a href="../reference/mll.html">mll</a></span>(<span class="kw">pc</span>)]
+<span class="fu"><a href="../reference/mlg.html">mlg.table</a></span>(<span class="kw">pc</span>)
+</pre></div>
 <p><img src="mlg_files/figure-html/unnamed-chunk-25-1.png" width="700" style="display: block; margin: auto;"></p>
 <pre><code>##   A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
 ## 1 0 1 0 0 1 1 0 1 1 0 0 0 0 1 1 0 0 0 0 0 0 2 2 0 2 0
@@ -655,19 +757,25 @@
 ## 3 1 0 0 0 0 0 1 0 1 1 0 1 2 0 0 0 1 1 0 0 0 1 1 1 0 0
 ## 4 0 1 1 0 0 0 0 0 2 0 1 1 3 0 0 0 0 0 0 0 1 1 0 1 0 0</code></pre>
 <p>This even works with minimum spanning networks:</p>
-<div class="sourceCode" id="cb102"><html><body><pre class="r"><span class="no">pcpal</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/colorRamp.html">colorRampPalette</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"blue"</span>, <span class="st">"gold"</span>))
+<div class="sourceCode" id="cb102"><pre class="downlit">
+<span class="kw">pcpal</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/colorRamp.html">colorRampPalette</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"blue"</span>, <span class="st">"gold"</span>))
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">9001</span>)
-<span class="no">pcmsn</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/bruvo.msn.html">bruvo.msn</a></span>(<span class="no">pc</span>, <span class="kw">replen</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>, <span class="fu">nLoc</span>(<span class="no">pc</span>)), <span class="kw">palette</span> <span class="kw">=</span> <span class="no">pcpal</span>,
-                   <span class="kw">vertex.label.color</span> <span class="kw">=</span> <span class="st">"firebrick"</span>, <span class="kw">vertex.label.font</span> <span class="kw">=</span> <span class="fl">2</span>,
-                   <span class="kw">vertex.label.cex</span> <span class="kw">=</span> <span class="fl">1.5</span>)</pre></body></html></div>
+<span class="kw">pcmsn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bruvo.msn.html">bruvo.msn</a></span>(<span class="kw">pc</span>, replen = <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>, <span class="fu">nLoc</span>(<span class="kw">pc</span>)), palette = <span class="kw">pcpal</span>,
+                   vertex.label.color = <span class="st">"firebrick"</span>, vertex.label.font = <span class="fl">2</span>,
+                   vertex.label.cex = <span class="fl">1.5</span>)
+</pre></div>
 <p><img src="mlg_files/figure-html/unnamed-chunk-26-1.png" width="700" style="display: block; margin: auto;"></p>
 <p>Let’s say that we realized that we have strong evidence for MLG “Q” being the same as MLG “M”. If we wanted to change those, we could simply change the factor levels:</p>
-<div class="sourceCode" id="cb103"><html><body><pre class="r"><span class="fu"><a href="../reference/mll.custom.html">mll.levels</a></span>(<span class="no">pc</span>)[<span class="fu"><a href="../reference/mll.custom.html">mll.levels</a></span>(<span class="no">pc</span>) <span class="kw">==</span> <span class="st">"Q"</span>] <span class="kw">&lt;-</span> <span class="st">"M"</span></pre></body></html></div>
+<div class="sourceCode" id="cb103"><pre class="downlit">
+<span class="fu"><a href="../reference/mll.custom.html">mll.levels</a></span>(<span class="kw">pc</span>)[<span class="fu"><a href="../reference/mll.custom.html">mll.levels</a></span>(<span class="kw">pc</span>) <span class="op">==</span> <span class="st">"Q"</span>] <span class="op">&lt;-</span> <span class="st">"M"</span>
+</pre></div>
 <p>And we can plot again</p>
-<div class="sourceCode" id="cb104"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">9001</span>)
-<span class="no">pcmsn</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/bruvo.msn.html">bruvo.msn</a></span>(<span class="no">pc</span>, <span class="kw">replen</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>, <span class="fu">nLoc</span>(<span class="no">pc</span>)), <span class="kw">palette</span> <span class="kw">=</span> <span class="no">pcpal</span>,
-                   <span class="kw">vertex.label.color</span> <span class="kw">=</span> <span class="st">"firebrick"</span>, <span class="kw">vertex.label.font</span> <span class="kw">=</span> <span class="fl">2</span>,
-                   <span class="kw">vertex.label.cex</span> <span class="kw">=</span> <span class="fl">1.5</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb104"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">9001</span>)
+<span class="kw">pcmsn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bruvo.msn.html">bruvo.msn</a></span>(<span class="kw">pc</span>, replen = <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>, <span class="fu">nLoc</span>(<span class="kw">pc</span>)), palette = <span class="kw">pcpal</span>,
+                   vertex.label.color = <span class="st">"firebrick"</span>, vertex.label.font = <span class="fl">2</span>,
+                   vertex.label.cex = <span class="fl">1.5</span>)
+</pre></div>
 <p><img src="mlg_files/figure-html/unnamed-chunk-28-1.png" width="700" style="display: block; margin: auto;"></p>
 <p>Notice how the minimum spanning network architecture stayed the same, but the labels had changed.</p>
 </div>
@@ -676,16 +784,20 @@
 <h1 class="hasAnchor">
 <a href="#diversity-analysis" class="anchor"></a>Diversity Analysis</h1>
 <p>In the <strong>Data Import and Manipulation</strong> vignette, the first command demonstrated was the <code><a href="../reference/poppr.html">poppr()</a></code>, command, which produced a table of diversity statistics, most of which were calculated on counts of multilocus genotypes. These statistics can be replicated by using the function <code><a href="../reference/diversity_stats.html">diversity_stats()</a></code>. This function calculates diversity statistics based off of a table of multilocus genotypes. Let’s analyze the diversity of the peach brown rot pathogen, <em>Monilinia fructicola</em>, structured by Symptom (Fruit Rot:FR and Blossom Blight:BB) and Year <span class="citation">(Everhart and Scherm 2015)</span>. Let’s first look at the distribution of multilocus genotypes:</p>
-<div class="sourceCode" id="cb105"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">monpop</span>)
-<span class="fu">splitStrata</span>(<span class="no">monpop</span>) <span class="kw">&lt;-</span> ~<span class="no">Tree</span>/<span class="no">Year</span>/<span class="no">Symptom</span>
-<span class="no">montab</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/mlg.html">mlg.table</a></span>(<span class="no">monpop</span>, <span class="kw">strata</span> <span class="kw">=</span> ~<span class="no">Symptom</span>/<span class="no">Year</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb105"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="kw">monpop</span>)
+<span class="fu">splitStrata</span>(<span class="kw">monpop</span>) <span class="op">&lt;-</span> <span class="op">~</span><span class="kw">Tree</span><span class="op">/</span><span class="kw">Year</span><span class="op">/</span><span class="kw">Symptom</span>
+<span class="kw">montab</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mlg.html">mlg.table</a></span>(<span class="kw">monpop</span>, strata = <span class="op">~</span><span class="kw">Symptom</span><span class="op">/</span><span class="kw">Year</span>)
+</pre></div>
 <p><img src="mlg_files/figure-html/unnamed-chunk-29-1.png" width="700" style="display: block; margin: auto;"></p>
 <p>We can see from these plots that the Fruit Rot (FR) have a lot more clones in the canopies than Blossom Blight (BB). This makes biological sense since Fruit Rot infections are clonally propagated, whereas Blossom Blight infections are from sexual propagules <span class="citation">(Everhart and Scherm 2015)</span>. Let’s look at the diversity metrics.</p>
 <div id="basic-statistics" class="section level2">
 <h2 class="hasAnchor">
 <a href="#basic-statistics" class="anchor"></a>Basic Statistics</h2>
 <p>The function <code><a href="../reference/diversity_stats.html">diversity_stats()</a></code> is used to get basic diversity statistics:</p>
-<div class="sourceCode" id="cb106"><html><body><pre class="r">(<span class="no">monstat</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/diversity_stats.html">diversity_stats</a></span>(<span class="no">montab</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb106"><pre class="downlit">
+(<span class="kw">monstat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/diversity_stats.html">diversity_stats</a></span>(<span class="kw">montab</span>))
+</pre></div>
 <pre><code>##        Index
 ## Pop            H        G    lambda       E.5
 ##   BB_9  3.580258 25.92405 0.9614258 0.7145086
@@ -699,7 +811,9 @@
 <h2 class="hasAnchor">
 <a href="#confidence-intervals" class="anchor"></a>Confidence Intervals</h2>
 <p>We can get confidence intervals for these statistics using <code><a href="../reference/diversity_ci.html">diversity_ci()</a></code>:</p>
-<div class="sourceCode" id="cb108"><html><body><pre class="r"><span class="fu"><a href="../reference/diversity_ci.html">diversity_ci</a></span>(<span class="no">montab</span>, <span class="kw">n</span> <span class="kw">=</span> <span class="fl">100L</span>, <span class="kw">raw</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb108"><pre class="downlit">
+<span class="fu"><a href="../reference/diversity_ci.html">diversity_ci</a></span>(<span class="kw">montab</span>, n = <span class="fl">100L</span>, raw = <span class="fl">FALSE</span>)
+</pre></div>
 <pre><code>## 
 ## Confidence Intervals have been centered around observed statistic.
 ## Please see ?diversity_ci for details.</code></pre>
@@ -724,16 +838,18 @@
 <h2 class="hasAnchor">
 <a href="#custom-statistics" class="anchor"></a>Custom Statistics</h2>
 <p>In all of the <code>diversity_*</code> functions, you can use your own custom diversity statistics. A common one we get requests for is the clonal fraction, <span class="math inline">\(\frac{MLG}{N}\)</span> or the number of multilocus genotypes over the number of samples. You can add it in by writing your own function. Keep in mind, that you should write it for both a matrix and a vector of counts if you want to be able to bootstrap it.</p>
-<div class="sourceCode" id="cb111"><html><body><pre class="r"><span class="no">myCF</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">x</span>){
- <span class="no">x</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/drop.html">drop</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="no">x</span>))
- <span class="kw">if</span> (<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">x</span>)) <span class="kw">&gt;</span> <span class="fl">1</span>){ <span class="co"># if it's a matrix</span>
-   <span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span>(<span class="no">x</span> <span class="kw">&gt;</span> <span class="fl">0</span>)/<span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span>(<span class="no">x</span>)
- } <span class="kw">else</span> {                 <span class="co"># if it's a vector</span>
-   <span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">x</span> <span class="kw">&gt;</span> <span class="fl">0</span>)/<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">x</span>)
+<div class="sourceCode" id="cb111"><pre class="downlit">
+<span class="kw">myCF</span> <span class="op">&lt;-</span> <span class="fu">function</span>(<span class="kw">x</span>){
+ <span class="kw">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/drop.html">drop</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="kw">x</span>))
+ <span class="co">if</span> (<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="kw">x</span>)) <span class="op">&gt;</span> <span class="fl">1</span>){ <span class="co"># if it's a matrix</span>
+   <span class="kw">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span>(<span class="kw">x</span> <span class="op">&gt;</span> <span class="fl">0</span>)<span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span>(<span class="kw">x</span>)
+ } <span class="co">else</span> {                 <span class="co"># if it's a vector</span>
+   <span class="kw">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="kw">x</span> <span class="op">&gt;</span> <span class="fl">0</span>)<span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="kw">x</span>)
  }
- <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="no">res</span>)
+ <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="kw">res</span>)
 }
-(<span class="no">monstat2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/diversity_stats.html">diversity_stats</a></span>(<span class="no">montab</span>, <span class="kw">CF</span> <span class="kw">=</span> <span class="no">myCF</span>))</pre></body></html></div>
+(<span class="kw">monstat2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/diversity_stats.html">diversity_stats</a></span>(<span class="kw">montab</span>, CF = <span class="kw">myCF</span>))
+</pre></div>
 <pre><code>##        Index
 ## Pop            H        G    lambda       E.5        CF
 ##   BB_9  3.580258 25.92405 0.9614258 0.7145086 0.7031250
@@ -746,21 +862,25 @@
 <blockquote>
 <p>One mutational step for a single allele in Bruvo’s distance is equivalent to 0.5, so a single mutational step for a haploid organism with 13 loci is 0.5/13.</p>
 </blockquote>
-<div class="sourceCode" id="cb113"><html><body><pre class="r"><span class="co"># Repeat lengths are necessary</span>
-<span class="no">reps</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/fix_replen.html">fix_replen</a></span>(<span class="no">monpop</span>,
-                   <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw">CHMFc4</span> <span class="kw">=</span> <span class="fl">7</span>, <span class="kw">CHMFc5</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">CHMFc12</span> <span class="kw">=</span> <span class="fl">4</span>,
-                     <span class="kw">SEA</span> <span class="kw">=</span> <span class="fl">4</span>, <span class="kw">SED</span> <span class="kw">=</span> <span class="fl">4</span>, <span class="kw">SEE</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">SEG</span> <span class="kw">=</span> <span class="fl">6</span>,
-                     <span class="kw">SEI</span> <span class="kw">=</span> <span class="fl">3</span>, <span class="kw">SEL</span> <span class="kw">=</span> <span class="fl">4</span>, <span class="kw">SEN</span> <span class="kw">=</span> <span class="fl">2</span>,
-                     <span class="kw">SEP</span> <span class="kw">=</span> <span class="fl">4</span>, <span class="kw">SEQ</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">SER</span> <span class="kw">=</span> <span class="fl">4</span>))
+<div class="sourceCode" id="cb113"><pre class="downlit">
+<span class="co"># Repeat lengths are necessary</span>
+<span class="kw">reps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fix_replen.html">fix_replen</a></span>(<span class="kw">monpop</span>,
+                   <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(CHMFc4 = <span class="fl">7</span>, CHMFc5 = <span class="fl">2</span>, CHMFc12 = <span class="fl">4</span>,
+                     SEA = <span class="fl">4</span>, SED = <span class="fl">4</span>, SEE = <span class="fl">2</span>, SEG = <span class="fl">6</span>,
+                     SEI = <span class="fl">3</span>, SEL = <span class="fl">4</span>, SEN = <span class="fl">2</span>,
+                     SEP = <span class="fl">4</span>, SEQ = <span class="fl">2</span>, SER = <span class="fl">4</span>))
 
 <span class="co"># Adding a little bit, so the threshold is included.</span>
-<span class="no">e</span> <span class="kw">&lt;-</span> <span class="no">.Machine</span>$<span class="no">double.eps</span>^<span class="fl">0.5</span>
+<span class="kw">e</span> <span class="op">&lt;-</span> <span class="kw">.Machine</span><span class="op">$</span><span class="kw">double.eps</span><span class="op">^</span><span class="fl">0.5</span>
 
 <span class="co"># Using the default farthest neighbor algorithm to collapse genotypes</span>
-<span class="fu"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(<span class="no">monpop</span>, <span class="kw">distance</span> <span class="kw">=</span> <span class="no">bruvo.dist</span>, <span class="kw">replen</span> <span class="kw">=</span> <span class="no">reps</span>) <span class="kw">&lt;-</span> (<span class="fl">0.5</span>/<span class="fl">13</span>) + <span class="no">e</span>
-<span class="no">montabf</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/mlg.html">mlg.table</a></span>(<span class="no">monpop</span>, <span class="kw">strata</span> <span class="kw">=</span> ~<span class="no">Symptom</span>/<span class="no">Year</span>)</pre></body></html></div>
+<span class="fu"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(<span class="kw">monpop</span>, distance = <span class="kw">bruvo.dist</span>, replen = <span class="kw">reps</span>) <span class="op">&lt;-</span> (<span class="fl">0.5</span><span class="op">/</span><span class="fl">13</span>) <span class="op">+</span> <span class="kw">e</span>
+<span class="kw">montabf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mlg.html">mlg.table</a></span>(<span class="kw">monpop</span>, strata = <span class="op">~</span><span class="kw">Symptom</span><span class="op">/</span><span class="kw">Year</span>)
+</pre></div>
 <p><img src="mlg_files/figure-html/unnamed-chunk-34-1.png" width="700" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb114"><html><body><pre class="r">(<span class="no">monstatf</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/diversity_stats.html">diversity_stats</a></span>(<span class="no">montabf</span>, <span class="kw">CF</span> <span class="kw">=</span> <span class="no">myCF</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb114"><pre class="downlit">
+(<span class="kw">monstatf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/diversity_stats.html">diversity_stats</a></span>(<span class="kw">montabf</span>, CF = <span class="kw">myCF</span>))
+</pre></div>
 <pre><code>##        Index
 ## Pop            H        G    lambda       E.5        CF
 ##   BB_9  3.442117 23.81395 0.9580078 0.7541044 0.6093750
@@ -769,7 +889,9 @@
 ##   FR_10 3.861202 33.10974 0.9697974 0.6901987 0.2724014
 ##   BB_11 3.401197 30.00000 0.9666667 1.0000000 1.0000000
 ##   FR_11 2.754565  8.00766 0.8751196 0.4762511 0.3195876</code></pre>
-<div class="sourceCode" id="cb116"><html><body><pre class="r"><span class="no">monstat2</span> - <span class="no">monstatf</span> <span class="co"># Take the difference from the unfiltered</span></pre></body></html></div>
+<div class="sourceCode" id="cb116"><pre class="downlit">
+<span class="kw">monstat2</span> <span class="op">-</span> <span class="kw">monstatf</span> <span class="co"># Take the difference from the unfiltered</span>
+</pre></div>
 <pre><code>##        Index
 ## Pop             H         G      lambda         E.5         CF
 ##   BB_9  0.1381408 2.1100971 0.003417969 -0.03959575 0.09375000
@@ -779,13 +901,17 @@
 ##   BB_11 0.0000000 0.0000000 0.000000000  0.00000000 0.00000000
 ##   FR_11 0.3401226 2.4817496 0.029546179 -0.02609686 0.13402062</code></pre>
 <p>We can see that filtered MLLs tend to be less diverse. This makes intuitive sense as it is creating larger classes of multilocus genotypes.</p>
-<div class="sourceCode" id="cb118"><html><body><pre class="r"><span class="fu"><a href="../reference/mll-method.html">mll</a></span>(<span class="no">monpop</span>) <span class="kw">&lt;-</span> <span class="st">"original"</span></pre></body></html></div>
+<div class="sourceCode" id="cb118"><pre class="downlit">
+<span class="fu"><a href="../reference/mll.html">mll</a></span>(<span class="kw">monpop</span>) <span class="op">&lt;-</span> <span class="st">"original"</span>
+</pre></div>
 </div>
 <div id="jack-knife-rarefaction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#jack-knife-rarefaction" class="anchor"></a>Jack-knife rarefaction</h2>
 <p>The function <code><a href="../reference/diversity_ci.html">diversity_ci()</a></code> and <code><a href="../reference/diversity_boot.html">diversity_boot()</a></code> have the option to perform jack knife rarefaction calculations. This means that your data will be randomly sub-sampled to either the smallest population size, or whatever is specified in the parameter <code>n.rare</code>, whichever is bigger. Here’s an example with the previous data set:</p>
-<div class="sourceCode" id="cb119"><html><body><pre class="r">(<span class="no">monrare</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/diversity_ci.html">diversity_ci</a></span>(<span class="no">montab</span>, <span class="kw">n</span> <span class="kw">=</span> <span class="fl">100L</span>, <span class="kw">rarefy</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">raw</span> <span class="kw">=</span> <span class="fl">FALSE</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb119"><pre class="downlit">
+(<span class="kw">monrare</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/diversity_ci.html">diversity_ci</a></span>(<span class="kw">montab</span>, n = <span class="fl">100L</span>, rarefy = <span class="fl">TRUE</span>, raw = <span class="fl">FALSE</span>))
+</pre></div>
 <pre><code>## 
 ## Samples for rarefaction: 19</code></pre>
 <p><img src="mlg_files/figure-html/unnamed-chunk-37-1.png" width="700" style="display: block; margin: auto;"></p>
@@ -810,29 +936,41 @@
 <h1 class="hasAnchor">
 <a href="#clone-correction" class="anchor"></a>Clone Correction</h1>
 <p>Clone-correction works hierarchically and only uses the first MLG copy encountered in the data per population. This is straightforward for naïve MLGs, but for MLLs collapsed by genetic distance or custom MLLs, this might change the results very slightly. As an example, let’s look at the <code>monpop</code> filtered MLLs that we created earlier.</p>
-<div class="sourceCode" id="cb122"><html><body><pre class="r"><span class="fu"><a href="../reference/mll-method.html">nmll</a></span>(<span class="no">monpop</span>, <span class="st">"original"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb122"><pre class="downlit">
+<span class="fu"><a href="../reference/mll.html">nmll</a></span>(<span class="kw">monpop</span>, <span class="st">"original"</span>)
+</pre></div>
 <pre><code>## [1] 264</code></pre>
-<div class="sourceCode" id="cb124"><html><body><pre class="r"><span class="fu"><a href="../reference/mll-method.html">nmll</a></span>(<span class="no">monpop</span>, <span class="st">"contracted"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb124"><pre class="downlit">
+<span class="fu"><a href="../reference/mll.html">nmll</a></span>(<span class="kw">monpop</span>, <span class="st">"contracted"</span>)
+</pre></div>
 <pre><code>## [1] 214</code></pre>
-<div class="sourceCode" id="cb126"><html><body><pre class="r"><span class="fu"><a href="../reference/mll-method.html">mll</a></span>(<span class="no">monpop</span>) <span class="kw">&lt;-</span> <span class="st">"contracted"</span></pre></body></html></div>
+<div class="sourceCode" id="cb126"><pre class="downlit">
+<span class="fu"><a href="../reference/mll.html">mll</a></span>(<span class="kw">monpop</span>) <span class="op">&lt;-</span> <span class="st">"contracted"</span>
+</pre></div>
 <p>To show how the order of the samples can affect the sampling, we will take the sum of all pairwise distances between clone-corrected samples (corrected without respect to populations):</p>
-<div class="sourceCode" id="cb127"><html><body><pre class="r"><span class="no">monpop</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(<span class="kw">strata</span> <span class="kw">=</span> <span class="fl">NA</span>) <span class="kw">%&gt;%</span>  <span class="co"># 1. clone correct whole data set</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/dist.html">dist</a></span>() <span class="kw">%&gt;%</span>                     <span class="co"># 2. calculate distance</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>()                          <span class="co"># 3. take the sum of the distance</span></pre></body></html></div>
+<div class="sourceCode" id="cb127"><pre class="downlit">
+<span class="kw">monpop</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(strata = <span class="fl">NA</span>) <span class="op">%&gt;%</span>  <span class="co"># 1. clone correct whole data set</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/dist.html">dist</a></span>() <span class="op">%&gt;%</span>                     <span class="co"># 2. calculate distance</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>()                          <span class="co"># 3. take the sum of the distance</span>
+</pre></div>
 <pre><code>## [1] 90268.73</code></pre>
 <p>Now, what happens when we randomly sample individuals?</p>
-<div class="sourceCode" id="cb129"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">999</span>)
-<span class="no">monpop</span>[<span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fu">nInd</span>(<span class="no">monpop</span>))] <span class="kw">%&gt;%</span> <span class="co"># 1. shuffle samples</span>
-  <span class="fu"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(<span class="kw">strata</span> <span class="kw">=</span> <span class="fl">NA</span>) <span class="kw">%&gt;%</span>  <span class="co"># 2. clone correct whole data set</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/dist.html">dist</a></span>() <span class="kw">%&gt;%</span>                     <span class="co"># 3. calculate distance</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>()                          <span class="co"># 4. take the sum of the distance</span></pre></body></html></div>
+<div class="sourceCode" id="cb129"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">999</span>)
+<span class="kw">monpop</span>[<span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fu">nInd</span>(<span class="kw">monpop</span>))] <span class="op">%&gt;%</span> <span class="co"># 1. shuffle samples</span>
+  <span class="fu"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(strata = <span class="fl">NA</span>) <span class="op">%&gt;%</span>  <span class="co"># 2. clone correct whole data set</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/dist.html">dist</a></span>() <span class="op">%&gt;%</span>                     <span class="co"># 3. calculate distance</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>()                          <span class="co"># 4. take the sum of the distance</span>
+</pre></div>
 <pre><code>## [1] 90257.92</code></pre>
-<div class="sourceCode" id="cb131"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">1000</span>)
-<span class="no">monpop</span>[<span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fu">nInd</span>(<span class="no">monpop</span>))] <span class="kw">%&gt;%</span> <span class="co"># 1. shuffle samples</span>
-  <span class="fu"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(<span class="kw">strata</span> <span class="kw">=</span> <span class="fl">NA</span>) <span class="kw">%&gt;%</span>  <span class="co"># 2. clone correct whole data set</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/dist.html">dist</a></span>() <span class="kw">%&gt;%</span>                     <span class="co"># 3. calculate distance</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>()                          <span class="co"># 4. take the sum of the distance</span></pre></body></html></div>
+<div class="sourceCode" id="cb131"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">1000</span>)
+<span class="kw">monpop</span>[<span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fu">nInd</span>(<span class="kw">monpop</span>))] <span class="op">%&gt;%</span> <span class="co"># 1. shuffle samples</span>
+  <span class="fu"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(strata = <span class="fl">NA</span>) <span class="op">%&gt;%</span>  <span class="co"># 2. clone correct whole data set</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/dist.html">dist</a></span>() <span class="op">%&gt;%</span>                     <span class="co"># 3. calculate distance</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>()                          <span class="co"># 4. take the sum of the distance</span>
+</pre></div>
 <pre><code>## [1] 90311.96</code></pre>
 <p>Notice how we are getting different results based on the order of samples. This does not mean that the procedure doesn’t work, it just means that we must be careful when clone-correcting modified multilocus genotypes.</p>
 </div>
@@ -882,7 +1020,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

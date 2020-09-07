@@ -101,7 +101,7 @@
 </h1></div>
 <!-- badges: start -->
 
-<!-- badges: end -->
+<p><a href="https://github.com/grunwaldlab/poppr/actions"><img src="https://github.com/grunwaldlab/poppr/workflows/R-CMD-check/badge.svg" alt="R build status"></a> <!-- badges: end --></p>
 <div id="what-is-poppr" class="section level2">
 <h2 class="hasAnchor">
 <a href="#what-is-poppr" class="anchor"></a>What is <em>poppr</em>?</h2>
@@ -133,7 +133,9 @@
 <li>and more!</li>
 </ul>
 <p>For full details, see the NEWS file or type in your R console:</p>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/news.html">news</a></span>(<span class="no">Version</span> <span class="kw">&gt;=</span> <span class="st">"2.0.0"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"poppr"</span>)</pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/news.html">news</a></span>(<span class="kw">Version</span> <span class="op">&gt;=</span> <span class="st">"2.0.0"</span>, package = <span class="st">"poppr"</span>)
+</pre></div>
 </div>
 </div>
 <div id="citation" class="section level2">
@@ -161,7 +163,9 @@
 <p>Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of genome-wide population genetic data with emphasis on clonality. Front. Genet. 6:208. doi: <a href="https://journal.frontiersin.org/article/10.3389/fgene.2015.00208/abstract">10.3389/fgene.2015.00208</a></p>
 </blockquote>
 <p>You can obtain citation information in R by typing:</p>
-<div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/citation.html">citation</a></span>(<span class="kw">package</span> <span class="kw">=</span> <span class="st">"poppr"</span>)</pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/citation.html">citation</a></span>(package = <span class="st">"poppr"</span>)
+</pre></div>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -171,7 +175,9 @@
 <a href="#from-cran" class="anchor"></a>From CRAN</h3>
 <p><a href="https://cran.r-project.org/package=poppr">Binary versions for mac and windows are available for R ≥ 2.15.1 <strong>here</strong></a>.</p>
 <p>To install, make sure R is at least version 2.15.1 (the authors recommend ≥ 3.0), and in your console, type:</p>
-<div class="sourceCode" id="cb3"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"poppr"</span>)</pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"poppr"</span>)
+</pre></div>
 <p>If you want the absolute latest version of <em>poppr</em>, see about installing from github below.</p>
 <hr>
 </div>
@@ -194,15 +200,19 @@
 <blockquote>
 <p>Note: As of 2020-06-12 the default branch is the “main” branch to avoid the “master/slave” terminology. For reference, see the <a href="https://tools.ietf.org/id/draft-knodel-terminology-00.html#rfc.section.1.1.1">IETF draft memo</a>.</p>
 </blockquote>
-<div class="sourceCode" id="cb4"><pre class="r"><span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="kw">repo</span> <span class="kw">=</span> <span class="st">"grunwaldlab/poppr@main"</span>, <span class="kw">build_vignettes</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"poppr"</span>)</pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="kw">remotes</span>::<span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(repo = <span class="st">"grunwaldlab/poppr@main"</span>, build_vignettes = <span class="fl">TRUE</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st"><a href="https://grunwaldlab.github.io/poppr">"poppr"</a></span>)
+</pre></div>
 </div>
 <div id="unstabledevelopment-versions" class="section level4">
 <h4 class="hasAnchor">
 <a href="#unstabledevelopment-versions" class="anchor"></a>Unstable/Development versions</h4>
 <p>All new features in testing will be released on different branches. These features will be in various stages of development and may or may not be documented. Install with caution. The below command would install features on the branch called “devel”. Note that these branches might be out of date from the main branch.</p>
-<div class="sourceCode" id="cb5"><pre class="r"><span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="kw">repo</span> <span class="kw">=</span> <span class="st">"grunwaldlab/poppr@devel"</span>, <span class="kw">build_vignettes</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"poppr"</span>)</pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="kw">remotes</span>::<span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(repo = <span class="st">"grunwaldlab/poppr@devel"</span>, build_vignettes = <span class="fl">TRUE</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st"><a href="https://grunwaldlab.github.io/poppr">"poppr"</a></span>)
+</pre></div>
 </div>
 </div>
 </div>
@@ -213,7 +223,9 @@
 <h3 class="hasAnchor">
 <a href="#r-documentation" class="anchor"></a>R documentation</h3>
 <p>To access a descriptive index of help files in <em>poppr</em>, type in your console:</p>
-<div class="sourceCode" id="cb6"><pre class="r"><span class="no">package</span>?<span class="no">poppr</span></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit">
+<span class="kw">package</span><span class="op">?</span><span class="kw">poppr</span>
+</pre></div>
 </div>
 <div id="vignettes" class="section level3">
 <h3 class="hasAnchor">
@@ -322,7 +334,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

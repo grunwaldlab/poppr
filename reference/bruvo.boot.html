@@ -144,17 +144,17 @@
     </div>
 
     <pre class="usage"><span class='fu'>bruvo.boot</span>(
-  <span class='no'>pop</span>,
-  <span class='kw'>replen</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>loss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>100</span>,
-  <span class='kw'>tree</span> <span class='kw'>=</span> <span class='st'>"upgma"</span>,
-  <span class='kw'>showtree</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>root</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>...</span>
+  <span class='kw'>pop</span>,
+  replen = <span class='fl'>1</span>,
+  add = <span class='fl'>TRUE</span>,
+  loss = <span class='fl'>TRUE</span>,
+  sample = <span class='fl'>100</span>,
+  tree = <span class='st'>"upgma"</span>,
+  showtree = <span class='fl'>TRUE</span>,
+  cutoff = <span class='kw'>NULL</span>,
+  quiet = <span class='fl'>FALSE</span>,
+  root = <span class='kw'>NULL</span>,
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -215,7 +215,7 @@ unrooted phylogeny unless the function name contains "upgma".</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>any argument to be passed on to <code>boot.phylo</code>. eg. 
+      <td><p>any argument to be passed on to <code><a href='https://rdrr.io/pkg/ape/man/boot.phylo.html'>boot.phylo</a></code>. eg. 
 <code>quiet = TRUE</code>.</p></td>
     </tr>
     </table>
@@ -251,6 +251,9 @@ genotype distances irrespective of ploidy level. Molecular Ecology,
   <code>upgma</code>, <code><a href='https://rdrr.io/pkg/ape/man/nj.html'>nj</a></code>, <code><a href='https://rdrr.io/pkg/ape/man/boot.phylo.html'>boot.phylo</a></code>, 
   <code><a href='https://rdrr.io/pkg/ape/man/nodelabels.html'>nodelabels</a></code>, <code>tab</code>, 
   <code><a href='missingno.html'>missingno</a></code>.</p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar, Javier F. Tabima</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Please note that the data presented is assuming that the nancycat dataset </span>
@@ -258,12 +261,13 @@ genotype distances irrespective of ploidy level. Molecular Ecology,
 <span class='co'># representation of the data.</span>
 
 <span class='co'># Load the nancycats dataset and construct the repeat vector.</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>nancycats</span>)
-<span class='no'>ssr</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>nancycats</span>)
+<span class='kw'>ssr</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>)
 
 <span class='co'># Analyze the 1st population in nancycats</span>
 
-<span class='fu'>bruvo.boot</span>(<span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='no'>nancycats</span>, <span class='fl'>1</span>), <span class='kw'>replen</span> <span class='kw'>=</span> <span class='no'>ssr</span>)</div><div class='output co'>#&gt; 
+<span class='fu'>bruvo.boot</span>(<span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='kw'>nancycats</span>, <span class='fl'>1</span>), replen = <span class='kw'>ssr</span>)
+</div><div class='output co'>#&gt; 
 #&gt; Bootstrapping...
 #&gt; (note: calculation of node labels can take a while even after the progress bar is full)
 #&gt; 
@@ -272,19 +276,20 @@ genotype distances irrespective of ploidy level. Molecular Ecology,
 #&gt; Phylogenetic tree with 10 tips and 9 internal nodes.
 #&gt; 
 #&gt; Tip labels:
-#&gt; 	N215, N216, N217, N218, N219, N220, ...
+#&gt;   N215, N216, N217, N218, N219, N220, ...
 #&gt; Node labels:
-#&gt; 	100, 29, 18, 75, 48, 53, ...
+#&gt;   100, 29, 18, 75, 48, 53, ...
 #&gt; 
 #&gt; Rooted; includes branch lengths.</div><div class='input'>
 <span class='co'># \dontrun{</span>
 
 <span class='co'># Always load the library before you specify the function.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'>"ape"</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'><a href='http://ape-package.ird.fr'>"ape"</a></span>)
 
 <span class='co'># Estimate the tree based off of the BIONJ algorithm.</span>
 
-<span class='fu'>bruvo.boot</span>(<span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='no'>nancycats</span>, <span class='fl'>9</span>), <span class='kw'>replen</span> <span class='kw'>=</span> <span class='no'>ssr</span>, <span class='kw'>tree</span> <span class='kw'>=</span> <span class='no'>bionj</span>)</div><div class='output co'>#&gt; 
+<span class='fu'>bruvo.boot</span>(<span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='kw'>nancycats</span>, <span class='fl'>9</span>), replen = <span class='kw'>ssr</span>, tree = <span class='kw'>bionj</span>)
+</div><div class='output co'>#&gt; 
 #&gt; Bootstrapping...
 #&gt; (note: calculation of node labels can take a while even after the progress bar is full)
 #&gt; 
@@ -293,13 +298,14 @@ genotype distances irrespective of ploidy level. Molecular Ecology,
 #&gt; Phylogenetic tree with 9 tips and 7 internal nodes.
 #&gt; 
 #&gt; Tip labels:
-#&gt; 	N104, N105, N106, N107, N108, N109, ...
+#&gt;   N104, N105, N106, N107, N108, N109, ...
 #&gt; Node labels:
-#&gt; 	100, 0, 0, 0, 0, 0, ...
+#&gt;   100, 18, 27, 28, 28, 60, ...
 #&gt; 
 #&gt; Unrooted; includes branch lengths.</div><div class='input'>
 <span class='co'># Utilizing  balanced FastME</span>
-<span class='fu'>bruvo.boot</span>(<span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='no'>nancycats</span>, <span class='fl'>9</span>), <span class='kw'>replen</span> <span class='kw'>=</span> <span class='no'>ssr</span>, <span class='kw'>tree</span> <span class='kw'>=</span> <span class='no'>fastme.bal</span>)</div><div class='output co'>#&gt; 
+<span class='fu'>bruvo.boot</span>(<span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='kw'>nancycats</span>, <span class='fl'>9</span>), replen = <span class='kw'>ssr</span>, tree = <span class='kw'>fastme.bal</span>)
+</div><div class='output co'>#&gt; 
 #&gt; Bootstrapping...
 #&gt; (note: calculation of node labels can take a while even after the progress bar is full)
 #&gt; 
@@ -308,16 +314,17 @@ genotype distances irrespective of ploidy level. Molecular Ecology,
 #&gt; Phylogenetic tree with 9 tips and 7 internal nodes.
 #&gt; 
 #&gt; Tip labels:
-#&gt; 	N104, N105, N106, N107, N108, N109, ...
+#&gt;   N104, N105, N106, N107, N108, N109, ...
 #&gt; Node labels:
-#&gt; 	100, 0, 0, 0, 0, 0, ...
+#&gt;   100, 29, 29, 24, 62, 22, ...
 #&gt; 
 #&gt; Unrooted; includes branch lengths.</div><div class='input'>
 <span class='co'># To change parameters for the tree, wrap it in a function.</span>
 <span class='co'># For example, let's build the tree without utilizing subtree-prune-regraft</span>
 
-<span class='no'>myFastME</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://rdrr.io/pkg/ape/man/fastme.html'>fastme.bal</a></span>(<span class='no'>x</span>, <span class='kw'>nni</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>spr</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>tbr</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>bruvo.boot</span>(<span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='no'>nancycats</span>, <span class='fl'>9</span>), <span class='kw'>replen</span> <span class='kw'>=</span> <span class='no'>ssr</span>, <span class='kw'>tree</span> <span class='kw'>=</span> <span class='no'>myFastME</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; 
+<span class='kw'>myFastME</span> <span class='op'>&lt;-</span> <span class='fu'>function</span>(<span class='kw'>x</span>) <span class='fu'><a href='https://rdrr.io/pkg/ape/man/fastme.html'>fastme.bal</a></span>(<span class='kw'>x</span>, nni = <span class='fl'>TRUE</span>, spr = <span class='fl'>FALSE</span>, tbr = <span class='fl'>TRUE</span>)
+<span class='fu'>bruvo.boot</span>(<span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='kw'>nancycats</span>, <span class='fl'>9</span>), replen = <span class='kw'>ssr</span>, tree = <span class='kw'>myFastME</span>)
+</div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; 
 #&gt; Bootstrapping...
 #&gt; (note: calculation of node labels can take a while even after the progress bar is full)
 #&gt; </div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; <span class='warning'>Warning: option 'tbr = TRUE' was ignored: see ?fastme.bal</span></div><div class='output co'>#&gt; Running bootstraps:       100 / 100
@@ -325,12 +332,12 @@ genotype distances irrespective of ploidy level. Molecular Ecology,
 #&gt; Phylogenetic tree with 9 tips and 7 internal nodes.
 #&gt; 
 #&gt; Tip labels:
-#&gt; 	N104, N105, N106, N107, N108, N109, ...
+#&gt;   N104, N105, N106, N107, N108, N109, ...
 #&gt; Node labels:
-#&gt; 	100, 0, 0, 0, 0, 0, ...
+#&gt;   100, 15, 7, 23, 66, 94, ...
 #&gt; 
 #&gt; Unrooted; includes branch lengths.</div><div class='input'>
-# }
+<span class='co'># }</span>
 
 </div></pre>
   </div>
@@ -348,7 +355,7 @@ genotype distances irrespective of ploidy level. Molecular Ecology,
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

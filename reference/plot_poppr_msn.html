@@ -148,28 +148,28 @@ adjusting the palette and scale bar.</p>
     </div>
 
     <pre class="usage"><span class='fu'>plot_poppr_msn</span>(
-  <span class='no'>x</span>,
-  <span class='no'>poppr_msn</span>,
-  <span class='kw'>gscale</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>3</span>,
-  <span class='kw'>mlg.compute</span> <span class='kw'>=</span> <span class='st'>"original"</span>,
-  <span class='kw'>glim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>0.8</span>),
-  <span class='kw'>gweight</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>wscale</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>nodescale</span> <span class='kw'>=</span> <span class='fl'>10</span>,
-  <span class='kw'>nodebase</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>nodelab</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"ALL"</span>,
-  <span class='kw'>mlg</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>palette</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>layfun</span> <span class='kw'>=</span> <span class='no'>layout.auto</span>,
-  <span class='kw'>beforecut</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>pop.leg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>size.leg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>scale.leg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='no'>...</span>
+  <span class='kw'>x</span>,
+  <span class='kw'>poppr_msn</span>,
+  gscale = <span class='fl'>TRUE</span>,
+  gadj = <span class='fl'>3</span>,
+  mlg.compute = <span class='st'>"original"</span>,
+  glim = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>0.8</span>),
+  gweight = <span class='fl'>1</span>,
+  wscale = <span class='fl'>TRUE</span>,
+  nodescale = <span class='fl'>10</span>,
+  nodebase = <span class='kw'>NULL</span>,
+  nodelab = <span class='fl'>2</span>,
+  inds = <span class='st'>"ALL"</span>,
+  mlg = <span class='fl'>FALSE</span>,
+  quantiles = <span class='fl'>TRUE</span>,
+  cutoff = <span class='kw'>NULL</span>,
+  palette = <span class='kw'>NULL</span>,
+  layfun = <span class='kw'>layout.auto</span>,
+  beforecut = <span class='fl'>FALSE</span>,
+  pop.leg = <span class='fl'>TRUE</span>,
+  size.leg = <span class='fl'>TRUE</span>,
+  scale.leg = <span class='fl'>TRUE</span>,
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -319,7 +319,7 @@ bar. See details.</p></td>
 <p>This function must have both the source data and the output msn to work. 
   The source data must contain the same population structure as the graph. 
   Every other parameter has a default setting.</p>  
-<p></p><h3>Parameter details</h3>
+<p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Parameter details</h3>
 <p></p><ul>
 <li><p><code>inds</code> By default, the graph will label each node (circle) with
   all of the samples (individuals) that are contained within that node. As
@@ -346,7 +346,7 @@ bar. See details.</p></td>
   the function.</p></li>
 </ul>
   
-<p></p><h3>mlg.compute</h3>
+<p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>mlg.compute</h3>
 <p>Each node on the graph represents a different multilocus genotype. 
   The edges on the graph represent genetic distances that connect the
   multilocus genotypes. In genclone objects, it is possible to set the
@@ -358,7 +358,7 @@ bar. See details.</p></td>
   "original" or "contracted". This is specified in the <code>mlg.compute</code>
   argument, above.</p>
   
-<p></p><h3>legends</h3>
+<p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>legends</h3>
 <p>To avoid drawing the legend over the graph, legends 
   are separated by different plotting areas. This means that if legends are 
   included, you cannot plot multiple MSNs in a single plot. The scale bar (to
@@ -370,15 +370,19 @@ bar. See details.</p></td>
     <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/igraph/man/layout_nicely.html'>layout.auto</a></code> <code><a href='https://rdrr.io/pkg/igraph/man/plot.igraph.html'>plot.igraph</a></code>
 <code><a href='poppr.msn.html'>poppr.msn</a></code> <code><a href='bruvo.msn.html'>bruvo.msn</a></code> <code><a href='greycurve.html'>greycurve</a></code>
 <code><a href='https://rdrr.io/pkg/igraph/man/delete_edges.html'>delete_edges</a></code> <code><a href='https://rdrr.io/r/grDevices/palette.html'>palette</a></code></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Using a data set of the Aphanomyces eutieches root rot pathogen.</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Aeut</span>)
-<span class='no'>adist</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='diss.dist.html'>diss.dist</a></span>(<span class='no'>Aeut</span>, <span class='kw'>percent</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='no'>amsn</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='poppr.msn.html'>poppr.msn</a></span>(<span class='no'>Aeut</span>, <span class='no'>adist</span>, <span class='kw'>showplot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Aeut</span>)
+<span class='kw'>adist</span> <span class='op'>&lt;-</span> <span class='fu'><a href='diss.dist.html'>diss.dist</a></span>(<span class='kw'>Aeut</span>, percent = <span class='fl'>TRUE</span>)
+<span class='kw'>amsn</span> <span class='op'>&lt;-</span> <span class='fu'><a href='poppr.msn.html'>poppr.msn</a></span>(<span class='kw'>Aeut</span>, <span class='kw'>adist</span>, showplot = <span class='fl'>FALSE</span>)
 
 <span class='co'># Default</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'>"igraph"</span>) <span class='co'># To get all the layouts.</span></div><div class='output co'>#&gt; <span class='message'></span>
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'><a href='http://igraph.org'>"igraph"</a></span>) <span class='co'># To get all the layouts.</span>
+</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Attaching package: ‘igraph’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:ape’:</span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    edges, mst, ring</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
@@ -386,87 +390,100 @@ bar. See details.</p></td>
 #&gt; <span class='message'>    decompose, spectrum</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:base’:</span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    union</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>500</span>)
-<span class='fu'>plot_poppr_msn</span>(<span class='no'>Aeut</span>, <span class='no'>amsn</span>, <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>15</span>)</div><div class='img'><img src='plot_poppr_msn-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'>plot_poppr_msn</span>(<span class='kw'>Aeut</span>, <span class='kw'>amsn</span>, gadj = <span class='fl'>15</span>)
+</div><div class='img'><img src='plot_poppr_msn-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># \dontrun{</span>
 
 <span class='co'># Different layouts (from igraph) can be used by supplying the function name.</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>500</span>)
-<span class='fu'>plot_poppr_msn</span>(<span class='no'>Aeut</span>, <span class='no'>amsn</span>, <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>15</span>, <span class='kw'>layfun</span> <span class='kw'>=</span> <span class='no'>layout_with_kk</span>)</div><div class='img'><img src='plot_poppr_msn-2.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'>plot_poppr_msn</span>(<span class='kw'>Aeut</span>, <span class='kw'>amsn</span>, gadj = <span class='fl'>15</span>, layfun = <span class='kw'>layout_with_kk</span>)
+</div><div class='img'><img src='plot_poppr_msn-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Removing link between populations (cutoff = 0.2) and labelling no individuals</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>500</span>)
-<span class='fu'>plot_poppr_msn</span>(<span class='no'>Aeut</span>, <span class='no'>amsn</span>, <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"none"</span>, <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>15</span>, <span class='kw'>beforecut</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.2</span>)</div><div class='img'><img src='plot_poppr_msn-3.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'>plot_poppr_msn</span>(<span class='kw'>Aeut</span>, <span class='kw'>amsn</span>, inds = <span class='st'>"none"</span>, gadj = <span class='fl'>15</span>, beforecut = <span class='fl'>TRUE</span>, cutoff = <span class='fl'>0.2</span>)
+</div><div class='img'><img src='plot_poppr_msn-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Labelling individual #57 because it is an MLG that crosses populations</span>
 <span class='co'># Showing clusters of MLGS with at most 5% variation</span>
 <span class='co'># Notice that the Mt. Vernon population appears to be more clonal</span>
-<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>50</span>)
-<span class='fu'>plot_poppr_msn</span>(<span class='no'>Aeut</span>, <span class='no'>amsn</span>, <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>15</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"057"</span>)</div><div class='img'><img src='plot_poppr_msn-4.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>50</span>) 
+<span class='fu'>plot_poppr_msn</span>(<span class='kw'>Aeut</span>, <span class='kw'>amsn</span>, gadj = <span class='fl'>15</span>, cutoff = <span class='fl'>0.05</span>, inds = <span class='st'>"057"</span>)
+</div><div class='img'><img src='plot_poppr_msn-4.png' alt='' width='700' height='433' /></div><div class='input'>
 
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>partial_clone</span>)
-<span class='no'>pcmsn</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='bruvo.msn.html'>bruvo.msn</a></span>(<span class='no'>partial_clone</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>1</span>, <span class='fl'>10</span>))</div><div class='img'><img src='plot_poppr_msn-5.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>partial_clone</span>)
+<span class='kw'>pcmsn</span> <span class='op'>&lt;-</span> <span class='fu'><a href='bruvo.msn.html'>bruvo.msn</a></span>(<span class='kw'>partial_clone</span>, replen = <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>1</span>, <span class='fl'>10</span>))
+</div><div class='img'><img src='plot_poppr_msn-5.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># You can plot using a color palette or a vector of named colors</span>
 <span class='co'># Here's a way to define the colors beforehand</span>
-<span class='no'>pc_colors</span> <span class='kw'>&lt;-</span> <span class='fu'>nPop</span>(<span class='no'>partial_clone</span>) <span class='kw'>%&gt;%</span>
-  <span class='kw pkg'>RColorBrewer</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html'>brewer.pal</a></span>(<span class='st'>"Set2"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://rdrr.io/r/stats/setNames.html'>setNames</a></span>(<span class='fu'>popNames</span>(<span class='no'>partial_clone</span>))
+<span class='kw'>pc_colors</span> <span class='op'>&lt;-</span> <span class='fu'>nPop</span>(<span class='kw'>partial_clone</span>) <span class='op'>%&gt;%</span> 
+  <span class='kw'>RColorBrewer</span>::<span class='fu'><a href='https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html'>brewer.pal</a></span>(<span class='st'>"Set2"</span>) <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='https://rdrr.io/r/stats/setNames.html'>setNames</a></span>(<span class='fu'>popNames</span>(<span class='kw'>partial_clone</span>))
 
-<span class='no'>pc_colors</span></div><div class='output co'>#&gt;         1         2         3         4 
+<span class='kw'>pc_colors</span>
+</div><div class='output co'>#&gt;         1         2         3         4 
 #&gt; "#66C2A5" "#FC8D62" "#8DA0CB" "#E78AC3" </div><div class='input'>
 <span class='co'># Labelling the samples contained in multilocus genotype 9</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>999</span>)
-<span class='fu'>plot_poppr_msn</span>(<span class='no'>partial_clone</span>, <span class='no'>pcmsn</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='no'>pc_colors</span>, <span class='kw'>inds</span> <span class='kw'>=</span> <span class='fl'>9</span>)</div><div class='input'>
+<span class='fu'>plot_poppr_msn</span>(<span class='kw'>partial_clone</span>, <span class='kw'>pcmsn</span>, palette = <span class='kw'>pc_colors</span>, inds = <span class='fl'>9</span>)
+</div><div class='input'>
 <span class='co'># Doing the same thing, but using one of the sample names as input.</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>999</span>)
-<span class='fu'>plot_poppr_msn</span>(<span class='no'>partial_clone</span>, <span class='no'>pcmsn</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='no'>pc_colors</span>, <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"sim 20"</span>)</div><div class='img'><img src='plot_poppr_msn-6.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'>plot_poppr_msn</span>(<span class='kw'>partial_clone</span>, <span class='kw'>pcmsn</span>, palette = <span class='kw'>pc_colors</span>, inds = <span class='st'>"sim 20"</span>)
+</div><div class='img'><img src='plot_poppr_msn-6.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Note that this is case sensitive. Nothing is labeled. </span>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>999</span>)
-<span class='fu'>plot_poppr_msn</span>(<span class='no'>partial_clone</span>, <span class='no'>pcmsn</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='no'>pc_colors</span>, <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"Sim 20"</span>)</div><div class='img'><img src='plot_poppr_msn-7.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'>plot_poppr_msn</span>(<span class='kw'>partial_clone</span>, <span class='kw'>pcmsn</span>, palette = <span class='kw'>pc_colors</span>, inds = <span class='st'>"Sim 20"</span>)
+</div><div class='img'><img src='plot_poppr_msn-7.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Something pretty</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>microbov</span>)
-<span class='no'>mdist</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='diss.dist.html'>diss.dist</a></span>(<span class='no'>microbov</span>, <span class='kw'>percent</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='no'>micmsn</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='poppr.msn.html'>poppr.msn</a></span>(<span class='no'>microbov</span>, <span class='no'>mdist</span>, <span class='kw'>showplot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>microbov</span>)
+<span class='kw'>mdist</span> <span class='op'>&lt;-</span> <span class='fu'><a href='diss.dist.html'>diss.dist</a></span>(<span class='kw'>microbov</span>, percent = <span class='fl'>TRUE</span>)
+<span class='kw'>micmsn</span> <span class='op'>&lt;-</span> <span class='fu'><a href='poppr.msn.html'>poppr.msn</a></span>(<span class='kw'>microbov</span>, <span class='kw'>mdist</span>, showplot = <span class='fl'>FALSE</span>)
 
-<span class='fu'>plot_poppr_msn</span>(<span class='no'>microbov</span>, <span class='no'>micmsn</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='st'>"terrain.colors"</span>, <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"n"</span>,
-  <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='img'><img src='plot_poppr_msn-8.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot_poppr_msn</span>(<span class='no'>microbov</span>, <span class='no'>micmsn</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='st'>"terrain.colors"</span>, <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"n"</span>,
-  <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.3</span>, <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='img'><img src='plot_poppr_msn-9.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'>plot_poppr_msn</span>(<span class='kw'>microbov</span>, <span class='kw'>micmsn</span>, palette = <span class='st'>"terrain.colors"</span>, inds = <span class='st'>"n"</span>, 
+  quantiles = <span class='fl'>FALSE</span>)
+</div><div class='img'><img src='plot_poppr_msn-8.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot_poppr_msn</span>(<span class='kw'>microbov</span>, <span class='kw'>micmsn</span>, palette = <span class='st'>"terrain.colors"</span>, inds = <span class='st'>"n"</span>, 
+  cutoff = <span class='fl'>0.3</span>, quantiles = <span class='fl'>FALSE</span>)
+</div><div class='img'><img src='plot_poppr_msn-9.png' alt='' width='700' height='433' /></div><div class='input'>  
 <span class='co'>### Utilizing vectors for palettes</span>
 
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Pram</span>)
-<span class='no'>Pram_sub</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='no'>Pram</span>, <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Nursery_CA"</span>, <span class='st'>"Nursery_OR"</span>))
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Pram</span>)
+<span class='kw'>Pram_sub</span> <span class='op'>&lt;-</span> <span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='kw'>Pram</span>, exclude = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Nursery_CA"</span>, <span class='st'>"Nursery_OR"</span>))
 
 <span class='co'># Creating the network for the forest</span>
-<span class='no'>min_span_net_sub</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='bruvo.msn.html'>bruvo.msn</a></span>(<span class='no'>Pram_sub</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='fu'>other</span>(<span class='no'>Pram</span>)$<span class='no'>REPLEN</span>,
-                              <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>loss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>showplot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-                              <span class='kw'>include.ties</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-
+<span class='kw'>min_span_net_sub</span> <span class='op'>&lt;-</span> <span class='fu'><a href='bruvo.msn.html'>bruvo.msn</a></span>(<span class='kw'>Pram_sub</span>, replen = <span class='fu'>other</span>(<span class='kw'>Pram</span>)<span class='op'>$</span><span class='kw'>REPLEN</span>, 
+                              add = <span class='fl'>TRUE</span>, loss = <span class='fl'>TRUE</span>, showplot = <span class='fl'>FALSE</span>, 
+                              include.ties = <span class='fl'>TRUE</span>)
+                              
 <span class='co'># Creating the network with nurseries</span>
-<span class='no'>min_span_net</span>     <span class='kw'>&lt;-</span> <span class='fu'><a href='bruvo.msn.html'>bruvo.msn</a></span>(<span class='no'>Pram</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='fu'>other</span>(<span class='no'>Pram</span>)$<span class='no'>REPLEN</span>,
-                              <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>loss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>showplot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-                              <span class='kw'>include.ties</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='kw'>min_span_net</span>     <span class='op'>&lt;-</span> <span class='fu'><a href='bruvo.msn.html'>bruvo.msn</a></span>(<span class='kw'>Pram</span>, replen = <span class='fu'>other</span>(<span class='kw'>Pram</span>)<span class='op'>$</span><span class='kw'>REPLEN</span>, 
+                              add = <span class='fl'>TRUE</span>, loss = <span class='fl'>TRUE</span>, showplot = <span class='fl'>FALSE</span>, 
+                              include.ties = <span class='fl'>TRUE</span>)
 
 <span class='co'># Only forest genotypes</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>70</span>)
-<span class='fu'>plot_poppr_msn</span>(<span class='no'>Pram</span>,
-               <span class='no'>min_span_net_sub</span>,
-               <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"ALL"</span>,
-               <span class='kw'>mlg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-               <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>9</span>,
-               <span class='kw'>nodescale</span> <span class='kw'>=</span> <span class='fl'>5</span>,
-               <span class='kw'>palette</span> <span class='kw'>=</span> <span class='fu'>other</span>(<span class='no'>Pram</span>)$<span class='no'>comparePal</span>,
-               <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-               <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-               <span class='kw'>beforecut</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='plot_poppr_msn-10.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'>plot_poppr_msn</span>(<span class='kw'>Pram</span>,
+               <span class='kw'>min_span_net_sub</span>,
+               inds = <span class='st'>"ALL"</span>,
+               mlg = <span class='fl'>TRUE</span>,
+               gadj = <span class='fl'>9</span>,
+               nodescale = <span class='fl'>5</span>,
+               palette = <span class='fu'>other</span>(<span class='kw'>Pram</span>)<span class='op'>$</span><span class='kw'>comparePal</span>,
+               cutoff = <span class='kw'>NULL</span>,
+               quantiles = <span class='fl'>FALSE</span>,
+               beforecut = <span class='fl'>TRUE</span>)
+</div><div class='img'><img src='plot_poppr_msn-10.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># With Nurseries</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>70</span>)
-<span class='fu'>plot_poppr_msn</span>(<span class='no'>Pram</span>,
-               <span class='no'>min_span_net</span>,
-               <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"ALL"</span>,
-               <span class='kw'>mlg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-               <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>9</span>,
-               <span class='kw'>nodescale</span> <span class='kw'>=</span> <span class='fl'>5</span>,
-               <span class='kw'>palette</span> <span class='kw'>=</span> <span class='fu'>other</span>(<span class='no'>Pram</span>)$<span class='no'>comparePal</span>,
-               <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-               <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-               <span class='kw'>beforecut</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='plot_poppr_msn-11.png' alt='' width='700' height='433' /></div><div class='input'># }
+<span class='fu'>plot_poppr_msn</span>(<span class='kw'>Pram</span>,
+               <span class='kw'>min_span_net</span>,
+               inds = <span class='st'>"ALL"</span>,
+               mlg = <span class='fl'>TRUE</span>,
+               gadj = <span class='fl'>9</span>,
+               nodescale = <span class='fl'>5</span>,
+               palette = <span class='fu'>other</span>(<span class='kw'>Pram</span>)<span class='op'>$</span><span class='kw'>comparePal</span>,
+               cutoff = <span class='kw'>NULL</span>,
+               quantiles = <span class='fl'>FALSE</span>,
+               beforecut = <span class='fl'>TRUE</span>)
+</div><div class='img'><img src='plot_poppr_msn-11.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -483,7 +500,7 @@ bar. See details.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

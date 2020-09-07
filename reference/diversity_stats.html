@@ -145,7 +145,7 @@ genotypes per population." />
 genotypes per population.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>diversity_stats</span>(<span class='no'>z</span>, <span class='kw'>H</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>G</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>lambda</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>E5</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>diversity_stats</span>(<span class='kw'>z</span>, H = <span class='fl'>TRUE</span>, G = <span class='fl'>TRUE</span>, lambda = <span class='fl'>TRUE</span>, E5 = <span class='fl'>TRUE</span>, <span class='kw'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -194,41 +194,46 @@ The calculations of H, G, and lambda are all performed by
 
     <div class='dont-index'><p><code><a href='diversity_boot.html'>diversity_boot()</a></code> <code><a href='diversity_ci.html'>diversity_ci()</a></code>
 <code><a href='poppr.html'>poppr()</a></code></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>poppr</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Pinf</span>)
-<span class='no'>tab</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mlg.html'>mlg.table</a></span>(<span class='no'>Pinf</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'>diversity_stats</span>(<span class='no'>tab</span>)</div><div class='output co'>#&gt;                Index
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://grunwaldlab.github.io/poppr'>poppr</a></span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Pinf</span>)
+<span class='kw'>tab</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mlg.html'>mlg.table</a></span>(<span class='kw'>Pinf</span>, plot = <span class='fl'>FALSE</span>)
+<span class='fu'>diversity_stats</span>(<span class='kw'>tab</span>)
+</div><div class='output co'>#&gt;                Index
 #&gt; Pop                    H        G    lambda       E.5
 #&gt;   South America 3.267944 23.29032 0.9570637 0.8825297
 #&gt;   North America 3.687013 34.90909 0.9713542 0.8711297</div><div class='input'><span class='co'># \dontrun{</span>
 <span class='co'># Example using the poweRlaw package to calculate the negative slope of the</span>
 <span class='co'># Pareto distribution.</span>
 
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'>"poweRlaw"</span>)
-<span class='no'>power_law_beta</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>){
-  <span class='no'>xpow</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/poweRlaw/man/displ.html'>displ</a></span>(<span class='no'>x</span>[<span class='no'>x</span> <span class='kw'>&gt;</span> <span class='fl'>0</span>])                 <span class='co'># Generate the distribution</span>
-  <span class='no'>xpow</span>$<span class='fu'>setPars</span>(<span class='fu'><a href='https://rdrr.io/pkg/poweRlaw/man/estimate_pars.html'>estimate_pars</a></span>(<span class='no'>xpow</span>))       <span class='co'># Estimate the parameters</span>
-  <span class='no'>xdat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>xpow</span>, <span class='kw'>draw</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)        <span class='co'># Extract the data</span>
-  <span class='no'>xlm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='no'>y</span>) ~ <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='no'>x</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>xdat</span>) <span class='co'># Run log-log linear model for slope</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/function.html'>return</a></span>(-<span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span>(<span class='no'>xlm</span>)[<span class='fl'>2</span>])
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'><a href='https://github.com/csgillespie/poweRlaw'>"poweRlaw"</a></span>)
+<span class='kw'>power_law_beta</span> <span class='op'>&lt;-</span> <span class='fu'>function</span>(<span class='kw'>x</span>){
+  <span class='kw'>xpow</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/poweRlaw/man/displ.html'>displ</a></span>(<span class='kw'>x</span>[<span class='kw'>x</span> <span class='op'>&gt;</span> <span class='fl'>0</span>])                 <span class='co'># Generate the distribution</span>
+  <span class='kw'>xpow</span><span class='op'>$</span><span class='fu'>setPars</span>(<span class='fu'><a href='https://rdrr.io/pkg/poweRlaw/man/estimate_pars.html'>estimate_pars</a></span>(<span class='kw'>xpow</span>))       <span class='co'># Estimate the parameters</span>
+  <span class='kw'>xdat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span>(<span class='kw'>xpow</span>, draw = <span class='fl'>FALSE</span>)        <span class='co'># Extract the data</span>
+  <span class='kw'>xlm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='kw'>y</span>) <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='kw'>x</span>), data = <span class='kw'>xdat</span>) <span class='co'># Run log-log linear model for slope</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/function.html'>return</a></span>(<span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span>(<span class='kw'>xlm</span>)[<span class='fl'>2</span>])
 }
 
-<span class='no'>Beta</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>){
-  <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/drop.html'>drop</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='no'>x</span>))
-  <span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='no'>x</span>)) <span class='kw'>&gt;</span> <span class='fl'>1</span>){
-    <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/apply.html'>apply</a></span>(<span class='no'>x</span>, <span class='fl'>1</span>, <span class='no'>power_law_beta</span>)
-  } <span class='kw'>else</span> {
-    <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>power_law_beta</span>(<span class='no'>x</span>)
+<span class='kw'>Beta</span> <span class='op'>&lt;-</span> <span class='fu'>function</span>(<span class='kw'>x</span>){
+  <span class='kw'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/drop.html'>drop</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='kw'>x</span>))
+  <span class='co'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='kw'>x</span>)) <span class='op'>&gt;</span> <span class='fl'>1</span>){
+    <span class='kw'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/apply.html'>apply</a></span>(<span class='kw'>x</span>, <span class='fl'>1</span>, <span class='kw'>power_law_beta</span>)
+  } <span class='co'>else</span> {
+    <span class='kw'>res</span> <span class='op'>&lt;-</span> <span class='fu'>power_law_beta</span>(<span class='kw'>x</span>)
   }
-  <span class='fu'><a href='https://rdrr.io/r/base/function.html'>return</a></span>(<span class='no'>res</span>)
+  <span class='fu'><a href='https://rdrr.io/r/base/function.html'>return</a></span>(<span class='kw'>res</span>)
 }
 
-<span class='fu'>diversity_stats</span>(<span class='no'>tab</span>, <span class='kw'>B</span> <span class='kw'>=</span> <span class='no'>Beta</span>)</div><div class='output co'>#&gt;                Index
+<span class='fu'>diversity_stats</span>(<span class='kw'>tab</span>, B = <span class='kw'>Beta</span>)
+</div><div class='output co'>#&gt;                Index
 #&gt; Pop                    H        G    lambda       E.5        B
 #&gt;   South America 3.267944 23.29032 0.9570637 0.8825297 2.087440
-#&gt;   North America 3.687013 34.90909 0.9713542 0.8711297 2.735194</div><div class='input'># }
+#&gt;   North America 3.687013 34.90909 0.9713542 0.8711297 2.735194</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -245,7 +250,7 @@ The calculations of H, G, and lambda are all performed by
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

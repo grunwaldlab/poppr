@@ -150,15 +150,15 @@ to have a downward bias. See the details for more information.</p>
     </div>
 
     <pre class="usage"><span class='fu'>diversity_boot</span>(
-  <span class='no'>tab</span>,
-  <span class='no'>n</span>,
-  <span class='kw'>n.boot</span> <span class='kw'>=</span> <span class='fl'>1L</span>,
-  <span class='kw'>n.rare</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>H</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>G</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>lambda</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>E5</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='no'>...</span>
+  <span class='kw'>tab</span>,
+  <span class='kw'>n</span>,
+  n.boot = <span class='fl'>1L</span>,
+  n.rare = <span class='kw'>NULL</span>,
+  H = <span class='fl'>TRUE</span>,
+  G = <span class='fl'>TRUE</span>,
+  lambda = <span class='fl'>TRUE</span>,
+  E5 = <span class='fl'>TRUE</span>,
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -230,7 +230,7 @@ proportion of each MLG in the data.
 </pre></li>
 </ul>
 
-<h3>Downward Bias</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Downward Bias</h3>
 <p>When sampling with replacement, the diversity statistics here present a
 downward bias partially due to the small number of samples in the data.
 The result is that the mean of the bootstrapped samples will often be
@@ -250,12 +250,16 @@ interpret the results of this function.</p>
 <code><a href='diversity_ci.html'>diversity_ci()</a></code> for confidence intervals and plotting, and
 <code><a href='poppr.html'>poppr()</a></code>. For bootstrap sampling:
 <code><a href='https://rdrr.io/r/stats/Multinom.html'>stats::rmultinom()</a></code> <code><a href='https://rdrr.io/pkg/boot/man/boot.html'>boot::boot()</a></code></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>poppr</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Pinf</span>)
-<span class='no'>tab</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mlg.html'>mlg.table</a></span>(<span class='no'>Pinf</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'>diversity_boot</span>(<span class='no'>tab</span>, <span class='fl'>10L</span>)</div><div class='output co'>#&gt; $`South America`
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://grunwaldlab.github.io/poppr'>poppr</a></span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Pinf</span>)
+<span class='kw'>tab</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mlg.html'>mlg.table</a></span>(<span class='kw'>Pinf</span>, plot = <span class='fl'>FALSE</span>)
+<span class='fu'>diversity_boot</span>(<span class='kw'>tab</span>, <span class='fl'>10L</span>)
+</div><div class='output co'>#&gt; $`South America`
 #&gt; 
 #&gt; PARAMETRIC BOOTSTRAP
 #&gt; 
@@ -290,9 +294,11 @@ interpret the results of this function.</p>
 #&gt; t4*  0.8711297 -4.199509e-04  0.04615188
 #&gt; </div><div class='input'><span class='co'># \dontrun{</span>
 <span class='co'># This can be done in a parallel fashion (OSX uses "multicore", Windows uses "snow")</span>
-<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='fu'>diversity_boot</span>(<span class='no'>tab</span>, <span class='fl'>10000L</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='st'>"multicore"</span>, <span class='kw'>ncpus</span> <span class='kw'>=</span> <span class='fl'>4L</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   5.907   2.042   2.226 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='fu'>diversity_boot</span>(<span class='no'>tab</span>, <span class='fl'>10000L</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   4.585   0.110   4.718 </div><div class='input'># }
+<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='fu'>diversity_boot</span>(<span class='kw'>tab</span>, <span class='fl'>10000L</span>, parallel = <span class='st'>"multicore"</span>, ncpus = <span class='fl'>4L</span>))
+</div><div class='output co'>#&gt;    user  system elapsed 
+#&gt;   5.756   1.781   2.524 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='fu'>diversity_boot</span>(<span class='kw'>tab</span>, <span class='fl'>10000L</span>))
+</div><div class='output co'>#&gt;    user  system elapsed 
+#&gt;   4.615   0.147   4.828 </div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -309,7 +315,7 @@ interpret the results of this function.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

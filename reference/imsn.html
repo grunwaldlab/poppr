@@ -170,7 +170,7 @@ network and even save the results to a pdf or png file.</p>
 
     
 
-<h3>Buttons</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Buttons</h3>
 <p>In the left hand panel, there are three buttons to execute the functions.
 These allow you to run the data set after you manipulate all of the
 parameters.</p>
@@ -186,7 +186,7 @@ changes to the display of the minimum spanning network.</p></li>
 </ul>
 
 
-<h3>Tabs</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Tabs</h3>
 
 
 <p>The right hand panel contains different tabs related to your data set of
@@ -207,28 +207,33 @@ PDF or PNG image.</p></li>
 
     <div class='dont-index'><p><code><a href='plot_poppr_msn.html'>plot_poppr_msn</a></code> <code><a href='diss.dist.html'>diss.dist</a></code>
   <code><a href='bruvo.dist.html'>bruvo.dist</a></code> <code><a href='bruvo.msn.html'>bruvo.msn</a></code> <code><a href='poppr.msn.html'>poppr.msn</a></code>
-  <code><a href='genetic_distance.html'>nei.dist</a></code> <code><a href='popsub.html'>popsub</a></code> <code><a href='missingno.html'>missingno</a></code></p></div>
+  <code><a href='nei.dist.html'>nei.dist</a></code> <code><a href='popsub.html'>popsub</a></code> <code><a href='missingno.html'>missingno</a></code></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
 
 <span class='co'># Set up some data</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'>"poppr"</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'><a href='https://grunwaldlab.github.io/poppr'>"poppr"</a></span>)
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'>"magrittr"</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>monpop</span>)
-<span class='fu'>splitStrata</span>(<span class='no'>monpop</span>) <span class='kw'>&lt;-</span> ~<span class='no'>Tree</span>/<span class='no'>Year</span>/<span class='no'>Symptom</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>monpop</span>)</div><div class='output co'>#&gt; 
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>monpop</span>)
+<span class='fu'>splitStrata</span>(<span class='kw'>monpop</span>) <span class='op'>&lt;-</span> <span class='op'>~</span><span class='kw'>Tree</span><span class='op'>/</span><span class='kw'>Year</span><span class='op'>/</span><span class='kw'>Symptom</span>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='kw'>monpop</span>)
+</div><div class='output co'>#&gt; 
 #&gt; // Number of individuals: 694
 #&gt; // Group sizes: 23 41 132 73 5 13 1 64 85 130 30 97
 #&gt; // Number of alleles per locus: 3 6 3 11 9 5 8 7 5 9 8 11 10
 #&gt; // Number of alleles per group: 48 53 58 48 37 40 13 44 60 64 60 63
 #&gt; // Percentage of missing data: 0.51 %
-#&gt; // Observed heterozygosity: 0</div><div class='input'><span class='no'>monpop_ssr</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>CHMFc4</span> <span class='kw'>=</span> <span class='fl'>7</span>, <span class='kw'>CHMFc5</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>CHMFc12</span> <span class='kw'>=</span> <span class='fl'>4</span>,
-                <span class='kw'>SEA</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>SED</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>SEE</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>SEG</span> <span class='kw'>=</span> <span class='fl'>6</span>,
-                <span class='kw'>SEI</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>SEL</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>SEN</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>SEP</span> <span class='kw'>=</span> <span class='fl'>4</span>,
-                <span class='kw'>SEQ</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>SER</span> <span class='kw'>=</span> <span class='fl'>4</span>)
-<span class='no'>t26</span> <span class='kw'>&lt;-</span> <span class='no'>monpop</span> <span class='kw'>%&gt;%</span> <span class='fu'>setPop</span>(~<span class='no'>Tree</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='st'>"26"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>setPop</span>(~<span class='no'>Year</span>/<span class='no'>Symptom</span>)
-<span class='no'>t26</span></div><div class='output co'>#&gt; 
+#&gt; // Observed heterozygosity: 0</div><div class='input'><span class='kw'>monpop_ssr</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(CHMFc4 = <span class='fl'>7</span>, CHMFc5 = <span class='fl'>2</span>, CHMFc12 = <span class='fl'>4</span>, 
+                SEA = <span class='fl'>4</span>, SED = <span class='fl'>4</span>, SEE = <span class='fl'>2</span>, SEG = <span class='fl'>6</span>, 
+                SEI = <span class='fl'>3</span>, SEL = <span class='fl'>4</span>, SEN = <span class='fl'>2</span>, SEP = <span class='fl'>4</span>, 
+                SEQ = <span class='fl'>2</span>, SER = <span class='fl'>4</span>)
+<span class='kw'>t26</span> <span class='op'>&lt;-</span> <span class='kw'>monpop</span> <span class='op'>%&gt;%</span> <span class='fu'>setPop</span>(<span class='op'>~</span><span class='kw'>Tree</span>) <span class='op'>%&gt;%</span> <span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='st'>"26"</span>) <span class='op'>%&gt;%</span> <span class='fu'>setPop</span>(<span class='op'>~</span><span class='kw'>Year</span><span class='op'>/</span><span class='kw'>Symptom</span>)
+<span class='kw'>t26</span>
+</div><div class='output co'>#&gt; 
 #&gt; This is a genclone object
 #&gt; -------------------------
 #&gt; Genotype information:
@@ -240,32 +245,33 @@ PDF or PNG image.</p></li>
 #&gt; Population information:
 #&gt; 
 #&gt;      3 strata - Tree, Year, Symptom
-#&gt;      6 populations defined - 9_BB, 9_FR, 10_BB, 10_FR, 11_BB, 11_FR</div><div class='input'><span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()) {
+#&gt;      6 populations defined - 9_BB, 9_FR, 10_BB, 10_FR, 11_BB, 11_FR</div><div class='input'><span class='co'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()) {
   <span class='fu'>imsn</span>() <span class='co'># select Bruvo's distance and enter "monpop_ssr" into the Repeat Length field.</span>
-
+  
   <span class='co'># It is also possible to run this from github if you are connected to the internet.</span>
   <span class='co'># This allows you to access any bug fixes that may have been updated before a formal</span>
   <span class='co'># release on CRAN</span>
 
-  <span class='kw pkg'>shiny</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/shiny/man/runUrl.html'>runGitHub</a></span>(<span class='st'>"grunwaldlab/poppr"</span>, <span class='kw'>subdir</span> <span class='kw'>=</span> <span class='st'>"inst/shiny/msn_explorer"</span>)
+  <span class='kw'>shiny</span>::<span class='fu'><a href='https://shiny.rstudio.com/reference/shiny/latest/runUrl.html'>runGitHub</a></span>(<span class='st'>"grunwaldlab/poppr"</span>, subdir = <span class='st'>"inst/shiny/msn_explorer"</span>)
 
   <span class='co'># You can also use your own distance matrices, but there's a small catch.</span>
   <span class='co'># in order to do so, you must write a function that will subset the matrix</span>
   <span class='co'># to whatever populations are in your data. Here's an example with the above</span>
 
-  <span class='no'>mondist</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='bruvo.dist.html'>bruvo.dist</a></span>(<span class='no'>monpop</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='no'>monpop_ssr</span>)
-  <span class='no'>myDist</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>, <span class='no'>d</span> <span class='kw'>=</span> <span class='no'>mondist</span>){
-   <span class='no'>dm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='no'>d</span>)          <span class='co'># Convert the dist object to a square matrix</span>
-   <span class='no'>xi</span> <span class='kw'>&lt;-</span> <span class='fu'>indNames</span>(<span class='no'>x</span>)           <span class='co'># Grab the sample names that exist</span>
-   <span class='fu'><a href='https://rdrr.io/r/base/function.html'>return</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/dist.html'>as.dist</a></span>(<span class='no'>dm</span>[<span class='no'>xi</span>, <span class='no'>xi</span>])) <span class='co'># return only the elements that have the names</span>
+  <span class='kw'>mondist</span> <span class='op'>&lt;-</span> <span class='fu'><a href='bruvo.dist.html'>bruvo.dist</a></span>(<span class='kw'>monpop</span>, replen = <span class='kw'>monpop_ssr</span>)
+  <span class='kw'>myDist</span> <span class='op'>&lt;-</span> <span class='fu'>function</span>(<span class='kw'>x</span>, <span class='kw'>d</span> = <span class='kw'>mondist</span>){
+   <span class='kw'>dm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='kw'>d</span>)          <span class='co'># Convert the dist object to a square matrix</span>
+   <span class='kw'>xi</span> <span class='op'>&lt;-</span> <span class='fu'>indNames</span>(<span class='kw'>x</span>)           <span class='co'># Grab the sample names that exist</span>
+   <span class='fu'><a href='https://rdrr.io/r/base/function.html'>return</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/dist.html'>as.dist</a></span>(<span class='kw'>dm</span>[<span class='kw'>xi</span>, <span class='kw'>xi</span>])) <span class='co'># return only the elements that have the names</span>
                                <span class='co'># in the data set</span>
   }
   <span class='co'># After executing imsn, choose:</span>
   <span class='co'># Distance: custom</span>
   <span class='co'># myDist</span>
-  <span class='fu'>imsn</span>()
+  <span class='fu'>imsn</span>() 
 }
-<span class='co'># }</span></div></pre>
+<span class='co'># }</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -281,7 +287,7 @@ PDF or PNG image.</p></li>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

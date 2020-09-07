@@ -143,7 +143,7 @@
     <p>Split samples from a genind object into pseudo-haplotypes</p>
     </div>
 
-    <pre class="usage"><span class='fu'>make_haplotypes</span>(<span class='no'>gid</span>)</pre>
+    <pre class="usage"><span class='fu'>make_haplotypes</span>(<span class='kw'>gid</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -174,14 +174,16 @@ haplotypes.</p>
 genind object.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='poppr.amova.html'>poppr.amova()</a></code> <code><a href='https://rdrr.io/pkg/pegas/man/amova.html'>pegas::amova()</a></code> <code><a href='coercion-methods.html'>as.genambig()</a></code></p></div>
+    <div class='dont-index'><p><code><a href='poppr.amova.html'>poppr.amova()</a></code> <code><a href='https://rdrr.io/pkg/pegas/man/amova.html'>pegas::amova()</a></code> <code><a href='bootgen2genind.html'>as.genambig()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Diploid data is doubled -------------------------------------------------</span>
 
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>nancycats</span>)
-<span class='no'>nan9</span> <span class='kw'>&lt;-</span> <span class='no'>nancycats</span>[<span class='kw'>pop</span> <span class='kw'>=</span> <span class='fl'>9</span>]
-<span class='no'>nan9hap</span> <span class='kw'>&lt;-</span> <span class='fu'>make_haplotypes</span>(<span class='no'>nan9</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: No strata found... creating one from the population.</span></div><div class='input'><span class='no'>nan9</span>              <span class='co'># 9 individuals from population 9</span></div><div class='output co'>#&gt; /// GENIND OBJECT /////////
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>nancycats</span>)
+<span class='kw'>nan9</span> <span class='op'>&lt;-</span> <span class='kw'>nancycats</span>[pop = <span class='fl'>9</span>]
+<span class='kw'>nan9hap</span> <span class='op'>&lt;-</span> <span class='fu'>make_haplotypes</span>(<span class='kw'>nan9</span>) 
+</div><div class='output co'>#&gt; <span class='warning'>Warning: No strata found... creating one from the population.</span></div><div class='input'><span class='kw'>nan9</span>              <span class='co'># 9 individuals from population 9</span>
+</div><div class='output co'>#&gt; /// GENIND OBJECT /////////
 #&gt; 
 #&gt;  // 9 individuals; 9 loci; 108 alleles; size: 28.6 Kb
 #&gt; 
@@ -197,7 +199,8 @@ genind object.</p>
 #&gt;  // Optional content
 #&gt;    @pop: population of each individual (group size range: 9-9)
 #&gt;    @other: a list containing: xy 
-#&gt; </div><div class='input'><span class='no'>nan9hap</span>           <span class='co'># 18 haplotypes</span></div><div class='output co'>#&gt; /// GENIND OBJECT /////////
+#&gt; </div><div class='input'><span class='kw'>nan9hap</span>           <span class='co'># 18 haplotypes</span>
+</div><div class='output co'>#&gt; /// GENIND OBJECT /////////
 #&gt; 
 #&gt;  // 18 individuals; 9 loci; 43 alleles; size: 21.3 Kb
 #&gt; 
@@ -212,7 +215,8 @@ genind object.</p>
 #&gt; 
 #&gt;  // Optional content
 #&gt;    @pop: population of each individual (group size range: 2-2)
-#&gt;    @strata: a data frame with 2 columns ( pop, Individual )</div><div class='input'><span class='fu'>strata</span>(<span class='no'>nan9hap</span>)   <span class='co'># strata gains a new column: Individual</span></div><div class='output co'>#&gt;    pop Individual
+#&gt;    @strata: a data frame with 2 columns ( pop, Individual )</div><div class='input'><span class='fu'>strata</span>(<span class='kw'>nan9hap</span>)   <span class='co'># strata gains a new column: Individual</span>
+</div><div class='output co'>#&gt;    pop Individual
 #&gt; 01 P09       N104
 #&gt; 02 P09       N104
 #&gt; 03 P09       N105
@@ -230,7 +234,8 @@ genind object.</p>
 #&gt; 15 P09       N112
 #&gt; 16 P09       N112
 #&gt; 17 P09       N113
-#&gt; 18 P09       N113</div><div class='input'><span class='fu'>indNames</span>(<span class='no'>nan9hap</span>) <span class='co'># individuals are renamed sequentially</span></div><div class='output co'>#&gt;  [1] "01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "14" "15"
+#&gt; 18 P09       N113</div><div class='input'><span class='fu'>indNames</span>(<span class='kw'>nan9hap</span>) <span class='co'># individuals are renamed sequentially</span>
+</div><div class='output co'>#&gt;  [1] "01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "14" "15"
 #&gt; [16] "16" "17" "18"</div><div class='input'>
 
 <span class='co'># Mix ploidy data can be split, but should be treated with caution --------</span>
@@ -238,8 +243,9 @@ genind object.</p>
 <span class='co'># For example, the Pinf data set contains 86 tetraploid individuals, </span>
 <span class='co'># but there appear to only be diploids and triploid genotypes. When </span>
 <span class='co'># we convert to haplotypes, those with all missing data are dropped.</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Pinf</span>)
-<span class='no'>Pinf</span></div><div class='output co'>#&gt; 
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Pinf</span>)
+<span class='kw'>Pinf</span>
+</div><div class='output co'>#&gt; 
 #&gt; This is a genclone object
 #&gt; -------------------------
 #&gt; Genotype information:
@@ -251,11 +257,13 @@ genind object.</p>
 #&gt; Population information:
 #&gt; 
 #&gt;     2 strata - Continent, Country
-#&gt;     2 populations defined - South America, North America</div><div class='input'><span class='no'>pmiss</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='info_table.html'>info_table</a></span>(<span class='no'>Pinf</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"ploidy"</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='make_haplotypes-method-1.png' alt='' width='700' height='433' /></div><div class='input'>
+#&gt;     2 populations defined - South America, North America</div><div class='input'><span class='kw'>pmiss</span> <span class='op'>&lt;-</span> <span class='fu'><a href='info_table.html'>info_table</a></span>(<span class='kw'>Pinf</span>, type = <span class='st'>"ploidy"</span>, plot = <span class='fl'>TRUE</span>)
+</div><div class='img'><img src='make_haplotypes-method-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># No samples appear to be triploid across all loci. This will cause</span>
 <span class='co'># several haplotypes to have a lot of missing data.</span>
-<span class='no'>p_haps</span> <span class='kw'>&lt;-</span> <span class='fu'>make_haplotypes</span>(<span class='no'>Pinf</span>)
-<span class='no'>p_haps</span></div><div class='output co'>#&gt; /// GENIND OBJECT /////////
+<span class='kw'>p_haps</span> <span class='op'>&lt;-</span> <span class='fu'>make_haplotypes</span>(<span class='kw'>Pinf</span>)
+<span class='kw'>p_haps</span>
+</div><div class='output co'>#&gt; /// GENIND OBJECT /////////
 #&gt; 
 #&gt;  // 203 individuals; 11 loci; 95 alleles; size: 137.9 Kb
 #&gt; 
@@ -270,7 +278,8 @@ genind object.</p>
 #&gt; 
 #&gt;  // Optional content
 #&gt;    @pop: population of each individual (group size range: 2-3)
-#&gt;    @strata: a data frame with 3 columns ( Continent, Country, Individual )</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>genind2df</span>(<span class='no'>p_haps</span>), <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>20</span>)</div><div class='output co'>#&gt;       pop Pi02  D13 Pi33 Pi04 Pi4B Pi16  G11 Pi56 Pi63 Pi70 Pi89
+#&gt;    @strata: a data frame with 3 columns ( Continent, Country, Individual )</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>genind2df</span>(<span class='kw'>p_haps</span>), n = <span class='fl'>20</span>)
+</div><div class='output co'>#&gt;       pop Pi02  D13 Pi33 Pi04 Pi4B Pi16  G11 Pi56 Pi63 Pi70 Pi89
 #&gt; 2  PiCO01 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;  205 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
 #&gt; 3  PiCO01  162  136  203  166  213  178  156  174  157  192  179
 #&gt; 4  PiCO01  162  136  203  170  217  178  156  176  157  192  181
@@ -306,7 +315,7 @@ genind object.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

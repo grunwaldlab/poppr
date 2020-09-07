@@ -150,14 +150,14 @@ of multilocus genotypes observed.</p>
     </div>
 
     <pre class="usage"><span class='fu'>genotype_curve</span>(
-  <span class='no'>gen</span>,
-  <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>100</span>,
-  <span class='kw'>maxloci</span> <span class='kw'>=</span> <span class='fl'>0L</span>,
-  <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>thresh</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>dropna</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+  <span class='kw'>gen</span>,
+  sample = <span class='fl'>100</span>,
+  maxloci = <span class='fl'>0L</span>,
+  quiet = <span class='fl'>FALSE</span>,
+  thresh = <span class='fl'>1</span>,
+  plot = <span class='fl'>TRUE</span>,
+  drop = <span class='fl'>TRUE</span>,
+  dropna = <span class='fl'>TRUE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -224,38 +224,47 @@ no effect when <code>drop = FALSE</code></p></td>
   multilocus genotypes in that random sample. This function does not take 
   into account any definitions of MLGs via <code><a href='mlg.filter.html'>mlg.filter</a></code> or 
   <code><a href='mll.custom.html'>mll.custom</a></code>.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>nancycats</span>)
-<span class='no'>nan_geno</span> <span class='kw'>&lt;-</span> <span class='fu'>genotype_curve</span>(<span class='no'>nancycats</span>)</div><div class='img'><img src='genotype_curve-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># \dontrun{</span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>nancycats</span>)
+<span class='kw'>nan_geno</span> <span class='op'>&lt;-</span> <span class='fu'>genotype_curve</span>(<span class='kw'>nancycats</span>)
+</div><div class='img'><img src='genotype_curve-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># \dontrun{</span>
 
 <span class='co'># Marker Type Comparison --------------------------------------------------</span>
 <span class='co'># With AFLP data, it is often necessary to include more markers for resolution</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Aeut</span>)
-<span class='no'>Ageno</span> <span class='kw'>&lt;-</span> <span class='fu'>genotype_curve</span>(<span class='no'>Aeut</span>)</div><div class='img'><img src='genotype_curve-2.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Aeut</span>)
+<span class='kw'>Ageno</span> <span class='op'>&lt;-</span> <span class='fu'>genotype_curve</span>(<span class='kw'>Aeut</span>)
+</div><div class='img'><img src='genotype_curve-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Many microsatellite data sets have hypervariable markers</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>microbov</span>)
-<span class='no'>mgeno</span> <span class='kw'>&lt;-</span> <span class='fu'>geotype_curve</span>(<span class='no'>microbov</span>)</div><div class='output co'>#&gt; <span class='error'>Error in geotype_curve(microbov): could not find function "geotype_curve"</span></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>microbov</span>)
+<span class='kw'>mgeno</span> <span class='op'>&lt;-</span> <span class='fu'>geotype_curve</span>(<span class='kw'>microbov</span>)
+</div><div class='output co'>#&gt; <span class='error'>Error in geotype_curve(microbov): could not find function "geotype_curve"</span></div><div class='input'>
 <span class='co'># Adding a trendline ------------------------------------------------------</span>
 
 <span class='co'># Trendlines: you can add a smoothed trendline with geom_smooth()</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'>"ggplot2"</span>)
-<span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/last_plot.html'>last_plot</a></span>()
-<span class='no'>p</span> + <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span>()</div><div class='output co'>#&gt; <span class='message'>`geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'</span></div><div class='img'><img src='genotype_curve-3.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'><a href='http://ggplot2.tidyverse.org'>"ggplot2"</a></span>)
+<span class='kw'>p</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/last_plot.html'>last_plot</a></span>()
+<span class='kw'>p</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span>()
+</div><div class='output co'>#&gt; <span class='message'>`geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'</span></div><div class='img'><img src='genotype_curve-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Producing Figures for Publication ---------------------------------------</span>
 
 <span class='co'># This data set has been pre filtered</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>monpop</span>)
-<span class='no'>mongeno</span> <span class='kw'>&lt;-</span> <span class='fu'>genotype_curve</span>(<span class='no'>monpop</span>)</div><div class='img'><img src='genotype_curve-4.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>monpop</span>)
+<span class='kw'>mongeno</span> <span class='op'>&lt;-</span> <span class='fu'>genotype_curve</span>(<span class='kw'>monpop</span>)
+</div><div class='img'><img src='genotype_curve-4.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Here, we add a curve and a title for publication</span>
-<span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/last_plot.html'>last_plot</a></span>()
-<span class='no'>mytitle</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/expression.html'>expression</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"Genotype Accumulation Curve for "</span>,
+<span class='kw'>p</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/last_plot.html'>last_plot</a></span>()
+<span class='kw'>mytitle</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/expression.html'>expression</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"Genotype Accumulation Curve for "</span>, 
                             <span class='fu'><a href='https://rdrr.io/r/grDevices/plotmath.html'>italic</a></span>(<span class='st'>"M. fructicola"</span>)))
-<span class='no'>p</span> + <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>12</span>, <span class='kw'>family</span> <span class='kw'>=</span> <span class='st'>"serif"</span>)) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span>(<span class='kw'>title</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>14</span>)) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>ggtitle</a></span>(<span class='no'>mytitle</span>)</div><div class='output co'>#&gt; <span class='message'>`geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'</span></div><div class='img'><img src='genotype_curve-5.png' alt='' width='700' height='433' /></div><div class='input'># }
+<span class='kw'>p</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span>() <span class='op'>+</span> 
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span>() <span class='op'>+</span> 
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span>(text = <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span>(size = <span class='fl'>12</span>, family = <span class='st'>"serif"</span>)) <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span>(title = <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span>(size = <span class='fl'>14</span>)) <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>ggtitle</a></span>(<span class='kw'>mytitle</span>)
+</div><div class='output co'>#&gt; <span class='message'>`geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'</span></div><div class='img'><img src='genotype_curve-5.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># }</span>
 
 </div></pre>
   </div>
@@ -273,7 +282,7 @@ no effect when <code>drop = FALSE</code></p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

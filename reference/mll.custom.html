@@ -145,13 +145,13 @@ data set." />
 data set.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mll.custom</span>(<span class='no'>x</span>, <span class='kw'>set</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>value</span>)
+    <pre class="usage"><span class='fu'>mll.custom</span>(<span class='kw'>x</span>, set = <span class='fl'>TRUE</span>, <span class='kw'>value</span>)
 
-<span class='fu'>mll.custom</span>(<span class='no'>x</span>, <span class='kw'>set</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+<span class='fu'>mll.custom</span>(<span class='kw'>x</span>, set = <span class='fl'>TRUE</span>) <span class='op'>&lt;-</span> <span class='kw'>value</span>
 
-<span class='fu'>mll.levels</span>(<span class='no'>x</span>, <span class='kw'>set</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>value</span>)
+<span class='fu'>mll.levels</span>(<span class='kw'>x</span>, set = <span class='fl'>TRUE</span>, <span class='kw'>value</span>)
 
-<span class='fu'>mll.levels</span>(<span class='no'>x</span>, <span class='kw'>set</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span></pre>
+<span class='fu'>mll.levels</span>(<span class='kw'>x</span>, set = <span class='fl'>TRUE</span>) <span class='op'>&lt;-</span> <span class='kw'>value</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -177,23 +177,29 @@ This can be a vector of ANYTHING that can be turned into a factor.</p></td>
     <p>an object of the same type as x</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='mll-method.html'>mll</a></code> <code><a href='mlg.html'>mlg.table</a></code></p></div>
+    <div class='dont-index'><p><code><a href='mll.html'>mll</a></code> <code><a href='mlg.html'>mlg.table</a></code></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>partial_clone</span>)
-<span class='no'>pc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='coercion-methods.html'>as.genclone</a></span>(<span class='no'>partial_clone</span>)
-<span class='fu'>mll.custom</span>(<span class='no'>pc</span>) <span class='kw'>&lt;-</span> <span class='no'>LETTERS</span>[<span class='fu'><a href='mll-method.html'>mll</a></span>(<span class='no'>pc</span>)]
-<span class='fu'><a href='mll-method.html'>mll</a></span>(<span class='no'>pc</span>)</div><div class='output co'>#&gt;  [1] H I W X V U J C V K X I Y D L B N A I I I Z G M W C Q V F T V L E Y M U O M
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>partial_clone</span>)
+<span class='kw'>pc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='bootgen2genind.html'>as.genclone</a></span>(<span class='kw'>partial_clone</span>)
+<span class='fu'>mll.custom</span>(<span class='kw'>pc</span>) <span class='op'>&lt;-</span> <span class='kw'>LETTERS</span>[<span class='fu'><a href='mll.html'>mll</a></span>(<span class='kw'>pc</span>)]
+<span class='fu'><a href='mll.html'>mll</a></span>(<span class='kw'>pc</span>)
+</div><div class='output co'>#&gt;  [1] H I W X V U J C V K X I Y D L B N A I I I Z G M W C Q V F T V L E Y M U O M
 #&gt; [39] M M B S R M W P A K Y D
 #&gt; Levels: A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</div><div class='input'>
 <span class='co'># Let's say we had a mistake and the A mlg was actually B. </span>
-<span class='fu'>mll.levels</span>(<span class='no'>pc</span>)[<span class='fu'>mll.levels</span>(<span class='no'>pc</span>) <span class='kw'>==</span> <span class='st'>"A"</span>] <span class='kw'>&lt;-</span> <span class='st'>"B"</span>
-<span class='fu'><a href='mll-method.html'>mll</a></span>(<span class='no'>pc</span>)</div><div class='output co'>#&gt;  [1] H I W X V U J C V K X I Y D L B N B I I I Z G M W C Q V F T V L E Y M U O M
+<span class='fu'>mll.levels</span>(<span class='kw'>pc</span>)[<span class='fu'>mll.levels</span>(<span class='kw'>pc</span>) <span class='op'>==</span> <span class='st'>"A"</span>] <span class='op'>&lt;-</span> <span class='st'>"B"</span>
+<span class='fu'><a href='mll.html'>mll</a></span>(<span class='kw'>pc</span>)
+</div><div class='output co'>#&gt;  [1] H I W X V U J C V K X I Y D L B N B I I I Z G M W C Q V F T V L E Y M U O M
 #&gt; [39] M M B S R M W P B K Y D
 #&gt; Levels: B C D E F G H I J K L M N O P Q R S T U V W X Y Z</div><div class='input'>
 <span class='co'># Set the MLL back to the original definition.</span>
-<span class='fu'><a href='mll-method.html'>mll</a></span>(<span class='no'>pc</span>) <span class='kw'>&lt;-</span> <span class='st'>"original"</span>
-<span class='fu'><a href='mll-method.html'>mll</a></span>(<span class='no'>pc</span>)</div><div class='output co'>#&gt;  [1]  8  9 23 24 22 21 10  3 22 11 24  9 25  4 12  2 14  1  9  9  9 26  7 13 23
+<span class='fu'><a href='mll.html'>mll</a></span>(<span class='kw'>pc</span>) <span class='op'>&lt;-</span> <span class='st'>"original"</span>
+<span class='fu'><a href='mll.html'>mll</a></span>(<span class='kw'>pc</span>)
+</div><div class='output co'>#&gt;  [1]  8  9 23 24 22 21 10  3 22 11 24  9 25  4 12  2 14  1  9  9  9 26  7 13 23
 #&gt; [26]  3 17 22  6 20 22 12  5 25 13 21 15 13 13 13  2 19 18 13 23 16  1 11 25  4</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -210,7 +216,7 @@ This can be a vector of ANYTHING that can be turned into a factor.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

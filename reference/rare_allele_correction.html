@@ -208,8 +208,8 @@ that appear at the end of the function call. For example, if you want to set
 the minor allele frequencies to a specific value (let's say 0.001),
 regardless of locus, you can insert <code>e = 0.001</code> along with any other 
 arguments (note, position is not specific):</p><pre>
-<span class='fu'><a href='pgen.html'>pgen</a></span>(<span class='no'>my_data</span>, <span class='kw'>e</span> <span class='kw'>=</span> <span class='fl'>0.001</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'><a href='psex.html'>psex</a></span>(<span class='no'>my_data</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"multiple"</span>, <span class='kw'>e</span> <span class='kw'>=</span> <span class='fl'>0.001</span>)</pre>
+<span class='fu'><a href='pgen.html'>pgen</a></span>(<span class='kw'>my_data</span>, e = <span class='fl'>0.001</span>, log = <span class='fl'>FALSE</span>) 
+<span class='fu'><a href='psex.html'>psex</a></span>(<span class='kw'>my_data</span>, method = <span class='st'>"multiple"</span>, e = <span class='fl'>0.001</span>)</pre>
 
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -225,16 +225,20 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
   <code><a href='pgen.html'>pgen</a></code>, 
   <code><a href='psex.html'>psex</a></code>, 
   <code><a href='rrmlg.html'>rrmlg</a></code></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
 
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Pram</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Pram</span>)
 <span class='co'>#-------------------------------------</span>
 
 <span class='co'># If you set correction = FALSE, you'll notice the zero-valued alleles</span>
 
-<span class='fu'><a href='rraf.html'>rraf</a></span>(<span class='no'>Pram</span>, <span class='kw'>correction</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; $PrMS6A1
+<span class='fu'><a href='rraf.html'>rraf</a></span>(<span class='kw'>Pram</span>, correction = <span class='fl'>FALSE</span>)
+</div><div class='output co'>#&gt; $PrMS6A1
 #&gt; PrMS6A1.165 PrMS6A1.168 
 #&gt;   0.5360825   0.4639175 
 #&gt; 
@@ -264,7 +268,8 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
 #&gt; </div><div class='input'>
 <span class='co'># By default, however, the data will be corrected by 1/n</span>
 
-<span class='fu'><a href='rraf.html'>rraf</a></span>(<span class='no'>Pram</span>)</div><div class='output co'>#&gt; $PrMS6A1
+<span class='fu'><a href='rraf.html'>rraf</a></span>(<span class='kw'>Pram</span>)
+</div><div class='output co'>#&gt; $PrMS6A1
 #&gt; PrMS6A1.165 PrMS6A1.168 
 #&gt;   0.5360825   0.4639175 
 #&gt; 
@@ -294,7 +299,8 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
 #&gt; </div><div class='input'>
 <span class='co'># Of course, this is a diploid organism, we might want to set 1/2n</span>
 
-<span class='fu'><a href='rraf.html'>rraf</a></span>(<span class='no'>Pram</span>, <span class='kw'>mul</span> <span class='kw'>=</span> <span class='fl'>1</span>/<span class='fl'>2</span>)</div><div class='output co'>#&gt; $PrMS6A1
+<span class='fu'><a href='rraf.html'>rraf</a></span>(<span class='kw'>Pram</span>, mul = <span class='fl'>1</span><span class='op'>/</span><span class='fl'>2</span>)
+</div><div class='output co'>#&gt; $PrMS6A1
 #&gt; PrMS6A1.165 PrMS6A1.168 
 #&gt;   0.5360825   0.4639175 
 #&gt; 
@@ -324,7 +330,8 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
 #&gt; </div><div class='input'>
 <span class='co'># To set MAF = 1/2mlg</span>
 
-<span class='fu'><a href='rraf.html'>rraf</a></span>(<span class='no'>Pram</span>, <span class='kw'>d</span> <span class='kw'>=</span> <span class='st'>"mlg"</span>, <span class='kw'>mul</span> <span class='kw'>=</span> <span class='fl'>1</span>/<span class='fl'>2</span>)</div><div class='output co'>#&gt; $PrMS6A1
+<span class='fu'><a href='rraf.html'>rraf</a></span>(<span class='kw'>Pram</span>, d = <span class='st'>"mlg"</span>, mul = <span class='fl'>1</span><span class='op'>/</span><span class='fl'>2</span>)
+</div><div class='output co'>#&gt; $PrMS6A1
 #&gt; PrMS6A1.165 PrMS6A1.168 
 #&gt;   0.5360825   0.4639175 
 #&gt; 
@@ -356,7 +363,8 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
 <span class='co'># derived at each locus with different sample sizes, it's only appropriate to</span>
 <span class='co'># correct based on those sample sizes.</span>
 
-<span class='fu'><a href='rraf.html'>rraf</a></span>(<span class='no'>Pram</span>, <span class='kw'>d</span> <span class='kw'>=</span> <span class='st'>"rrmlg"</span>, <span class='kw'>mul</span> <span class='kw'>=</span> <span class='fl'>1</span>/<span class='fl'>2</span>)</div><div class='output co'>#&gt; $PrMS6A1
+<span class='fu'><a href='rraf.html'>rraf</a></span>(<span class='kw'>Pram</span>, d = <span class='st'>"rrmlg"</span>, mul = <span class='fl'>1</span><span class='op'>/</span><span class='fl'>2</span>)
+</div><div class='output co'>#&gt; $PrMS6A1
 #&gt; PrMS6A1.165 PrMS6A1.168 
 #&gt;   0.5360825   0.4639175 
 #&gt; 
@@ -387,7 +395,8 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
 <span class='co'># If we were going to use these frequencies for simulations, we might want to</span>
 <span class='co'># ensure that they all sum to one. </span>
 
-<span class='fu'><a href='rraf.html'>rraf</a></span>(<span class='no'>Pram</span>, <span class='kw'>d</span> <span class='kw'>=</span> <span class='st'>"mlg"</span>, <span class='kw'>mul</span> <span class='kw'>=</span> <span class='fl'>1</span>/<span class='fl'>2</span>, <span class='kw'>sum_to_one</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; $PrMS6A1
+<span class='fu'><a href='rraf.html'>rraf</a></span>(<span class='kw'>Pram</span>, d = <span class='st'>"mlg"</span>, mul = <span class='fl'>1</span><span class='op'>/</span><span class='fl'>2</span>, sum_to_one = <span class='fl'>TRUE</span>) 
+</div><div class='output co'>#&gt; $PrMS6A1
 #&gt; PrMS6A1.165 PrMS6A1.168 
 #&gt;   0.5360825   0.4639175 
 #&gt; 
@@ -419,7 +428,8 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
 <span class='co'># When we calculate these frequencies based on population, they are heavily</span>
 <span class='co'># influenced by the number of observed mlgs. </span>
 
-<span class='fu'><a href='rraf.html'>rraf</a></span>(<span class='no'>Pram</span>, <span class='kw'>by_pop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>d</span> <span class='kw'>=</span> <span class='st'>"rrmlg"</span>, <span class='kw'>mul</span> <span class='kw'>=</span> <span class='fl'>1</span>/<span class='fl'>2</span>)</div><div class='output co'>#&gt;               PrMS6A1.165 PrMS6A1.168 Pr9C3A1.216 Pr9C3A1.226 PrMS39A1.130
+<span class='fu'><a href='rraf.html'>rraf</a></span>(<span class='kw'>Pram</span>, by_pop = <span class='fl'>TRUE</span>, d = <span class='st'>"rrmlg"</span>, mul = <span class='fl'>1</span><span class='op'>/</span><span class='fl'>2</span>)
+</div><div class='output co'>#&gt;               PrMS6A1.165 PrMS6A1.168 Pr9C3A1.216 Pr9C3A1.226 PrMS39A1.130
 #&gt; Nursery_CA      0.5000000   0.5000000   0.5000000   0.5000000          0.5
 #&gt; Nursery_OR      0.5000000   0.5000000   0.5000000   0.5000000          0.5
 #&gt; JHallCr_OR      0.6166667   0.3833333   0.6166667   0.3833333          0.5
@@ -501,7 +511,8 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
 #&gt; PistolRSF_OR    0.50000000   0.50000000   0.50000000</div><div class='input'>
 <span class='co'># This can be fixed by specifying a specific value</span>
 
-<span class='fu'><a href='rraf.html'>rraf</a></span>(<span class='no'>Pram</span>, <span class='kw'>by_pop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>e</span> <span class='kw'>=</span> <span class='fl'>0.01</span>)</div><div class='output co'>#&gt;               PrMS6A1.165 PrMS6A1.168 Pr9C3A1.216 Pr9C3A1.226 PrMS39A1.130
+<span class='fu'><a href='rraf.html'>rraf</a></span>(<span class='kw'>Pram</span>, by_pop = <span class='fl'>TRUE</span>, e = <span class='fl'>0.01</span>)
+</div><div class='output co'>#&gt;               PrMS6A1.165 PrMS6A1.168 Pr9C3A1.216 Pr9C3A1.226 PrMS39A1.130
 #&gt; Nursery_CA      0.5000000   0.5000000   0.5000000   0.5000000          0.5
 #&gt; Nursery_OR      0.5000000   0.5000000   0.5000000   0.5000000          0.5
 #&gt; JHallCr_OR      0.6166667   0.3833333   0.6166667   0.3833333          0.5
@@ -581,7 +592,7 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
 #&gt; Winchuck_OR           0.01         0.01         0.01
 #&gt; ChetcoMain_OR         0.01         0.01         0.01
 #&gt; PistolRSF_OR          0.01         0.01         0.01</div><div class='input'>
-# }
+<span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -598,7 +609,7 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

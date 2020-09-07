@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>The <span class="pkg">poppr</span> R package — poppr-package • poppr</title>
+<title>The poppr R package — poppr-package • poppr</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,7 +46,7 @@
 
 
 
-<meta property="og:title" content="The <span class="pkg">poppr</span> R package — poppr-package" />
+<meta property="og:title" content="The poppr R package — poppr-package" />
 <meta property="og:description" content="Poppr provides tools for population genetic analysis that
 include genotypic diversity measures, genetic distances with bootstrap
 support, native organization and handling of population hierarchies, and
@@ -169,7 +169,7 @@ SNP data efficiently by packing binary allele calls into single bits.
 respectively. These objects are designed for analysis of clonal organisms
 as they add the <strong>@mlg</strong> slot for keeping track of multilocus
 genotypes and multilocus lineages.</p>
-<h3>Documentation</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Documentation</h3>
 <p>Documentation is available for any function by
 typing <code>?function_name</code> in the R console. Detailed topic explanations
 live in the package vignettes:</p>
@@ -190,7 +190,7 @@ vignette, and details for working with multilocus genotypes are in
 Grünwald, Zhian N. Kamvar, and Sydney E.  Everhart at
 <a href='http://grunwaldlab.github.io/Population_Genetics_in_R'>http://grunwaldlab.github.io/Population_Genetics_in_R</a>.</p>
 
-<h3>Getting help</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Getting help</h3>
 <p>If you have a specific question or issue with
 <span class="pkg">poppr</span>, feel free to contribute to the google group at
 <a href='https://groups.google.com/group/poppr'>https://groups.google.com/group/poppr</a>. If you find a bug and
@@ -225,9 +225,9 @@ available. The functions are documented as:</p><ul>
 <li><p><code><a href='getfile.html'>getfile()</a></code> (x) - Provides a quick GUI to grab files for import</p></li>
 <li><p><code><a href='read.genalex.html'>read.genalex()</a></code> (x) - Reads GenAlEx formatted csv files to a genind object</p></li>
 <li><p><code><a href='genind2genalex.html'>genind2genalex()</a></code> (m) - Converts genind objects to GenAlEx formatted csv files</p></li>
-<li><p><code><a href='coercion-methods.html'>genclone2genind()</a></code> (m) - Removes the @mlg slot from genclone objects</p></li>
-<li><p><code><a href='coercion-methods.html'>as.genambig()</a></code> (m) - Converts genind data to <span class="pkg">polysat</span>'s <a href='https://rdrr.io/pkg/polysat/man/genambig-class.html'>genambig</a> data structure.</p></li>
-<li><p><code><a href='coercion-methods.html'>bootgen2genind()</a></code> (x) - see <code><a href='aboot.html'>aboot()</a></code> for details)</p></li>
+<li><p><code><a href='bootgen2genind.html'>genclone2genind()</a></code> (m) - Removes the @mlg slot from genclone objects</p></li>
+<li><p><code><a href='bootgen2genind.html'>as.genambig()</a></code> (m) - Converts genind data to <span class="pkg">polysat</span>'s <a href='https://rdrr.io/pkg/polysat/man/genambig-class.html'>genambig</a> data structure.</p></li>
+<li><p><code><a href='bootgen2genind.html'>bootgen2genind()</a></code> (x) - see <code><a href='aboot.html'>aboot()</a></code> for details)</p></li>
 </ul>
 
     <h2 class="hasAnchor" id="data-structures"><a class="anchor" href="#data-structures"></a>Data Structures</h2>
@@ -257,14 +257,14 @@ Bruvo's distance where blocks of integer loci can be shuffled.</p></li>
     
 
 <ul>
-<li><p><code><a href='coercion-methods.html'>as.genclone()</a></code> (m) - Converts genind objects to genclone objects</p></li>
+<li><p><code><a href='bootgen2genind.html'>as.genclone()</a></code> (m) - Converts genind objects to genclone objects</p></li>
 <li><p><code><a href='missingno.html'>missingno()</a></code> (m) - Handles missing data</p></li>
 <li><p><code><a href='clonecorrect.html'>clonecorrect()</a></code> (m | s) - Clone-censors at a specified population hierarchy</p></li>
 <li><p><code><a href='informloci.html'>informloci()</a></code> (m) - Detects and removes phylogenetically uninformative loci</p></li>
 <li><p><code><a href='popsub.html'>popsub()</a></code> (m | s) - Subsets genind objects by population</p></li>
 <li><p><code><a href='shufflepop.html'>shufflepop()</a></code> (m) - Shuffles genotypes at each locus using four different shuffling algorithms</p></li>
 <li><p><code><a href='recode_polyploids.html'>recode_polyploids()</a></code> (m | x) - Recodes polyploid data sets with missing alleles imported as "0"</p></li>
-<li><p><code><a href='make_haplotypes-method.html'>make_haplotypes()</a></code> (m | s) - Splits data into pseudo-haplotypes. This is mainly used in AMOVA.</p></li>
+<li><p><code><a href='make_haplotypes.html'>make_haplotypes()</a></code> (m | s) - Splits data into pseudo-haplotypes. This is mainly used in AMOVA.</p></li>
 <li><p><code><a href='test_replen.html'>test_replen()</a></code> (m) - Tests for inconsistent repeat lengths in microsatellite data. For use in <code><a href='bruvo.dist.html'>bruvo.dist()</a></code> functions.</p></li>
 <li><p><code><a href='fix_replen.html'>fix_replen()</a></code> (m) - Fixes inconsistent repeat lengths. For use in <code><a href='bruvo.dist.html'>bruvo.dist()</a></code> functions.</p></li>
 </ul>
@@ -275,12 +275,12 @@ Bruvo's distance where blocks of integer loci can be shuffled.</p></li>
 
 <ul>
 <li><p><code><a href='bruvo.dist.html'>bruvo.dist()</a></code> (m) - Bruvo's distance (see also: <code><a href='fix_replen.html'>fix_replen()</a></code>)</p></li>
-<li><p><code><a href='diss.dist.html'>diss.dist()</a></code> (m) - Absolute genetic distance (see <code><a href='genetic_distance.html'>prevosti.dist()</a></code>)</p></li>
-<li><p><code><a href='genetic_distance.html'>nei.dist()</a></code> (m | x) - Nei's 1978 genetic distance</p></li>
-<li><p><code><a href='genetic_distance.html'>rogers.dist()</a></code> (m | x) - Rogers' euclidean distance</p></li>
-<li><p><code><a href='genetic_distance.html'>reynolds.dist()</a></code> (m | x) - Reynolds' coancestry distance</p></li>
-<li><p><code><a href='genetic_distance.html'>edwards.dist()</a></code> (m | x) - Edwards' angular distance</p></li>
-<li><p><code><a href='genetic_distance.html'>prevosti.dist()</a></code> (m | x) - Prevosti's absolute genetic distance</p></li>
+<li><p><code><a href='diss.dist.html'>diss.dist()</a></code> (m) - Absolute genetic distance (see <code><a href='nei.dist.html'>prevosti.dist()</a></code>)</p></li>
+<li><p><code><a href='nei.dist.html'>nei.dist()</a></code> (m | x) - Nei's 1978 genetic distance</p></li>
+<li><p><code><a href='nei.dist.html'>rogers.dist()</a></code> (m | x) - Rogers' euclidean distance</p></li>
+<li><p><code><a href='nei.dist.html'>reynolds.dist()</a></code> (m | x) - Reynolds' coancestry distance</p></li>
+<li><p><code><a href='nei.dist.html'>edwards.dist()</a></code> (m | x) - Edwards' angular distance</p></li>
+<li><p><code><a href='nei.dist.html'>prevosti.dist()</a></code> (m | x) - Prevosti's absolute genetic distance</p></li>
 <li><p><code><a href='bitwise.dist.html'>bitwise.dist()</a></code> (s) - Calculates fast pairwise distances for genlight objects.</p></li>
 </ul>
 
@@ -302,8 +302,8 @@ Bruvo's distance where blocks of integer loci can be shuffled.</p></li>
 
 <ul>
 <li><p><code><a href='mlg.html'>mlg()</a></code> (m | s) - Calculates the number of multilocus genotypes</p></li>
-<li><p><code><a href='mll-method.html'>mll()</a></code> (m | s) - Displays the current multilocus lineages (genotypes) defined.</p></li>
-<li><p><code><a href='mll-method.html'>nmll()</a></code> (m | s) - Same as <code><a href='mlg.html'>mlg()</a></code>.</p></li>
+<li><p><code><a href='mll.html'>mll()</a></code> (m | s) - Displays the current multilocus lineages (genotypes) defined.</p></li>
+<li><p><code><a href='mll.html'>nmll()</a></code> (m | s) - Same as <code><a href='mlg.html'>mlg()</a></code>.</p></li>
 <li><p><code><a href='mlg.html'>mlg.crosspop()</a></code> (m | s) - Finds all multilocus genotypes that cross populations</p></li>
 <li><p><code><a href='mlg.html'>mlg.table()</a></code> (m | s) - Returns a table of populations by multilocus genotypes</p></li>
 <li><p><code><a href='mlg.html'>mlg.vector()</a></code> (m | s) - Returns a vector of a numeric multilocus genotype assignment for each individual</p></li>
@@ -313,7 +313,7 @@ Bruvo's distance where blocks of integer loci can be shuffled.</p></li>
 <li><p><code><a href='cutoff_predictor.html'>cutoff_predictor()</a></code> (x) - Predicts cutoff threshold from mlg.filter.</p></li>
 <li><p><code><a href='mll.custom.html'>mll.custom()</a></code> (m | s) - Allows for the custom definition of multilocus lineages</p></li>
 <li><p><code><a href='mll.custom.html'>mll.levels()</a></code> (m | s) - Allows the user to change levels of custom MLLs.</p></li>
-<li><p><code><a href='mll.reset-method.html'>mll.reset()</a></code> (m | s) - Reset multilocus lineages.</p></li>
+<li><p><code><a href='mll.reset.html'>mll.reset()</a></code> (m | s) - Reset multilocus lineages.</p></li>
 <li><p><code><a href='diversity_stats.html'>diversity_stats()</a></code> (x) - Creates a table of diversity indices for multilocus genotypes.</p></li>
 </ul>
 
@@ -408,6 +408,11 @@ death pathogen in Oregon forests. Phytopathology 105:982-989. doi:
 J. 2009. Population genetic analysis infers migration pathways of
 <em>Phytophthora ramorum</em> in US nurseries. PLoS Pathog. 5:e1000583. doi:
 <a href='https://doi.org/10.1371/journal.ppat.1000583'>10.1371/journal.ppat.1000583</a></p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar, Jonah C. Brooks, Sydney E. Everhart, Javier F.
+Tabima, Stacy Krueger-Hadfield, Erik Sotka, Niklaus J. Grünwald</p>
+<p>Maintainer: Zhian N. Kamvar</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -424,7 +429,7 @@ J. 2009. Population genetic analysis infers migration pathways of
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

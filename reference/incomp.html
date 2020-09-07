@@ -149,7 +149,7 @@ further analyses. This function finds these samples and returns a matrix of
 how many other samples these are incomparable with.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>incomp</span>(<span class='no'>gid</span>)</pre>
+    <pre class="usage"><span class='fu'>incomp</span>(<span class='kw'>gid</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -166,12 +166,14 @@ how many other samples these are incomparable with.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>nancycats</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>nancycats</span>)
 <span class='co'># These two populations have no samples that are incomparable</span>
-<span class='fu'>incomp</span>(<span class='no'>nancycats</span>[<span class='kw'>pop</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>17</span>)])</div><div class='output co'>#&gt; &lt;0 x 0 matrix&gt;</div><div class='input'>
+<span class='fu'>incomp</span>(<span class='kw'>nancycats</span>[pop = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>17</span>)])
+</div><div class='output co'>#&gt; &lt;0 x 0 matrix&gt;</div><div class='input'>
 <span class='co'># If you reduce the number of loci, we find that there are </span>
 <span class='co'># incomparable samples.</span>
-<span class='fu'>incomp</span>(<span class='no'>nancycats</span>[<span class='kw'>pop</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>17</span>), <span class='kw'>loc</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>4</span>)])</div><div class='output co'>#&gt;      N215 N216 N282 N283 N288 N291 N292 N293 N294 N295 N296 N297 N281 N289 N290
+<span class='fu'>incomp</span>(<span class='kw'>nancycats</span>[pop = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>17</span>), loc = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>4</span>)])
+</div><div class='output co'>#&gt;      N215 N216 N282 N283 N288 N291 N292 N293 N294 N295 N296 N297 N281 N289 N290
 #&gt; N215    1    1    0    0    0    0    0    0    0    0    0    0    0    0    0
 #&gt; N216    1    1    0    0    0    0    0    0    0    0    0    0    0    0    0
 #&gt; N282    0    0    1    1    1    1    1    1    1    1    1    1    1    1    1
@@ -202,7 +204,7 @@ how many other samples these are incomparable with.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

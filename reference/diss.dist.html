@@ -155,7 +155,7 @@ individuals who share half of the same alleles will have a distance of 0.5.
 This function can analyze distances for any marker system.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>diss.dist</span>(<span class='no'>x</span>, <span class='kw'>percent</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>mat</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>diss.dist</span>(<span class='kw'>x</span>, percent = <span class='fl'>FALSE</span>, mat = <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -190,21 +190,27 @@ of loci.</p></td>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>When <code>percent = TRUE</code>, this is exactly the same as
-  <code><a href='genetic_distance.html'>provesti.dist</a></code>, except that it performs better for large
+  <code><a href='nei.dist.html'>provesti.dist</a></code>, except that it performs better for large
   numbers of individuals (n &gt; 125) at the cost of available memory.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='genetic_distance.html'>prevosti.dist</a></code>,
+    <div class='dont-index'><p><code><a href='nei.dist.html'>prevosti.dist</a></code>,
    <code><a href='bitwise.dist.html'>bitwise.dist</a></code> (for SNP data)</p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'># A simple example. Let's analyze the mean distance among populations of A.</span>
 <span class='co'># euteiches.</span>
 
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Aeut</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span>(<span class='fu'>diss.dist</span>(<span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='no'>Aeut</span>, <span class='fl'>1</span>)))</div><div class='output co'>#&gt; [1] 9.503866</div><div class='input'><span class='co'># \dontrun{</span>
-<span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span>(<span class='fu'>diss.dist</span>(<span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='no'>Aeut</span>, <span class='fl'>2</span>)))</div><div class='output co'>#&gt; [1] 8.848939</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span>(<span class='fu'>diss.dist</span>(<span class='no'>Aeut</span>))</div><div class='output co'>#&gt; [1] 20.44299</div><div class='input'># }
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Aeut</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span>(<span class='fu'>diss.dist</span>(<span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='kw'>Aeut</span>, <span class='fl'>1</span>)))
+</div><div class='output co'>#&gt; [1] 9.503866</div><div class='input'><span class='co'># \dontrun{</span>
+<span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span>(<span class='fu'>diss.dist</span>(<span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='kw'>Aeut</span>, <span class='fl'>2</span>)))
+</div><div class='output co'>#&gt; [1] 8.848939</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span>(<span class='fu'>diss.dist</span>(<span class='kw'>Aeut</span>))
+</div><div class='output co'>#&gt; [1] 20.44299</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -221,7 +227,7 @@ of loci.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

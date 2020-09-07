@@ -149,16 +149,16 @@ genclone object</p>
     </div>
 
     <pre class="usage"><span class='fu'>info_table</span>(
-  <span class='no'>gen</span>,
-  <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"missing"</span>, <span class='st'>"ploidy"</span>),
-  <span class='kw'>percent</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>df</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>returnplot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>low</span> <span class='kw'>=</span> <span class='st'>"blue"</span>,
-  <span class='kw'>high</span> <span class='kw'>=</span> <span class='st'>"red"</span>,
-  <span class='kw'>plotlab</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>scaled</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+  <span class='kw'>gen</span>,
+  type = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"missing"</span>, <span class='st'>"ploidy"</span>),
+  percent = <span class='fl'>TRUE</span>,
+  plot = <span class='fl'>FALSE</span>,
+  df = <span class='fl'>FALSE</span>,
+  returnplot = <span class='fl'>FALSE</span>,
+  low = <span class='st'>"blue"</span>,
+  high = <span class='st'>"red"</span>,
+  plotlab = <span class='fl'>TRUE</span>,
+  scaled = <span class='fl'>TRUE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -232,7 +232,7 @@ If <code>FALSE</code>, the color specified in <code>high</code> will represent 1
 
     <p>Missing data is accounted for on a per-population level.<br />
   Ploidy is accounted for on a per-individual level.</p>  
-<p></p><h3>For type = 'missing'</h3>
+<p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>For type = 'missing'</h3>
 <p>This data is potentially useful for identifying areas of systematic missing
   data. There are a few caveats to be aware of.</p><ul>
 <li><p><strong>Regarding counts of missing data</strong>: Each count represents the number
@@ -243,17 +243,22 @@ If <code>FALSE</code>, the color specified in <code>high</code> will represent 1
   <strong>relative to the population and locus</strong>, not to the entire data set.
   The last column, "mean" represents the average percent of the population
   with missing data per locus.</p></li>
-</ul><p></p><h3>For type = 'ploidy'</h3>
+</ul><p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>For type = 'ploidy'</h3>
 <p>This option is useful for data that has been imported with mixed ploidies.
   It will summarize the relative levels of ploidy per individual per locus.
   This is simply based off of observed alleles and does not provide any
   further estimates.</p>
 
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>nancycats</span>)
-<span class='no'>nancy.miss</span> <span class='kw'>&lt;-</span> <span class='fu'>info_table</span>(<span class='no'>nancycats</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"missing"</span>)</div><div class='img'><img src='info_table-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Pinf</span>)
-<span class='no'>Pinf.ploid</span> <span class='kw'>&lt;-</span> <span class='fu'>info_table</span>(<span class='no'>Pinf</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"ploidy"</span>)</div><div class='img'><img src='info_table-2.png' alt='' width='700' height='433' /></div><div class='input'>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>nancycats</span>)
+<span class='kw'>nancy.miss</span> <span class='op'>&lt;-</span> <span class='fu'>info_table</span>(<span class='kw'>nancycats</span>, plot = <span class='fl'>TRUE</span>, type = <span class='st'>"missing"</span>)
+</div><div class='img'><img src='info_table-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Pinf</span>)
+<span class='kw'>Pinf.ploid</span> <span class='op'>&lt;-</span> <span class='fu'>info_table</span>(<span class='kw'>Pinf</span>, plot = <span class='fl'>TRUE</span>, type = <span class='st'>"ploidy"</span>)
+</div><div class='img'><img src='info_table-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -270,7 +275,7 @@ If <code>FALSE</code>, the color specified in <code>high</code> will represent 1
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

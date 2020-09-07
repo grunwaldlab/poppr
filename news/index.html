@@ -233,9 +233,9 @@
 <a href="#misc" class="anchor"></a>MISC</h2>
 <ul>
 <li>
-<code><a href="../reference/mlg.html">mlg.vector()</a></code> is now safer as it now uses a for loop instead of a function with the out-of-scope operator (<code>&lt;&lt;-</code>) (see <a href='https://github.com/grunwaldlab/poppr/issues/205'>#205</a>)</li>
+<code><a href="../reference/mlg.html">mlg.vector()</a></code> is now safer as it now uses a for loop instead of a function with the out-of-scope operator (<code><a href="https://rdrr.io/r/base/assignOps.html">&lt;&lt;-</a></code>) (see <a href='https://github.com/grunwaldlab/poppr/issues/205'>#205</a>)</li>
 <li>
-<code><a href="../reference/shufflepop.html">shufflepop()</a></code> is now safer as it now uses a for loop instead of a function with the out-of-scope operator (<code>&lt;&lt;-</code>) (see <a href='https://github.com/grunwaldlab/poppr/issues/205'>#205</a>)</li>
+<code><a href="../reference/shufflepop.html">shufflepop()</a></code> is now safer as it now uses a for loop instead of a function with the out-of-scope operator (<code><a href="https://rdrr.io/r/base/assignOps.html">&lt;&lt;-</a></code>) (see <a href='https://github.com/grunwaldlab/poppr/issues/205'>#205</a>)</li>
 <li>The MLG class gains a new <code>distenv</code> slot, which will store the environment where the distance function or matrix exists. This is accompanied by an accessor of the same name (see <a href='https://github.com/grunwaldlab/poppr/issues/206'>#206</a>).</li>
 <li>
 <code><a href="../reference/mlg.filter.html">"mlg.filter&lt;-"()</a></code> replacement methods will no longer search the global environment when evaluating the distance function or matrix (see <a href='https://github.com/grunwaldlab/poppr/issues/206'>#206</a>).</li>
@@ -323,7 +323,7 @@
 <ul>
 <li><p><code><a href="../reference/poppr.amova.html">poppr.amova()</a></code> will now handle genlight/snpclone objects. See <a href="https://github.com/grunwaldlab/poppr/pull/185" class="uri">https://github.com/grunwaldlab/poppr/pull/185</a> for details.</p></li>
 <li><p><code><a href="../reference/bitwise.dist.html">bitwise.dist()</a></code> now has two new options: <code>euclidean</code> and <code>scale_missing</code>. When both of these are set to <code>TRUE</code>, the distance measured will be Euclidean scaled for the amount of missing data in each comparison. This matches the output of base R’s <code><a href="https://rdrr.io/r/stats/dist.html">dist()</a></code> function at a fraction of time and memory. See <a href="https://github.com/grunwaldlab/poppr/pull/176" class="uri">https://github.com/grunwaldlab/poppr/pull/176</a> for details.</p></li>
-<li><p><code><a href="../reference/make_haplotypes-method.html">make_haplotypes()</a></code> is now a generic defined for both genind and genlight.</p></li>
+<li><p><code><a href="../reference/make_haplotypes.html">make_haplotypes()</a></code> is now a generic defined for both genind and genlight.</p></li>
 <li><p><code><a href="../reference/genind2genalex.html">genind2genalex()</a></code> will no longer write to “genalex.csv” by default. Instead, it will warn the user and write to a temporary file. See <a href="https://github.com/grunwaldlab/poppr/issues/175" class="uri">https://github.com/grunwaldlab/poppr/issues/175</a> for details.</p></li>
 <li><p><code><a href="../reference/genind2genalex.html">genind2genalex()</a></code> now has an <code>overwrite</code> parameter set to <code>FALSE</code> to prevent accidental overwriting of files.</p></li>
 <li><p><code><a href="../reference/win.ia.html">win.ia()</a></code> has a new argument <code>name_window</code>, which will give each element in the result the designation of the terminal position of that window. Thanks to <a href='https://github.com/MarisaMiller'>@MarisaMiller</a> for the suggestion!</p></li>
@@ -367,8 +367,8 @@
 <h2 class="hasAnchor">
 <a href="#new-functions" class="anchor"></a>NEW FUNCTIONS</h2>
 <ul>
-<li><p><code><a href="../reference/make_haplotypes-method.html">make_haplotypes()</a></code> will split your data into pseudo-haplotypes for use in AMOVA-like analyses. This was a previously internal function, but has been promoted to a user-facing function in this version.</p></li>
-<li><p><code><a href="../reference/coercion-methods.html">as.genambig()</a></code> will convert genind/genclone objects to Polysat’s “genambig” class. Note that polysat must be installed for this to work.</p></li>
+<li><p><code><a href="../reference/make_haplotypes.html">make_haplotypes()</a></code> will split your data into pseudo-haplotypes for use in AMOVA-like analyses. This was a previously internal function, but has been promoted to a user-facing function in this version.</p></li>
+<li><p><code><a href="../reference/bootgen2genind.html">as.genambig()</a></code> will convert genind/genclone objects to Polysat’s “genambig” class. Note that polysat must be installed for this to work.</p></li>
 </ul>
 </div>
 <div id="algorithmic-change-1" class="section level2">
@@ -577,7 +577,7 @@
 <h2 class="hasAnchor">
 <a href="#new-functions-3" class="anchor"></a>NEW FUNCTIONS</h2>
 <ul>
-<li>The function <code><a href="../reference/coercion-methods.html">bootgen2genind()</a></code> will help users take advantage of bootstrapping distance functions from other packages that require genind objects. For details, see <a href="https://github.com/grunwaldlab/poppr/issues/112" class="uri">https://github.com/grunwaldlab/poppr/issues/112</a> and <a href="https://github.com/grunwaldlab/poppr/issues/111" class="uri">https://github.com/grunwaldlab/poppr/issues/111</a>
+<li>The function <code><a href="../reference/bootgen2genind.html">bootgen2genind()</a></code> will help users take advantage of bootstrapping distance functions from other packages that require genind objects. For details, see <a href="https://github.com/grunwaldlab/poppr/issues/112" class="uri">https://github.com/grunwaldlab/poppr/issues/112</a> and <a href="https://github.com/grunwaldlab/poppr/issues/111" class="uri">https://github.com/grunwaldlab/poppr/issues/111</a>
 </li>
 </ul>
 </div>
@@ -587,7 +587,7 @@
 <ul>
 <li>There is now a <code>plot</code> parameter for the genotype curve to enable or suppress plotting.</li>
 <li>Progress bars are now automatically suppressed when running non-interactively. to turn them on when running non-interactively, use <code><a href="https://rdrr.io/r/base/options.html">options(poppr.debug = TRUE)</a></code>.</li>
-<li>The progress bar for <code><a href="../reference/ia.html">ia()</a></code> and <code><a href="../reference/poppr.html">poppr()</a></code> will now show estimated time. This is from dplyr’s <code>progress_estimated()</code>.</li>
+<li>The progress bar for <code><a href="../reference/ia.html">ia()</a></code> and <code><a href="../reference/poppr.html">poppr()</a></code> will now show estimated time. This is from dplyr’s <code><a href="https://dplyr.tidyverse.org/reference/progress_estimated.html">progress_estimated()</a></code>.</li>
 </ul>
 </div>
 <div id="misc-9" class="section level2">
@@ -595,7 +595,7 @@
 <a href="#misc-9" class="anchor"></a>MISC</h2>
 <ul>
 <li>The <code>hist</code> argument in the <code><a href="../reference/ia.html">ia()</a></code> is deprecated in favor of <code>plot</code>.</li>
-<li>The x axis for the <code><a href="../reference/genotype_curve.html">genotype_curve()</a></code> plot is now numeric, allowing you to fit a smoothing function over the points without having to use the hack <code>geom_smooth(aes(group = 1))</code>. This is thanks to Kara Woo for pointing this out on twitter (<a href="https://twitter.com/kara_woo/status/783336540407685120" class="uri">https://twitter.com/kara_woo/status/783336540407685120</a>).</li>
+<li>The x axis for the <code><a href="../reference/genotype_curve.html">genotype_curve()</a></code> plot is now numeric, allowing you to fit a smoothing function over the points without having to use the hack <code><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth(aes(group = 1))</a></code>. This is thanks to Kara Woo for pointing this out on twitter (<a href="https://twitter.com/kara_woo/status/783336540407685120" class="uri">https://twitter.com/kara_woo/status/783336540407685120</a>).</li>
 <li>The “show” method for genclone objects now delimits populations and strata by a comma, avoiding confusion with multi-word population names. Thanks to <a href='https://github.com/knausb'>@knausb</a> for the fix in <a href="https://github.com/grunwaldlab/poppr/pull/116" class="uri">https://github.com/grunwaldlab/poppr/pull/116</a>.<br>
 </li>
 <li>Documentation for <code>poppr.amova</code> now contains a note about significance testing with the ade4 function <code>randtest.amova</code>.</li>
@@ -659,7 +659,7 @@
 <a href="#new-features-8" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>Threshold argument added to <code><a href="../reference/filter_stats.html">filter_stats()</a></code> (see <a href="https://github.com/grunwaldlab/poppr/issues/94" class="uri">https://github.com/grunwaldlab/poppr/issues/94</a>)</li>
-<li>The pipe operator (<code><a href="../reference/grapes-greater-than-grapes.html">%&gt;%</a></code>) is now exported from magrittr to make chaining commands easier.</li>
+<li>The pipe operator (<code><a href="../reference/%&gt;%.html">%&gt;%</a></code>) is now exported from magrittr to make chaining commands easier.</li>
 <li>
 <code><a href="../reference/mlg.filter.html">mlg.filter()</a></code> can now return multiple statistics.</li>
 <li>The user can now control the size of the labels in the index of association plots with the labsize and linesize arguments in the plot method.</li>
@@ -674,11 +674,11 @@
 <a href="#bug-fix-11" class="anchor"></a>BUG FIX</h2>
 <ul>
 <li>An issue that caused errors in the <code><a href="../reference/imsn.html">imsn()</a></code> code output was fixed (see <a href="https://github.com/grunwaldlab/poppr/issues/93" class="uri">https://github.com/grunwaldlab/poppr/issues/93</a>)</li>
-<li>Caught bug where the <code><a href="../reference/mlg.filter.html">mlg.filter()</a></code> assignment method was using <code><a href="../reference/genetic_distance.html">nei.dist()</a></code> instead of <code><a href="../reference/diss.dist.html">diss.dist()</a></code> when no distance was specified.</li>
+<li>Caught bug where the <code><a href="../reference/mlg.filter.html">mlg.filter()</a></code> assignment method was using <code><a href="../reference/nei.dist.html">nei.dist()</a></code> instead of <code><a href="../reference/diss.dist.html">diss.dist()</a></code> when no distance was specified.</li>
 <li>A bug that resulted in significantly negative values from <code><a href="../reference/bitwise.ia.html">bitwise.ia()</a></code> with large sample sizes was fixed. Spotted by <a href='https://github.com/knausb'>@knausb</a> (see <a href="https://github.com/grunwaldlab/poppr/issues/100" class="uri">https://github.com/grunwaldlab/poppr/issues/100</a>)</li>
 <li>Fixed issue where <code><a href="../reference/plot_filter_stats.html">plot_filter_stats()</a></code> wasn’t displaying the full range of MLGs</li>
 <li>Color vectors are now correctly parsed when passed to msn functions (see <a href="https://github.com/grunwaldlab/poppr/issues/55" class="uri">https://github.com/grunwaldlab/poppr/issues/55</a>) for details. Long color vectors are now accepted, albiet with warning.</li>
-<li>An issue where <code><a href="../reference/mll.reset-method.html">mll.reset()</a></code> did not reset non-MLG class objects in the mlg slot was fixed.</li>
+<li>An issue where <code><a href="../reference/mll.reset.html">mll.reset()</a></code> did not reset non-MLG class objects in the mlg slot was fixed.</li>
 </ul>
 </div>
 <div id="misc-11" class="section level2">
@@ -702,7 +702,7 @@
 <li>
 <code><a href="../reference/imsn.html">imsn()</a></code> now has collapsible side panels</li>
 <li>
-<code><a href="../reference/mll-method.html">nmll()</a></code> and <code><a href="../reference/mll-method.html">mll()</a></code> will now handle genind and genlight objects</li>
+<code><a href="../reference/mll.html">nmll()</a></code> and <code><a href="../reference/mll.html">mll()</a></code> will now handle genind and genlight objects</li>
 <li>
 <code><a href="../reference/rraf.html">rraf()</a></code> now gives options for minor allele correction encompassed in the internal function <code><a href="../reference/rare_allele_correction.html">rare_allele_correction()</a></code>. This extends also to <code><a href="../reference/pgen.html">pgen()</a></code> and <code><a href="../reference/psex.html">psex()</a></code>, which must correct minor allele frequencies by default. See <a href="https://github.com/grunwaldlab/poppr/issues/81" class="uri">https://github.com/grunwaldlab/poppr/issues/81</a> for details.</li>
 </ul>
@@ -1590,7 +1590,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

@@ -146,16 +146,16 @@ formatted for use in genalex.</p>
     </div>
 
     <pre class="usage"><span class='fu'>genind2genalex</span>(
-  <span class='no'>gid</span>,
-  <span class='kw'>filename</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>pop</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>allstrata</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>geo</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>geodf</span> <span class='kw'>=</span> <span class='st'>"xy"</span>,
-  <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>","</span>,
-  <span class='kw'>sequence</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>gid</span>,
+  filename = <span class='st'>""</span>,
+  overwrite = <span class='fl'>FALSE</span>,
+  quiet = <span class='fl'>FALSE</span>,
+  pop = <span class='kw'>NULL</span>,
+  allstrata = <span class='fl'>TRUE</span>,
+  geo = <span class='fl'>FALSE</span>,
+  geodf = <span class='st'>"xy"</span>,
+  sep = <span class='st'>","</span>,
+  sequence = <span class='fl'>FALSE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -235,11 +235,15 @@ any labels for your individuals, they will be labeled as "ind1" through
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='read.genalex.html'>read.genalex()</a></code>, <code><a href='clonecorrect.html'>clonecorrect()</a></code>, <a href='genclone-class.html'>genclone</a>, genind</p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>nancycats</span>)
-<span class='fu'>genind2genalex</span>(<span class='no'>nancycats</span>, <span class='st'>"~/Documents/nancycats.csv"</span>, <span class='kw'>geo</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; Extracting the table ... Writing the table to ~/Documents/nancycats.csv ... Done.</div><div class='output co'>#&gt; [1] "~/Documents/nancycats.csv"</div><div class='input'># }
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>nancycats</span>)
+<span class='fu'>genind2genalex</span>(<span class='kw'>nancycats</span>, <span class='st'>"~/Documents/nancycats.csv"</span>, geo=<span class='fl'>TRUE</span>)
+</div><div class='output co'>#&gt; Extracting the table ... Writing the table to ~/Documents/nancycats.csv ... Done.</div><div class='output co'>#&gt; [1] "~/Documents/nancycats.csv"</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -256,7 +260,7 @@ any labels for your individuals, they will be labeled as "ind1" through
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

@@ -149,7 +149,7 @@ the largest difference. The average between the thresholds spanning that
 difference is the cutoff threshold defining the clonal lineage threshold.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cutoff_predictor</span>(<span class='no'>thresholds</span>, <span class='kw'>fraction</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</pre>
+    <pre class="usage"><span class='fu'>cutoff_predictor</span>(<span class='kw'>thresholds</span>, fraction = <span class='fl'>0.5</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -187,17 +187,23 @@ genome-wide population genetic data with emphasis on clonality. Front. Genet.
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='filter_stats.html'>filter_stats</a></code> <code><a href='mlg.filter.html'>mlg.filter</a></code></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Pinf</span>)
-<span class='no'>pinfreps</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fix_replen.html'>fix_replen</a></span>(<span class='no'>Pinf</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>6</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>2</span>))
-<span class='no'>pthresh</span>  <span class='kw'>&lt;-</span> <span class='fu'><a href='filter_stats.html'>filter_stats</a></span>(<span class='no'>Pinf</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='no'>bruvo.dist</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='no'>pinfreps</span>,
-                         <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"THRESHOLD"</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>)</div><div class='img'><img src='cutoff_predictor-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Pinf</span>)
+<span class='kw'>pinfreps</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fix_replen.html'>fix_replen</a></span>(<span class='kw'>Pinf</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>6</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>2</span>))
+<span class='kw'>pthresh</span>  <span class='op'>&lt;-</span> <span class='fu'><a href='filter_stats.html'>filter_stats</a></span>(<span class='kw'>Pinf</span>, distance = <span class='kw'>bruvo.dist</span>, replen = <span class='kw'>pinfreps</span>, 
+                         plot = <span class='fl'>TRUE</span>, stats = <span class='st'>"THRESHOLD"</span>, threads = <span class='fl'>1L</span>)
+</div><div class='img'><img src='cutoff_predictor-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># prediction for farthest neighbor</span>
-<span class='fu'>cutoff_predictor</span>(<span class='no'>pthresh</span>$<span class='no'>farthest</span>)</div><div class='output co'>#&gt; [1] 0.1132221</div><div class='input'>
+<span class='fu'>cutoff_predictor</span>(<span class='kw'>pthresh</span><span class='op'>$</span><span class='kw'>farthest</span>)
+</div><div class='output co'>#&gt; [1] 0.1132221</div><div class='input'>
 <span class='co'># prediction for all algorithms</span>
-<span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>sapply</a></span>(<span class='no'>pthresh</span>, <span class='no'>cutoff_predictor</span>)</div><div class='output co'>#&gt;  farthest   average   nearest 
+<span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>sapply</a></span>(<span class='kw'>pthresh</span>, <span class='kw'>cutoff_predictor</span>)
+</div><div class='output co'>#&gt;  farthest   average   nearest 
 #&gt; 0.1132221 0.1084407 0.1092773 </div><div class='input'>
 </div></pre>
   </div>
@@ -215,7 +221,7 @@ genome-wide population genetic data with emphasis on clonality. Front. Genet.
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

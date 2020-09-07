@@ -161,7 +161,7 @@
   characterized using a set of 13 microsatellite markers.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>monpop</span>)</pre>
+    <pre class="usage"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>monpop</span>)</pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
@@ -177,10 +177,11 @@
   <a href='https://doi.org/10.1094/PHYTO-03-14-0088-R'>10.1094/PHYTO-03-14-0088-R</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>monpop</span>)
-<span class='fu'>splitStrata</span>(<span class='no'>monpop</span>) <span class='kw'>&lt;-</span> ~<span class='no'>Tree</span>/<span class='no'>Year</span>/<span class='no'>Symptom</span>
-<span class='fu'>setPop</span>(<span class='no'>monpop</span>) <span class='kw'>&lt;-</span> ~<span class='no'>Symptom</span>/<span class='no'>Year</span>
-<span class='no'>monpop</span></div><div class='output co'>#&gt; 
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>monpop</span>)
+<span class='fu'>splitStrata</span>(<span class='kw'>monpop</span>) <span class='op'>&lt;-</span> <span class='op'>~</span><span class='kw'>Tree</span><span class='op'>/</span><span class='kw'>Year</span><span class='op'>/</span><span class='kw'>Symptom</span>
+<span class='fu'>setPop</span>(<span class='kw'>monpop</span>) <span class='op'>&lt;-</span> <span class='op'>~</span><span class='kw'>Symptom</span><span class='op'>/</span><span class='kw'>Year</span>
+<span class='kw'>monpop</span>
+</div><div class='output co'>#&gt; 
 #&gt; This is a genclone object
 #&gt; -------------------------
 #&gt; Genotype information:
@@ -208,7 +209,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

@@ -144,15 +144,15 @@
     </div>
 
     <pre class="usage"><span class='fu'>poppr.plot</span>(
-  <span class='no'>sample</span>,
-  <span class='kw'>pval</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>Ia</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>rbarD</span> <span class='kw'>=</span> <span class='fl'>0.05</span>),
-  <span class='kw'>pop</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>N</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>observed</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>Ia</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>rbarD</span> <span class='kw'>=</span> <span class='fl'>0</span>),
-  <span class='kw'>index</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"rbarD"</span>, <span class='st'>"Ia"</span>),
-  <span class='kw'>labsize</span> <span class='kw'>=</span> <span class='fu'>rel</span>(<span class='fl'>3</span>),
-  <span class='kw'>linesize</span> <span class='kw'>=</span> <span class='fu'>rel</span>(<span class='fl'>1</span>)
+  <span class='kw'>sample</span>,
+  pval = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(Ia = <span class='fl'>0.05</span>, rbarD = <span class='fl'>0.05</span>),
+  pop = <span class='kw'>NULL</span>,
+  file = <span class='kw'>NULL</span>,
+  N = <span class='kw'>NULL</span>,
+  observed = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(Ia = <span class='fl'>0</span>, rbarD = <span class='fl'>0</span>),
+  index = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"rbarD"</span>, <span class='st'>"Ia"</span>),
+  labsize = <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>rel</a></span>(<span class='fl'>3</span>),
+  linesize = <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>rel</a></span>(<span class='fl'>1</span>)
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -202,9 +202,10 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Pinf</span>)
-<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='no'>Pinf</span> <span class='kw'>%&gt;%</span> <span class='fu'>seppop</span>() <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='no'>ia</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>99</span>, <span class='kw'>valuereturn</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='no'>x</span></div><div class='output co'>#&gt; $`South America`
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Pinf</span>)
+<span class='kw'>x</span> <span class='op'>&lt;-</span> <span class='kw'>Pinf</span> <span class='op'>%&gt;%</span> <span class='fu'>seppop</span>() <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='kw'>ia</span>, sample = <span class='fl'>99</span>, valuereturn = <span class='fl'>TRUE</span>, quiet = <span class='fl'>TRUE</span>, plot = <span class='fl'>FALSE</span>)
+<span class='kw'>x</span>
+</div><div class='output co'>#&gt; $`South America`
 #&gt; Index
 #&gt;        Ia      p.Ia     rbarD      p.rD 
 #&gt; 2.8733344 0.0100000 0.3446431 0.0100000 
@@ -245,10 +246,12 @@
 #&gt; 97  0.03893598  0.0039743077
 #&gt; 98 -0.03249290 -0.0033205183
 #&gt; 99 -0.17858266 -0.0181508777
-#&gt; </div><div class='input'><span class='kw pkg'>poppr</span><span class='kw ns'>:::</span><span class='fu'>poppr.plot</span>(<span class='kw'>sample</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>file</span> <span class='kw'>=</span> <span class='st'>"hey"</span>) <span class='co'># plots multiple populations</span></div><div class='img'><img src='poppr.plot-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># plot.ialist takes care of the single populations.</span>
-<span class='kw'>for</span> (<span class='no'>i</span> <span class='kw'>in</span> <span class='no'>x</span>){
-  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>i</span>))
-}</div><div class='img'><img src='poppr.plot-2.png' alt='' width='700' height='433' /></div><div class='img'><img src='poppr.plot-3.png' alt='' width='700' height='433' /></div><div class='input'># }
+#&gt; </div><div class='input'><span class='kw'>poppr</span>:::<span class='fu'>poppr.plot</span>(sample = <span class='kw'>x</span>, file = <span class='st'>"hey"</span>) <span class='co'># plots multiple populations</span>
+</div><div class='img'><img src='poppr.plot-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># plot.ialist takes care of the single populations.</span>
+<span class='co'>for</span> (<span class='kw'>i</span> <span class='co'>in</span> <span class='kw'>x</span>){
+  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span>(<span class='kw'>i</span>))
+}
+</div><div class='img'><img src='poppr.plot-2.png' alt='' width='700' height='433' /></div><div class='img'><img src='poppr.plot-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># }</span>
 
 </div></pre>
   </div>
@@ -266,7 +269,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

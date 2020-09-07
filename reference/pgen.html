@@ -145,7 +145,7 @@ frequencies over all loci." />
 frequencies over all loci.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>pgen</span>(<span class='no'>gid</span>, <span class='kw'>pop</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>by_pop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>freq</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>pgen</span>(<span class='kw'>gid</span>, pop = <span class='kw'>NULL</span>, by_pop = <span class='fl'>TRUE</span>, log = <span class='fl'>TRUE</span>, freq = <span class='kw'>NULL</span>, <span class='kw'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -222,10 +222,14 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
 
     <div class='dont-index'><p><code><a href='psex.html'>psex</a></code>, <code><a href='rraf.html'>rraf</a></code>, <code><a href='rrmlg.html'>rrmlg</a></code>, 
 <code><a href='rare_allele_correction.html'>rare_allele_correction</a></code></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar, Jonah Brooks, Stacy A. Krueger-Hadfield, Erik Sotka</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Pram</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>pgen</span>(<span class='no'>Pram</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='output co'>#&gt;             PrMS6A1 Pr9C3A1 PrMS39A1 PrMS45A1    PrMS43A1
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Pram</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>pgen</span>(<span class='kw'>Pram</span>, log = <span class='fl'>FALSE</span>))
+</div><div class='output co'>#&gt;             PrMS6A1 Pr9C3A1 PrMS39A1 PrMS45A1    PrMS43A1
 #&gt; 1411152-10B     0.5     0.5     0.15      0.5 0.111111111
 #&gt; 82              0.5     0.5     0.35      0.5 0.111111111
 #&gt; 83              0.5     0.5     0.15      0.5 0.002298851
@@ -234,11 +238,13 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
 #&gt; 81-NM-1         0.5     0.5     0.35      0.5 0.111111111</div><div class='input'>
 <span class='co'># \dontrun{</span>
 <span class='co'># You can also supply the observed allele frequencies</span>
-<span class='no'>pramfreq</span> <span class='kw'>&lt;-</span> <span class='no'>Pram</span> <span class='kw'>%&gt;%</span> <span class='fu'>genind2genpop</span>() <span class='kw'>%&gt;%</span> <span class='fu'>tab</span>(<span class='kw'>freq</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; 
+<span class='kw'>pramfreq</span> <span class='op'>&lt;-</span> <span class='kw'>Pram</span> <span class='op'>%&gt;%</span> <span class='fu'>genind2genpop</span>() <span class='op'>%&gt;%</span> <span class='fu'>tab</span>(freq = <span class='fl'>TRUE</span>)
+</div><div class='output co'>#&gt; 
 #&gt;  Converting data from a genind to a genpop object... 
 #&gt; 
 #&gt; ...done.
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>pgen</span>(<span class='no'>Pram</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>freq</span> <span class='kw'>=</span> <span class='no'>pramfreq</span>))</div><div class='output co'>#&gt;             PrMS6A1 Pr9C3A1  PrMS39A1 PrMS45A1    PrMS43A1
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>pgen</span>(<span class='kw'>Pram</span>, log = <span class='fl'>FALSE</span>, freq = <span class='kw'>pramfreq</span>))
+</div><div class='output co'>#&gt;             PrMS6A1 Pr9C3A1  PrMS39A1 PrMS45A1    PrMS43A1
 #&gt; 1411152-10B     0.5     0.5 0.1301308      0.5 0.048799049
 #&gt; 82              0.5     0.5 0.3664209      0.5 0.129488704
 #&gt; 83              0.5     0.5 0.1301308      0.5 0.011771700
@@ -246,9 +252,10 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
 #&gt; 85              0.5     0.5 0.3664209      0.5 0.134197384
 #&gt; 81-NM-1         0.5     0.5 0.3664209      0.5 0.129488704</div><div class='input'>
 <span class='co'># You can get the Pgen values over all loci by summing over the logged results:</span>
-<span class='fu'>pgen</span>(<span class='no'>Pram</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>%&gt;%</span>  <span class='co'># calculate pgen matrix</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/colSums.html'>rowSums</a></span>(<span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>%&gt;%</span> <span class='co'># take the sum of each row</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span>()                     <span class='co'># take the exponent of the results</span></div><div class='output co'>#&gt;             1411152-10B                      82                      83 
+<span class='fu'>pgen</span>(<span class='kw'>Pram</span>, log = <span class='fl'>TRUE</span>) <span class='op'>%&gt;%</span>  <span class='co'># calculate pgen matrix</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/colSums.html'>rowSums</a></span>(na.rm = <span class='fl'>TRUE</span>) <span class='op'>%&gt;%</span> <span class='co'># take the sum of each row</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span>()                     <span class='co'># take the exponent of the results</span>
+</div><div class='output co'>#&gt;             1411152-10B                      82                      83 
 #&gt;            2.083333e-03            4.861111e-03            4.310345e-05 
 #&gt;                      84                      85                 81-NM-1 
 #&gt;            2.011494e-04            9.722222e-03            4.861111e-03 
@@ -735,7 +742,8 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
 #&gt;                   14174                   14175             WA84-121613 
 #&gt;            1.795071e-06            9.259259e-05            4.861111e-03 </div><div class='input'>
 <span class='co'># You can also take the product of the non-logged results:</span>
-<span class='fu'><a href='https://rdrr.io/r/base/apply.html'>apply</a></span>(<span class='fu'>pgen</span>(<span class='no'>Pram</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='fl'>1</span>, <span class='no'>prod</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;             1411152-10B                      82                      83 
+<span class='fu'><a href='https://rdrr.io/r/base/apply.html'>apply</a></span>(<span class='fu'>pgen</span>(<span class='kw'>Pram</span>, log = <span class='fl'>FALSE</span>), <span class='fl'>1</span>, <span class='kw'>prod</span>, na.rm = <span class='fl'>TRUE</span>)
+</div><div class='output co'>#&gt;             1411152-10B                      82                      83 
 #&gt;            2.083333e-03            4.861111e-03            4.310345e-05 
 #&gt;                      84                      85                 81-NM-1 
 #&gt;            2.011494e-04            9.722222e-03            4.861111e-03 
@@ -1235,7 +1243,8 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
 <span class='co'># would be more appropriate to correct by 1/rrmlg at each locus. This is </span>
 <span class='co'># acheived by setting d = "rrmlg". Since this is a diploid, we would want to</span>
 <span class='co'># account for the number of chromosomes, and so we set mul = 1/2</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>pgen</span>(<span class='no'>Pram</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>d</span> <span class='kw'>=</span> <span class='st'>"rrmlg"</span>, <span class='kw'>mul</span> <span class='kw'>=</span> <span class='fl'>1</span>/<span class='fl'>2</span>)) <span class='co'># compare with the output above</span></div><div class='output co'>#&gt;             PrMS6A1 Pr9C3A1 PrMS39A1 PrMS45A1   PrMS43A1
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>pgen</span>(<span class='kw'>Pram</span>, log = <span class='fl'>FALSE</span>, d = <span class='st'>"rrmlg"</span>, mul = <span class='fl'>1</span><span class='op'>/</span><span class='fl'>2</span>)) <span class='co'># compare with the output above</span>
+</div><div class='output co'>#&gt;             PrMS6A1 Pr9C3A1 PrMS39A1 PrMS45A1   PrMS43A1
 #&gt; 1411152-10B     0.5     0.5     0.15      0.5 0.11111111
 #&gt; 82              0.5     0.5     0.35      0.5 0.11111111
 #&gt; 83              0.5     0.5     0.15      0.5 0.05555556
@@ -1244,13 +1253,14 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
 #&gt; 81-NM-1         0.5     0.5     0.35      0.5 0.11111111</div><div class='input'>
 <span class='co'># If you wanted to treat all alleles as equally rare, then you would set a</span>
 <span class='co'># specific value (let's say the rare alleles are 1/100):</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>pgen</span>(<span class='no'>Pram</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>e</span> <span class='kw'>=</span> <span class='fl'>1</span>/<span class='fl'>100</span>))</div><div class='output co'>#&gt;             PrMS6A1 Pr9C3A1 PrMS39A1 PrMS45A1    PrMS43A1
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>pgen</span>(<span class='kw'>Pram</span>, log = <span class='fl'>FALSE</span>, e = <span class='fl'>1</span><span class='op'>/</span><span class='fl'>100</span>))
+</div><div class='output co'>#&gt;             PrMS6A1 Pr9C3A1 PrMS39A1 PrMS45A1    PrMS43A1
 #&gt; 1411152-10B     0.5     0.5     0.15      0.5 0.111111111
 #&gt; 82              0.5     0.5     0.35      0.5 0.111111111
 #&gt; 83              0.5     0.5     0.15      0.5 0.003333333
 #&gt; 84              0.5     0.5     0.35      0.5 0.006666667
 #&gt; 85              0.5     0.5     0.35      0.5 0.222222222
-#&gt; 81-NM-1         0.5     0.5     0.35      0.5 0.111111111</div><div class='input'># }
+#&gt; 81-NM-1         0.5     0.5     0.35      0.5 0.111111111</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -1267,7 +1277,7 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

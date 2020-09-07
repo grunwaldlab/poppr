@@ -149,24 +149,24 @@ matrix.</p>
     </div>
 
     <pre class="usage"><span class='fu'>poppr.msn</span>(
-  <span class='no'>gid</span>,
-  <span class='no'>distmat</span>,
-  <span class='kw'>palette</span> <span class='kw'>=</span> <span class='no'>topo.colors</span>,
-  <span class='kw'>mlg.compute</span> <span class='kw'>=</span> <span class='st'>"original"</span>,
-  <span class='kw'>sublist</span> <span class='kw'>=</span> <span class='st'>"All"</span>,
-  <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>blacklist</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>vertex.label</span> <span class='kw'>=</span> <span class='st'>"MLG"</span>,
-  <span class='kw'>gscale</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>glim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>0.8</span>),
-  <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>3</span>,
-  <span class='kw'>gweight</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>wscale</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>showplot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>include.ties</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>threshold</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>clustering.algorithm</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>...</span>
+  <span class='kw'>gid</span>,
+  <span class='kw'>distmat</span>,
+  palette = <span class='kw'>topo.colors</span>,
+  mlg.compute = <span class='st'>"original"</span>,
+  sublist = <span class='st'>"All"</span>,
+  exclude = <span class='kw'>NULL</span>,
+  blacklist = <span class='kw'>NULL</span>,
+  vertex.label = <span class='st'>"MLG"</span>,
+  gscale = <span class='fl'>TRUE</span>,
+  glim = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>0.8</span>),
+  gadj = <span class='fl'>3</span>,
+  gweight = <span class='fl'>1</span>,
+  wscale = <span class='fl'>TRUE</span>,
+  showplot = <span class='fl'>TRUE</span>,
+  include.ties = <span class='fl'>FALSE</span>,
+  threshold = <span class='kw'>NULL</span>,
+  clustering.algorithm = <span class='kw'>NULL</span>,
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -299,10 +299,10 @@ override the algorithm in the data set. See Details.</p></td>
   via igraph's <code><a href='https://rdrr.io/pkg/igraph/man/mst.html'>minimum.spanning.tree</a></code>. The resultant
   graph produced can be plotted using igraph functions, or the entire object
   can be plotted using the function <code><a href='plot_poppr_msn.html'>plot_poppr_msn</a></code>, which will
-  give the user a scale bar and the option to layout your data.</p><h3>node sizes</h3>
+  give the user a scale bar and the option to layout your data.</p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>node sizes</h3>
 <p>The area of the nodes are representative of the number of samples. Because
   <span class="pkg">igraph</span> scales nodes by radius, the node sizes in the graph are 
-  represented as the square root of the number of samples.</p><p></p><h3>mlg.compute</h3>
+  represented as the square root of the number of samples.</p><p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>mlg.compute</h3>
 <p>Each node on the graph represents a different multilocus genotype. 
   The edges on the graph represent genetic distances that connect the
   multilocus genotypes. In genclone objects, it is possible to set the
@@ -312,7 +312,7 @@ override the algorithm in the data set. See Details.</p></td>
   definitions, information is lost from the graph. To circumvent this, The
   clone correction will be done via the computed multilocus genotypes, either
   "original" or "contracted". This is specified in the <code>mlg.compute</code>
-  argument, above.</p><p></p><h3>contracted multilocus genotypes</h3>
+  argument, above.</p><p></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>contracted multilocus genotypes</h3>
 <p>If your incoming data set is of the class <code><a href='genclone-class.html'>genclone</a></code>,
   and it contains contracted multilocus genotypes, this function will retain
   that information for creating the minimum spanning network. You can use the
@@ -333,46 +333,56 @@ override the algorithm in the data set. See Details.</p></td>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='plot_poppr_msn.html'>plot_poppr_msn</a></code> <code>nancycats</code>,
-  <code>upgma</code>, <code>nj</code>, <code>nodelabels</code>,
+  <code>upgma</code>, <code><a href='https://rdrr.io/pkg/ape/man/nj.html'>nj</a></code>, <code><a href='https://rdrr.io/pkg/ape/man/nodelabels.html'>nodelabels</a></code>,
   <code>tab</code>, <code><a href='missingno.html'>missingno</a></code>, <code><a href='bruvo.msn.html'>bruvo.msn</a></code>,
   <code><a href='greycurve.html'>greycurve</a></code></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Javier F. Tabima, Zhian N. Kamvar, Jonah C. Brooks</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'># Load the data set and calculate the distance matrix for all individuals.</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Aeut</span>)
-<span class='no'>A.dist</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='diss.dist.html'>diss.dist</a></span>(<span class='no'>Aeut</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Aeut</span>)
+<span class='kw'>A.dist</span> <span class='op'>&lt;-</span> <span class='fu'><a href='diss.dist.html'>diss.dist</a></span>(<span class='kw'>Aeut</span>)
 
 <span class='co'># Graph it.</span>
-<span class='no'>A.msn</span> <span class='kw'>&lt;-</span> <span class='fu'>poppr.msn</span>(<span class='no'>Aeut</span>, <span class='no'>A.dist</span>, <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>15</span>, <span class='kw'>vertex.label</span> <span class='kw'>=</span> <span class='fl'>NA</span>)</div><div class='img'><img src='poppr.msn-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='kw'>A.msn</span> <span class='op'>&lt;-</span> <span class='fu'>poppr.msn</span>(<span class='kw'>Aeut</span>, <span class='kw'>A.dist</span>, gadj = <span class='fl'>15</span>, vertex.label = <span class='fl'>NA</span>)
+</div><div class='img'><img src='poppr.msn-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Find the sizes of the nodes (number of individuals per MLL):</span>
-<span class='kw pkg'>igraph</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/igraph/man/vertex_attr.html'>vertex_attr</a></span>(<span class='no'>A.msn</span>$<span class='no'>graph</span>, <span class='st'>"size"</span>)^<span class='fl'>2</span></div><div class='output co'>#&gt;   [1]  2  1  2  2  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  9  1  1  5  1  1
+<span class='kw'>igraph</span>::<span class='fu'><a href='https://rdrr.io/pkg/igraph/man/vertex_attr.html'>vertex_attr</a></span>(<span class='kw'>A.msn</span><span class='op'>$</span><span class='kw'>graph</span>, <span class='st'>"size"</span>)<span class='op'>^</span><span class='fl'>2</span>
+</div><div class='output co'>#&gt;   [1]  2  1  2  2  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  9  1  1  5  1  1
 #&gt;  [26]  2  1  1  1  1  2  3  1  1  2  1  1  1  2  1  1  1  1  1  1  2  1  2  1  1
 #&gt;  [51]  1  2  1  3  1  1  1  1  1  2  1  1  1  2  1  1  1  1  1  1  1  1  1  2  1
 #&gt;  [76]  2  1  1 10  1  1  1  1  1  1  1  1  1  1  2  5  2  2  1  2  1  5  2  2  3
 #&gt; [101]  1  4  1  1  2  1  1  1  1  2  3  1  2  2  1  1  2  1  4</div><div class='input'>
 <span class='co'># \dontrun{</span>
 <span class='co'># Set subpopulation structure.</span>
-<span class='no'>Aeut.sub</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='coercion-methods.html'>as.genclone</a></span>(<span class='no'>Aeut</span>)
-<span class='fu'>setPop</span>(<span class='no'>Aeut.sub</span>) <span class='kw'>&lt;-</span> ~<span class='no'>Pop</span>/<span class='no'>Subpop</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Cannot set the population from an empty strata</span></div><div class='input'>
+<span class='kw'>Aeut.sub</span> <span class='op'>&lt;-</span> <span class='fu'><a href='bootgen2genind.html'>as.genclone</a></span>(<span class='kw'>Aeut</span>)
+<span class='fu'>setPop</span>(<span class='kw'>Aeut.sub</span>) <span class='op'>&lt;-</span> <span class='op'>~</span><span class='kw'>Pop</span><span class='op'>/</span><span class='kw'>Subpop</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Cannot set the population from an empty strata</span></div><div class='input'>
 <span class='co'># Plot respective to the subpopulation structure</span>
-<span class='no'>As.msn</span> <span class='kw'>&lt;-</span> <span class='fu'>poppr.msn</span>(<span class='no'>Aeut.sub</span>, <span class='no'>A.dist</span>, <span class='kw'>gadj</span><span class='kw'>=</span><span class='fl'>15</span>, <span class='kw'>vertex.label</span><span class='kw'>=</span><span class='fl'>NA</span>)</div><div class='img'><img src='poppr.msn-2.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='kw'>As.msn</span> <span class='op'>&lt;-</span> <span class='fu'>poppr.msn</span>(<span class='kw'>Aeut.sub</span>, <span class='kw'>A.dist</span>, gadj=<span class='fl'>15</span>, vertex.label=<span class='fl'>NA</span>)
+</div><div class='img'><img src='poppr.msn-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Show only the structure of the Athena population.</span>
-<span class='no'>As.msn</span> <span class='kw'>&lt;-</span> <span class='fu'>poppr.msn</span>(<span class='no'>Aeut.sub</span>, <span class='no'>A.dist</span>, <span class='kw'>gadj</span><span class='kw'>=</span><span class='fl'>15</span>, <span class='kw'>vertex.label</span><span class='kw'>=</span><span class='fl'>NA</span>, <span class='kw'>sublist</span><span class='kw'>=</span><span class='fl'>1</span>:<span class='fl'>10</span>)</div><div class='img'><img src='poppr.msn-3.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='kw'>As.msn</span> <span class='op'>&lt;-</span> <span class='fu'>poppr.msn</span>(<span class='kw'>Aeut.sub</span>, <span class='kw'>A.dist</span>, gadj=<span class='fl'>15</span>, vertex.label=<span class='fl'>NA</span>, sublist=<span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>)
+</div><div class='img'><img src='poppr.msn-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Let's look at the structure of the microbov data set</span>
 
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'>"igraph"</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>microbov</span>)
-<span class='no'>micro.dist</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='diss.dist.html'>diss.dist</a></span>(<span class='no'>microbov</span>, <span class='kw'>percent</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='no'>micro.msn</span> <span class='kw'>&lt;-</span> <span class='fu'>poppr.msn</span>(<span class='no'>microbov</span>, <span class='no'>micro.dist</span>, <span class='kw'>vertex.label</span><span class='kw'>=</span><span class='fl'>NA</span>)</div><div class='img'><img src='poppr.msn-4.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'><a href='http://igraph.org'>"igraph"</a></span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>microbov</span>)
+<span class='kw'>micro.dist</span> <span class='op'>&lt;-</span> <span class='fu'><a href='diss.dist.html'>diss.dist</a></span>(<span class='kw'>microbov</span>, percent = <span class='fl'>TRUE</span>)
+<span class='kw'>micro.msn</span> <span class='op'>&lt;-</span> <span class='fu'>poppr.msn</span>(<span class='kw'>microbov</span>, <span class='kw'>micro.dist</span>, vertex.label=<span class='fl'>NA</span>)
+</div><div class='img'><img src='poppr.msn-4.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Let's plot it and show where individuals have &lt; 15% of their genotypes </span>
 <span class='co'># different.</span>
 
-<span class='no'>edge_weight</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/igraph/man/E.html'>E</a></span>(<span class='no'>micro.msn</span>$<span class='no'>graph</span>)$<span class='no'>weight</span>
-<span class='no'>edge_labels</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='no'>edge_weight</span> <span class='kw'>&lt;</span> <span class='fl'>0.15</span>, <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span>(<span class='no'>edge_weight</span>, <span class='fl'>3</span>), <span class='fl'>NA</span>)
-<span class='fu'><a href='https://rdrr.io/pkg/igraph/man/plot.igraph.html'>plot.igraph</a></span>(<span class='no'>micro.msn</span>$<span class='no'>graph</span>, <span class='kw'>edge.label</span> <span class='kw'>=</span> <span class='no'>edge_labels</span>, <span class='kw'>vertex.size</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-<span class='kw'>edge.label.color</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='poppr.msn-5.png' alt='' width='700' height='433' /></div><div class='input'>
-# }
+<span class='kw'>edge_weight</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/igraph/man/E.html'>E</a></span>(<span class='kw'>micro.msn</span><span class='op'>$</span><span class='kw'>graph</span>)<span class='op'>$</span><span class='kw'>weight</span>
+<span class='kw'>edge_labels</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='kw'>edge_weight</span> <span class='op'>&lt;</span> <span class='fl'>0.15</span>, <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span>(<span class='kw'>edge_weight</span>, <span class='fl'>3</span>), <span class='fl'>NA</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/igraph/man/plot.igraph.html'>plot.igraph</a></span>(<span class='kw'>micro.msn</span><span class='op'>$</span><span class='kw'>graph</span>, edge.label = <span class='kw'>edge_labels</span>, vertex.size = <span class='fl'>2</span>, 
+edge.label.color = <span class='st'>"red"</span>)
+</div><div class='img'><img src='poppr.msn-5.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'># }</span>
 
 </div></pre>
   </div>
@@ -390,7 +400,7 @@ override the algorithm in the data set. See Details.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

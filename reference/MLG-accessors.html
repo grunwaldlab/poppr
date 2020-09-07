@@ -147,31 +147,31 @@ are preferred over accessing the elements via the @ symbol. Please use these
 in your code when accessing MLG objects.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>visible</span>(<span class='no'>x</span>)
+    <pre class="usage"><span class='fu'>visible</span>(<span class='kw'>x</span>)
 
-<span class='fu'>visible</span>(<span class='no'>x</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+<span class='fu'>visible</span>(<span class='kw'>x</span>) <span class='op'>&lt;-</span> <span class='kw'>value</span>
 
-<span class='fu'>MLG2df</span>(<span class='no'>x</span>)
+<span class='fu'>MLG2df</span>(<span class='kw'>x</span>)
 
-<span class='fu'>distname</span>(<span class='no'>x</span>)
+<span class='fu'>distname</span>(<span class='kw'>x</span>)
 
-<span class='fu'>distenv</span>(<span class='no'>x</span>)
+<span class='fu'>distenv</span>(<span class='kw'>x</span>)
 
-<span class='fu'>distname</span>(<span class='no'>x</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+<span class='fu'>distname</span>(<span class='kw'>x</span>) <span class='op'>&lt;-</span> <span class='kw'>value</span>
 
-<span class='fu'>distenv</span>(<span class='no'>x</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+<span class='fu'>distenv</span>(<span class='kw'>x</span>) <span class='op'>&lt;-</span> <span class='kw'>value</span>
 
-<span class='fu'>distargs</span>(<span class='no'>x</span>)
+<span class='fu'>distargs</span>(<span class='kw'>x</span>)
 
-<span class='fu'>distargs</span>(<span class='no'>x</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+<span class='fu'>distargs</span>(<span class='kw'>x</span>) <span class='op'>&lt;-</span> <span class='kw'>value</span>
 
-<span class='fu'>distalgo</span>(<span class='no'>x</span>)
+<span class='fu'>distalgo</span>(<span class='kw'>x</span>)
 
-<span class='fu'>distalgo</span>(<span class='no'>x</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+<span class='fu'>distalgo</span>(<span class='kw'>x</span>) <span class='op'>&lt;-</span> <span class='kw'>value</span>
 
-<span class='fu'>cutoff</span>(<span class='no'>x</span>)
+<span class='fu'>cutoff</span>(<span class='kw'>x</span>)
 
-<span class='fu'>cutoff</span>(<span class='no'>x</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span></pre>
+<span class='fu'>cutoff</span>(<span class='kw'>x</span>) <span class='op'>&lt;-</span> <span class='kw'>value</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -200,22 +200,27 @@ in your code when accessing MLG objects.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='MLG-class.html'>MLG</a></code> <code><a href='genclone-class.html'>genclone</a></code> 
-  <code>genlight</code> <code><a href='MLG-method.html'>initialize,MLG-method</a></code>
-  <code><a href='levels-methods.html'>levels,MLG-method</a></code> <code><a href='unique-methods.html'>unique,MLG-method</a></code></p></div>
+  <code>genlight</code> <code><a href='initialize,MLG-method.html'>initialize,MLG-method</a></code>
+  <code><a href='levels,MLG-method.html'>levels,MLG-method</a></code> <code><a href='unique,MLG,ANY-method.html'>unique,MLG-method</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'># \dontrun{</span>
 <span class='co'># These examples will simply show you what you can do with these</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>5000</span>)
-(<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='fl'>10</span>, <span class='fl'>20</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;  [1]  8  5  5  2  3  1  4  9  6  4  5  9  7 10  2  4  2  4 10  2</div><div class='input'>(<span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='fu'>new</span>(<span class='st'>"MLG"</span>, <span class='no'>x</span>))</div><div class='output co'>#&gt; 20 original mlgs.
+(<span class='kw'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='fl'>10</span>, <span class='fl'>20</span>, replace = <span class='fl'>TRUE</span>))
+</div><div class='output co'>#&gt;  [1]  8  5  5  2  3  1  4  9  6  4  5  9  7 10  2  4  2  4 10  2</div><div class='input'>(<span class='kw'>m</span> <span class='op'>&lt;-</span> <span class='fu'>new</span>(<span class='st'>"MLG"</span>, <span class='kw'>x</span>))
+</div><div class='output co'>#&gt; 20 original mlgs.
 #&gt;  [1]  8  5  5  2  3  1  4  9  6  4  5  9  7 10  2  4  2  4 10  2</div><div class='input'>
 <span class='co'># Visibility ------------------------------</span>
-<span class='fu'>visible</span>(<span class='no'>m</span>) <span class='co'># original</span></div><div class='output co'>#&gt; [1] "original"</div><div class='input'><span class='fu'>visible</span>(<span class='no'>m</span>) <span class='kw'>&lt;-</span> <span class='st'>"contracted"</span>
-<span class='no'>m</span>          <span class='co'># shows contracted MLGS</span></div><div class='output co'>#&gt; 20 contracted mlgs with a cutoff of 0 based on the function diss.dist
+<span class='fu'>visible</span>(<span class='kw'>m</span>) <span class='co'># original</span>
+</div><div class='output co'>#&gt; [1] "original"</div><div class='input'><span class='fu'>visible</span>(<span class='kw'>m</span>) <span class='op'>&lt;-</span> <span class='st'>"contracted"</span>
+<span class='kw'>m</span>          <span class='co'># shows contracted MLGS</span>
+</div><div class='output co'>#&gt; 20 contracted mlgs with a cutoff of 0 based on the function diss.dist
 #&gt;  [1]  8  5  5  2  3  1  4  9  6  4  5  9  7 10  2  4  2  4 10  2</div><div class='input'>
 <span class='co'># Conversion to data frame ----------------</span>
-<span class='fu'>MLG2df</span>(<span class='no'>m</span>)  <span class='co'># Grab the internal data frame</span></div><div class='output co'>#&gt;    expanded original contracted custom
+<span class='fu'>MLG2df</span>(<span class='kw'>m</span>)  <span class='co'># Grab the internal data frame</span>
+</div><div class='output co'>#&gt;    expanded original contracted custom
 #&gt; 1         8        8          8      8
 #&gt; 2         5        5          5      5
 #&gt; 3         5        5          5      5
@@ -237,14 +242,19 @@ in your code when accessing MLG objects.</p>
 #&gt; 19       10       10         10     10
 #&gt; 20        2        2          2      2</div><div class='input'>
 <span class='co'># Distance function handling --------------</span>
-<span class='fu'>distname</span>(<span class='no'>m</span>) <span class='co'># nei.dist</span></div><div class='output co'>#&gt; [1] "diss.dist"</div><div class='input'><span class='fu'>distargs</span>(<span class='no'>m</span>) <span class='co'># list()</span></div><div class='output co'>#&gt; list()</div><div class='input'><span class='fu'>distalgo</span>(<span class='no'>m</span>) <span class='co'># farthest</span></div><div class='output co'>#&gt; [1] "farthest_neighbor"</div><div class='input'><span class='fu'>cutoff</span>(<span class='no'>m</span>)</div><div class='output co'>#&gt;   expanded contracted 
+<span class='fu'>distname</span>(<span class='kw'>m</span>) <span class='co'># nei.dist</span>
+</div><div class='output co'>#&gt; [1] "diss.dist"</div><div class='input'><span class='fu'>distargs</span>(<span class='kw'>m</span>) <span class='co'># list()</span>
+</div><div class='output co'>#&gt; list()</div><div class='input'><span class='fu'>distalgo</span>(<span class='kw'>m</span>) <span class='co'># farthest</span>
+</div><div class='output co'>#&gt; [1] "farthest_neighbor"</div><div class='input'><span class='fu'>cutoff</span>(<span class='kw'>m</span>)
+</div><div class='output co'>#&gt;   expanded contracted 
 #&gt;          0          0 </div><div class='input'>
-<span class='fu'>distname</span>(<span class='no'>m</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span>(<span class='st'>"diss.dist"</span>)
-<span class='fu'>distargs</span>(<span class='no'>m</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>percent</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>distalgo</span>(<span class='no'>m</span>) <span class='kw'>&lt;-</span> <span class='st'>"average"</span>
-<span class='fu'>cutoff</span>(<span class='no'>m</span>)[<span class='st'>"contracted"</span>] <span class='kw'>&lt;-</span> <span class='fl'>0.2</span>
+<span class='fu'>distname</span>(<span class='kw'>m</span>) <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span>(<span class='st'>"diss.dist"</span>)
+<span class='fu'>distargs</span>(<span class='kw'>m</span>) <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(percent = <span class='fl'>TRUE</span>)
+<span class='fu'>distalgo</span>(<span class='kw'>m</span>) <span class='op'>&lt;-</span> <span class='st'>"average"</span>
+<span class='fu'>cutoff</span>(<span class='kw'>m</span>)[<span class='st'>"contracted"</span>] <span class='op'>&lt;-</span> <span class='fl'>0.2</span>
 
-<span class='co'># }</span></div></pre>
+<span class='co'># }</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -260,7 +270,7 @@ in your code when accessing MLG objects.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

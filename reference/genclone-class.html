@@ -169,7 +169,7 @@
 
     
 
-<dl'>
+<dl>
 <dt><code>mlg</code></dt><dd><p>a vector representing multilocus genotypes for the data set OR an 
 object of class <code><a href='MLG-class.html'>MLG</a></code>.</p></dd>
 
@@ -188,18 +188,22 @@ object of class <code><a href='MLG-class.html'>MLG</a></code>.</p></dd>
   extends class <code>"genlight"</code>, directly.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='coercion-methods.html'>as.genclone</a></code> <code><a href='snpclone-coercion-methods.html'>as.snpclone</a></code> 
+    <div class='dont-index'><p><code><a href='bootgen2genind.html'>as.genclone</a></code> <code><a href='as.snpclone.html'>as.snpclone</a></code> 
   <code>genind</code> <code>genlight</code> 
   <code>strata</code> <code>setPop</code> 
-  <code><a href='MLG-class.html'>MLG</a></code> <code><a href='mll-method.html'>mll</a></code> <code><a href='mlg.filter.html'>mlg.filter</a></code></p></div>
+  <code><a href='MLG-class.html'>MLG</a></code> <code><a href='mll.html'>mll</a></code> <code><a href='mlg.filter.html'>mlg.filter</a></code></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
 
 <span class='co'># genclone objects can be created from genind objects</span>
 <span class='co'>#</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>partial_clone</span>)
-<span class='no'>partial_clone</span></div><div class='output co'>#&gt; /// GENIND OBJECT /////////
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>partial_clone</span>)
+<span class='kw'>partial_clone</span>
+</div><div class='output co'>#&gt; /// GENIND OBJECT /////////
 #&gt; 
 #&gt;  // 50 individuals; 10 loci; 35 alleles; size: 22.6 Kb
 #&gt; 
@@ -213,7 +217,8 @@ object of class <code><a href='MLG-class.html'>MLG</a></code>.</p></dd>
 #&gt;    @call: old2new_genind(object = x, donor = new(class(x)))
 #&gt; 
 #&gt;  // Optional content
-#&gt;    @pop: population of each individual (group size range: 12-13)</div><div class='input'>(<span class='no'>pc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='coercion-methods.html'>as.genclone</a></span>(<span class='no'>partial_clone</span>))</div><div class='output co'>#&gt; 
+#&gt;    @pop: population of each individual (group size range: 12-13)</div><div class='input'>(<span class='kw'>pc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='bootgen2genind.html'>as.genclone</a></span>(<span class='kw'>partial_clone</span>))
+</div><div class='output co'>#&gt; 
 #&gt; This is a genclone object
 #&gt; -------------------------
 #&gt; Genotype information:
@@ -229,7 +234,8 @@ object of class <code><a href='MLG-class.html'>MLG</a></code>.</p></dd>
 <span class='co'># snpclone objects can be created from genlight objects</span>
 <span class='co'>#</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>999</span>)
-(<span class='no'>gl</span> <span class='kw'>&lt;-</span> <span class='fu'>glSim</span>(<span class='fl'>100</span>, <span class='fl'>0</span>, <span class='kw'>n.snp.struc</span> <span class='kw'>=</span> <span class='fl'>1e3</span>, <span class='kw'>ploidy</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='output co'>#&gt;  /// GENLIGHT OBJECT /////////
+(<span class='kw'>gl</span> <span class='op'>&lt;-</span> <span class='fu'>glSim</span>(<span class='fl'>100</span>, <span class='fl'>0</span>, n.snp.struc = <span class='fl'>1e3</span>, ploidy = <span class='fl'>2</span>, parallel = <span class='fl'>FALSE</span>))
+</div><div class='output co'>#&gt;  /// GENLIGHT OBJECT /////////
 #&gt; 
 #&gt;  // 100 genotypes,  1,000 binary SNPs, size: 172 Kb
 #&gt;  0 (0 %) missing data
@@ -241,7 +247,8 @@ object of class <code><a href='MLG-class.html'>MLG</a></code>.</p></dd>
 #&gt;  // Optional content
 #&gt;    @pop: population of each individual (group size range: 50-50)
 #&gt;    @other: a list containing: ancestral.pops 
-#&gt; </div><div class='input'>(<span class='no'>sc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snpclone-coercion-methods.html'>as.snpclone</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span>(<span class='no'>gl</span>, <span class='no'>gl</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='output co'>#&gt;  ||| SNPCLONE OBJECT |||||||||
+#&gt; </div><div class='input'>(<span class='kw'>sc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='as.snpclone.html'>as.snpclone</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span>(<span class='kw'>gl</span>, <span class='kw'>gl</span>, parallel = <span class='fl'>FALSE</span>), parallel = <span class='fl'>FALSE</span>))
+</div><div class='output co'>#&gt;  ||| SNPCLONE OBJECT |||||||||
 #&gt; 
 #&gt;  || 200 genotypes,  1,000 binary SNPs, size: 353.7 Kb
 #&gt;  0 (0 %) missing data
@@ -257,8 +264,9 @@ object of class <code><a href='MLG-class.html'>MLG</a></code>.</p></dd>
 #&gt; 
 #&gt; NULL</div><div class='input'><span class='co'># </span>
 <span class='co'># Use mlg.filter to create a distance threshold to define multilocus genotypes.</span>
-<span class='fu'><a href='mlg.filter.html'>mlg.filter</a></span>(<span class='no'>sc</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>) <span class='kw'>&lt;-</span> <span class='fl'>0.25</span>
-<span class='no'>sc</span> <span class='co'># 82 mlgs</span></div><div class='output co'>#&gt;  ||| SNPCLONE OBJECT |||||||||
+<span class='fu'><a href='mlg.filter.html'>mlg.filter</a></span>(<span class='kw'>sc</span>, threads = <span class='fl'>1L</span>) <span class='op'>&lt;-</span> <span class='fl'>0.25</span>
+<span class='kw'>sc</span> <span class='co'># 82 mlgs</span>
+</div><div class='output co'>#&gt;  ||| SNPCLONE OBJECT |||||||||
 #&gt; 
 #&gt;  || 200 genotypes,  1,000 binary SNPs, size: 353.7 Kb
 #&gt;  0 (0 %) missing data
@@ -274,7 +282,7 @@ object of class <code><a href='MLG-class.html'>MLG</a></code>.</p></dd>
 #&gt;    @other: a list containing: elements without names 
 #&gt; 
 #&gt; NULL</div><div class='input'>
-# }
+<span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -291,7 +299,7 @@ object of class <code><a href='MLG-class.html'>MLG</a></code>.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

@@ -146,12 +146,12 @@ populations from the dataset.</p>
     </div>
 
     <pre class="usage"><span class='fu'>popsub</span>(
-  <span class='no'>gid</span>,
-  <span class='kw'>sublist</span> <span class='kw'>=</span> <span class='st'>"ALL"</span>,
-  <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>blacklist</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>mat</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+  <span class='kw'>gid</span>,
+  sublist = <span class='st'>"ALL"</span>,
+  exclude = <span class='kw'>NULL</span>,
+  blacklist = <span class='kw'>NULL</span>,
+  mat = <span class='kw'>NULL</span>,
+  drop = <span class='fl'>TRUE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -192,29 +192,34 @@ from the population.</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A <code>genind</code> object or a matrix.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Load the dataset microbov.</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>microbov</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>microbov</span>)
 
 <span class='co'># List the population names.</span>
-<span class='fu'>popNames</span>(<span class='no'>microbov</span>)</div><div class='output co'>#&gt;  [1] "Borgou"          "Zebu"            "Lagunaire"       "NDama"          
+<span class='fu'>popNames</span>(<span class='kw'>microbov</span>)
+</div><div class='output co'>#&gt;  [1] "Borgou"          "Zebu"            "Lagunaire"       "NDama"          
 #&gt;  [5] "Somba"           "Aubrac"          "Bazadais"        "BlondeAquitaine"
 #&gt;  [9] "BretPieNoire"    "Charolais"       "Gascon"          "Limousin"       
 #&gt; [13] "MaineAnjou"      "Montbeliard"     "Salers"         </div><div class='input'>
 <span class='co'># Analyze only the populations with exactly 50 individuals</span>
-<span class='no'>mic.50</span> <span class='kw'>&lt;-</span> <span class='fu'>popsub</span>(<span class='no'>microbov</span>, <span class='kw'>sublist</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>:<span class='fl'>6</span>, <span class='fl'>11</span>:<span class='fl'>15</span>), <span class='kw'>exclude</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>,<span class='fl'>4</span>,<span class='fl'>13</span>,<span class='fl'>14</span>))
+<span class='kw'>mic.50</span> <span class='op'>&lt;-</span> <span class='fu'>popsub</span>(<span class='kw'>microbov</span>, sublist=<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span><span class='op'>:</span><span class='fl'>6</span>, <span class='fl'>11</span><span class='op'>:</span><span class='fl'>15</span>), exclude=<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>,<span class='fl'>4</span>,<span class='fl'>13</span>,<span class='fl'>14</span>))
 
 <span class='co'># \dontrun{</span>
 <span class='co'># Analyze the first 10 populations, except for "Bazadais"</span>
-<span class='no'>mic.10</span> <span class='kw'>&lt;-</span> <span class='fu'>popsub</span>(<span class='no'>microbov</span>, <span class='kw'>sublist</span><span class='kw'>=</span><span class='fl'>1</span>:<span class='fl'>10</span>, <span class='kw'>exclude</span><span class='kw'>=</span><span class='st'>"Bazadais"</span>)
+<span class='kw'>mic.10</span> <span class='op'>&lt;-</span> <span class='fu'>popsub</span>(<span class='kw'>microbov</span>, sublist=<span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>, exclude=<span class='st'>"Bazadais"</span>)
 
 <span class='co'># Take out the two smallest populations</span>
-<span class='no'>micbig</span> <span class='kw'>&lt;-</span> <span class='fu'>popsub</span>(<span class='no'>microbov</span>, <span class='kw'>exclude</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"NDama"</span>, <span class='st'>"Montbeliard"</span>))
+<span class='kw'>micbig</span> <span class='op'>&lt;-</span> <span class='fu'>popsub</span>(<span class='kw'>microbov</span>, exclude=<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"NDama"</span>, <span class='st'>"Montbeliard"</span>))
 
 <span class='co'># Analyze the two largest populations</span>
-<span class='no'>miclrg</span> <span class='kw'>&lt;-</span> <span class='fu'>popsub</span>(<span class='no'>microbov</span>, <span class='kw'>sublist</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"BlondeAquitaine"</span>, <span class='st'>"Charolais"</span>))
-<span class='co'># }</span></div></pre>
+<span class='kw'>miclrg</span> <span class='op'>&lt;-</span> <span class='fu'>popsub</span>(<span class='kw'>microbov</span>, sublist=<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"BlondeAquitaine"</span>, <span class='st'>"Charolais"</span>))
+<span class='co'># }</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -230,7 +235,7 @@ from the population.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>
