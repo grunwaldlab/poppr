@@ -88,8 +88,8 @@ Where \sQuote{data type} refers to the type of data that can be used:
 \section{Data Structures}{
 
 
-Data structures "genclone" (based off of adegenet's \link[adegenet:genind-class]{genind}) and
-"snpclone" (based off of adegenet's \link[adegenet:genlight-class]{genlight} for large SNP data sets).
+Data structures "genclone" (based off of adegenet's \link[adegenet:genind]{genind}) and
+"snpclone" (based off of adegenet's \link[adegenet:genlight]{genlight} for large SNP data sets).
 Both of these data structures are defined by the presence of an extra
 MLG slot representing multilocus genotype assignments, which can be a numeric
 vector or a MLG class object.
@@ -100,7 +100,7 @@ vector or a MLG class object.
 assignments that acts like a vector, allowing the user to easily switch
 between different MLG definitions.
 \item \linkS4class{bootgen} - An internal class used explicitly for \code{\link[=aboot]{aboot()}} that
-inherits the \link[adegenet:gen-class]{gen-class} virtual object. It is
+inherits the \link[adegenet:virClasses]{gen-class} virtual object. It is
 designed to allow for sampling loci with replacement.
 \item \linkS4class{bruvomat} - An internal class designed to handle bootstrapping for
 Bruvo's distance where blocks of integer loci can be shuffled.
@@ -192,7 +192,7 @@ Analysis of multilocus linkage disequilibrium.
 \item \code{\link[=rraf]{rraf()}} (m) - Round-robin allele frequency estimates.
 \item \code{\link[=pgen]{pgen()}} (m) - Probability of genotypes.
 \item \code{\link[=psex]{psex()}} (m) - Probability of observing a genotype more than once.
-\item \link[poppr:rare_allele_correction]{rare_allele_correction} (m) - rules for correcting rare alleles for round-robin estimates.
+\item \link[=rare_allele_correction]{rare_allele_correction} (m) - rules for correcting rare alleles for round-robin estimates.
 \item \code{\link[=incomp]{incomp()}} (m) - Check data for incomparable samples.
 }
 }

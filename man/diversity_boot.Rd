@@ -18,7 +18,7 @@ diversity_boot(
 }
 \arguments{
 \item{tab}{a table produced from the \pkg{poppr} function
-\code{\link[poppr:mlg.table]{poppr::mlg.table()}}. MLGs in columns and populations in rows}
+\code{\link[=mlg.table]{mlg.table()}}. MLGs in columns and populations in rows}
 
 \item{n}{an integer > 0 specifying the number of bootstrap replicates to
 perform (corresponds to \code{R} in the function \code{\link[boot:boot]{boot::boot()}}.}
@@ -100,7 +100,7 @@ system.time(diversity_boot(tab, 10000L))
 \code{\link[=diversity_stats]{diversity_stats()}} for basic statistic calculation,
 \code{\link[=diversity_ci]{diversity_ci()}} for confidence intervals and plotting, and
 \code{\link[=poppr]{poppr()}}. For bootstrap sampling:
-\code{\link[stats:rmultinom]{stats::rmultinom()}} \code{\link[boot:boot]{boot::boot()}}
+\code{\link[stats:Multinom]{stats::rmultinom()}} \code{\link[boot:boot]{boot::boot()}}
 }
 \author{
 Zhian N. Kamvar

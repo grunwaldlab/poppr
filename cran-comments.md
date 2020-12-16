@@ -1,10 +1,11 @@
-# Poppr version 2.8.6
+# Poppr version 2.8.7
+
+This fixes the help links to other packages on CRAN.
 
 ## Test environments
 
-* local macOS install, R 4.0.0
-* local ubuntu 16.04 install, R 4.0.0
-* ubuntu 14.04 (on travis-ci), devel (2019-06-17 r76705) and R 4.0.0
+* local macOS install, R 4.0.2
+* local ubuntu 20.04 install, R 4.0.2
 * windows R Under development (unstable) 
 
 ## R CMD check results
