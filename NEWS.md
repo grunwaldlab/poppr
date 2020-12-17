@@ -1,3 +1,11 @@
+poppr 2.8.7
+===========
+
+CRAN MAINTENANCE
+----------------
+
+* Links to other packages are now formatted correctly.
+
 poppr 2.8.6
 ===========
 
