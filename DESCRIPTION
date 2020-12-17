@@ -24,16 +24,16 @@ Authors@R: c(person(c("Zhian", "N."), "Kamvar", role = c("cre", "aut"),
     email = "grunwaln@science.oregonstate.edu", comment = c(ORCID = "0000-0003-1656-7602")))
 Maintainer: Zhian N. Kamvar <zkamvar@gmail.com>
 Encoding: UTF-8
-URL: https://grunwaldlab.github.io/poppr,
-    https://github.com/grunwaldlab/poppr,
+URL: https://grunwaldlab.github.io/poppr/,
+    https://github.com/grunwaldlab/poppr/,
     https://grunwaldlab.github.io/Population_Genetics_in_R/
 Description: Population genetic analyses for hierarchical analysis of partially
     clonal populations built upon the architecture of the 'adegenet' package. 
     Originally described in Kamvar, Tabima, and Grünwald (2014) 
     <doi:10.7717/peerj.281> with version 2.0 described in Kamvar, Brooks, and 
     Grünwald (2015) <doi:10.3389/fgene.2015.00208>.
-MailingList: https://groups.google.com/group/poppr
-BugReports: https://github.com/grunwaldlab/poppr/issues
+MailingList: https://groups.google.com/d/forum/poppr
+BugReports: https://github.com/grunwaldlab/poppr/issues/
 Depends:
     R (>= 2.15.1),
     adegenet (>= 2.0.0)

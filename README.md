@@ -2,11 +2,6 @@
 
 <!-- badges: start -->
 
-[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=master)](https://travis-ci.org/grunwaldlab/poppr)
-[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=master)](https://coveralls.io/r/grunwaldlab/poppr?branch=master)
-[![CRAN version](https://www.r-pkg.org/badges/version-ago/poppr)](https://cran.r-project.org/package=poppr)
-[![CRAN check status](https://cranchecks.info/badges/worst/poppr)](https://cran.r-project.org/web/checks/check_results_poppr.html)
-[![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/poppr)](https://www.r-pkg.org/pkg/poppr)
 
 <!-- badges: end -->
 
@@ -72,7 +67,7 @@ Please also cite:
 > Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of
 > genome-wide population genetic data with emphasis on clonality. Front. Genet.
 > 6:208. doi:
-> [10.3389/fgene.2015.00208](https://journal.frontiersin.org/article/10.3389/fgene.2015.00208/abstract)
+> [10.3389/fgene.2015.00208](https://www.frontiersin.org/articles/10.3389/fgene.2015.00208/abstract)
   
 You can obtain citation information in R by typing:
 
@@ -102,9 +97,9 @@ github below.
 
 To install this package from github, make sure you have the following:
 
-- [Xcode](https://developer.apple.com/xcode) (OSX)
+- [Xcode](https://developer.apple.com/xcode/) (OSX)
     OR [Rtools](https://cran.r-project.org/bin/windows/Rtools/) (Windows)
-- [devtools](https://github.com/hadley/devtools) (to install, use: `install.packages("devtools")`)
+- [devtools](https://github.com/r-lib/devtools) (to install, use: `install.packages("devtools")`)
 
 For Linux users, make sure that the function `getOption("unzip")` returns
 `"unzip"` or `"internal"`. If it doesn't, then run `options(unzip =
@@ -161,7 +156,7 @@ A few vignettes have been written for poppr:
 
 Users who have any questions/comments/suggestions regarding any version of poppr
 (stable or development) should direct their comments to the [Poppr google
-group](https://groups.google.com/group/poppr)
+group](https://groups.google.com/d/forum/poppr)
 
 ### Book/Primer
 

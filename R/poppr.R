@@ -84,11 +84,11 @@
 #'
 #'   Examples of analyses are available in a primer written by Niklaus J.
 #'   Grünwald, Zhian N. Kamvar, and Sydney E.  Everhart at
-#'   <http://grunwaldlab.github.io/Population_Genetics_in_R>.}
+#'   <http://grunwaldlab.github.io/Population_Genetics_in_R/>.}
 #'   
 #'   \subsection{Getting help}{ If you have a specific question or issue with 
 #'   \pkg{poppr}, feel free to contribute to the google group at 
-#'   <https://groups.google.com/group/poppr>. If you find a bug and 
+#'   <https://groups.google.com/d/forum/poppr>. If you find a bug and 
 #'   are a github user, you can submit bug reports at 
 #'   <https://github.com/grunwaldlab/poppr/issues>. Otherwise, leave a
 #'   message on the groups. Personal emails are highly discouraged as they do 

@@ -121,14 +121,14 @@ written to give algorithmic details of analyses introduced with *poppr*.
 
 As of spring 2014, Drs. Niklaus J. Grünwald, Sydney E. Everhart, and I have co-
 authored a primer on using R for population genetic analysis. It is located at
-<http://grunwaldlab.github.io//Population_Genetics_in_R> and the source code can
+<https://grunwaldlab.github.io/Population_Genetics_in_R/> and the source code can
 be found [on our github site][githubsite].
 
 Getting Help
 ------------
 
 If you have any questions or feedback, feel free to send a message to
-the *poppr* forum at <http://groups.google.com/group/poppr>. You can submit bug
+the *poppr* forum at <https://groups.google.com/d/forum/poppr>. You can submit bug
 reports there or on our github site: 
 <https://github.com/grunwaldlab/poppr/issues>
 
@@ -162,7 +162,7 @@ citation(package = "poppr")
 ```
 
 The formal publication for the first version of *poppr* was
-published in the journal **PeerJ**: <http://peerj.com/articles/281/>
+published in the journal **PeerJ**: <https://peerj.com/articles/281/>
 [@kamvar2014poppr]. The new features in version 2.0 were published in
 **Frontiers** <https://doi.org/10.3389/fgene.2015.00208>
 [@kamvar2015novel].
@@ -175,7 +175,7 @@ Installation {#intro:install}
 
 This manual assumes you have installed R. If you have not, please refer
 to The CRAN home page at <https://cran.r-project.org/>. We also recommend
-the Rstudio IDE (<http://www.rstudio.com/>), which allows the user to
+the Rstudio IDE (<https://www.rstudio.com/>), which allows the user to
 view the R console, environment, scripts, and plots in a single window.
 
 ### From CRAN
@@ -184,7 +184,7 @@ To install *poppr* from CRAN, select "Package Installer"
 from the menu "Packages & Data" in the GUI or type:
 
 ```{r install, eval = FALSE}
-install.packages("poppr", repos = "http://cloud.r-project.org/")
+install.packages("poppr", repos = "https://cloud.r-project.org/")
 ```
 
 All dependencies will also be installed. In the unfortunate case this does not 
@@ -206,7 +206,7 @@ Windows
 
 OSX
 
-:   Download Xcode: <https://developer.apple.com/xcode>
+:   Download Xcode: <https://developer.apple.com/xcode/>
 
 To install from GitHub, you do not need to download the tarball since there is a
 package called *devtools* that will download and install the package for you
@@ -1932,7 +1932,7 @@ example on how to export graphics from R. Note that any code here that
 will produce images will also be present in other places in this
 vignette. The default installation of the R GUI is quite minimal, and
 for an easy way to manage your plots and code, I strongly encourage the
-user to use Rstudio <http://www.rstudio.com/>.
+user to use Rstudio <https://www.rstudio.com/>.
 
 ### Basics {#appendix:graphics:basics}
 
@@ -1985,11 +1985,11 @@ price) that you can use to edit your graphics.
         Windows only. <https://www.getpaint.net>
     -   **Adobe Photoshop**
         Pricey, Windows and Mac.
-        <http://www.adobe.com/products/photoshop.html>
+        <https://www.adobe.com/products/photoshop.html>
 -   Scalable Vector Graphics based editors (for svg, pdf)
     -   **Inkscape**  Free, cross-platform <https://inkscape.org>
     -   **Adobe Illustrator** Pricey, Windows and Mac.
-        <http://www.adobe.com/products/illustrator.html>
+        <https://www.adobe.com/products/illustrator.html>
     
 ### Exporting ggplot2 graphics {#appendix:graphics:ggplot2}
 
@@ -2066,7 +2066,7 @@ this image since it is based off of vector graphics.
 [^2]: \*.CSV files are comma separated files that are easily machine
     readable. 
 
-[githubsite]: https://github.com/grunwaldlab/Population_Genetics_in_R
+[githubsite]: https://github.com/grunwaldlab/Population_Genetics_in_R/
 
 References
 ==========
