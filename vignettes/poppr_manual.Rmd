@@ -1932,7 +1932,7 @@ example on how to export graphics from R. Note that any code here that
 will produce images will also be present in other places in this
 vignette. The default installation of the R GUI is quite minimal, and
 for an easy way to manage your plots and code, I strongly encourage the
-user to use Rstudio <https://www.rstudio.com/>.
+user to use Rstudio <https://rstudio.com/>.
 
 ### Basics {#appendix:graphics:basics}
 
