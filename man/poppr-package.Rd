@@ -226,12 +226,11 @@ Analysis of multilocus linkage disequilibrium.
 
 Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for genetic
 analysis of populations with clonal, partially clonal, and/or sexual
-reproduction. PeerJ 2:e281 \url{https://doi.org/10.7717/peerj.281}
+reproduction. PeerJ 2:e281 \doi{10.7717/peerj.281}
 
 Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of
 genome-wide population genetic data with emphasis on clonality. Front. Genet.
-6:208. doi: 10.3389/fgene.2015.00208
-\url{https://doi.org/10.3389/fgene.2015.00208}
+6:208. \doi{10.3389/fgene.2015.00208}
 
 --------- Papers referencing data sets ---------
 

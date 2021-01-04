@@ -16,7 +16,7 @@ data(Pram)
 }
 \description{
 This is the data set from 
-  <https://doi.org/10.5281/zenodo.13007>. It has been converted to the 
+  \doi{10.5281/zenodo.13007}. It has been converted to the 
   genclone object as of poppr version 2.0. It contains 729 samples of the 
   Sudden Oak Death pathogen *Phytophthora ramorum* genotyped over five 
   microsatellite loci (Kamvar et. al., 2015). 513 samples were collected from

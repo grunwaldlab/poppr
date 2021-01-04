@@ -238,12 +238,11 @@
 #' 
 #' Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for genetic
 #' analysis of populations with clonal, partially clonal, and/or sexual
-#' reproduction. PeerJ 2:e281 <https://doi.org/10.7717/peerj.281>
+#' reproduction. PeerJ 2:e281 \doi{10.7717/peerj.281}
 #' 
 #' Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of 
 #' genome-wide population genetic data with emphasis on clonality. Front. Genet.
-#' 6:208. doi: 10.3389/fgene.2015.00208 
-#' <https://doi.org/10.3389/fgene.2015.00208>
+#' 6:208. \doi{10.3389/fgene.2015.00208}
 #' 
 #' --------- Papers referencing data sets ---------
 #' 
@@ -360,7 +359,7 @@ NULL
 #' @docType data
 #' @usage data(Pram)
 #' @description This is the data set from 
-#'   <https://doi.org/10.5281/zenodo.13007>. It has been converted to the 
+#'   \doi{10.5281/zenodo.13007}. It has been converted to the 
 #'   genclone object as of poppr version 2.0. It contains 729 samples of the 
 #'   Sudden Oak Death pathogen *Phytophthora ramorum* genotyped over five 
 #'   microsatellite loci (Kamvar et. al., 2015). 513 samples were collected from

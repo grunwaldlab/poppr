@@ -26,7 +26,7 @@ Attempts to fix inconsistent repeat lengths found by \code{test_replen}
 }
 \details{
 This function is modified from the version used in 
-  \url{https://doi.org/10.5281/zenodo.13007}.\cr Before being fed into the
+  \doi{10.5281/zenodo.13007}.\cr Before being fed into the
   algorithm to calculate Bruvo's distance, the amplicon length is divided by
   the repeat unit length. Because of the amplified primer sequence attached
   to sequence repeat, this division does not always result in an integer and
@@ -72,7 +72,7 @@ diff(PxPcr)
 Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M. 
   Hansen, & Niklaus J. Grünwald. Sudden_Oak_Death_in_Oregon_Forests: Spatial
   and temporal population dynamics of the sudden oak death epidemic in Oregon
-  Forests. ZENODO, https://doi.org/10.5281/zenodo.13007, 2014.
+  Forests. ZENODO, \doi{10.5281/zenodo.13007}, 2014.
   
   Kamvar, Z. N., Larsen, M. M., Kanaskie, A. M., Hansen, E. M., & Grünwald,
   N. J. (2015). Spatial and temporal analysis of populations of the sudden
