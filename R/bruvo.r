@@ -628,7 +628,7 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
 #'   Kamvar, Z. N., Larsen, M. M., Kanaskie, A. M., Hansen, E. M., & Grünwald,
 #'   N. J. (2015). Spatial and temporal analysis of populations of the sudden
 #'   oak death pathogen in Oregon forests. Phytopathology 105:982-989.
-#'   doi: \href{https://doi.org/10.1094/PHYTO-12-14-0350-FI}{10.1094/PHYTO-12-14-0350-FI}
+#'   doi: \doi{10.1094/PHYTO-12-14-0350-FI}{10.1094/PHYTO-12-14-0350-FI}
 #'   
 #'   Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and Hinrich 
 #'   Schulenburg. A simple method for the calculation of microsatellite genotype
@@ -695,7 +695,7 @@ consistent_replen <- function(index, alleles, replen){
 #'   Kamvar, Z. N., Larsen, M. M., Kanaskie, A. M., Hansen, E. M., & Grünwald,
 #'   N. J. (2015). Spatial and temporal analysis of populations of the sudden
 #'   oak death pathogen in Oregon forests. Phytopathology 105:982-989.
-#'   doi: \href{https://doi.org/10.1094/PHYTO-12-14-0350-FI}{10.1094/PHYTO-12-14-0350-FI}
+#'   doi: \doi{10.1094/PHYTO-12-14-0350-FI}{10.1094/PHYTO-12-14-0350-FI}
 #'   
 #'   Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and Hinrich 
 #'   Schulenburg. A simple method for the calculation of microsatellite genotype
