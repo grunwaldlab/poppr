@@ -80,12 +80,12 @@
 #'   Material for Frontiers Plant Genetics and Genomics 'Novel R tools for 
 #'   analysis of genome-wide population genetic data with emphasis on
 #'   clonality'. DOI:
-#'   \doi{10.5281/zenodo.17424}{10.5281/zenodo.17424}
+#'   \doi{10.5281/zenodo.17424}
 #'   
 #'   Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of 
 #'   genome-wide population genetic data with emphasis on clonality. Front.
 #'   Genet. 6:208. doi: 
-#'   \doi{10.3389/fgene.2015.00208}{10.3389/fgene.2015.00208}
+#'   \doi{10.3389/fgene.2015.00208}
 #'   
 #' @author Zhian N. Kamvar, Jonah C. Brooks
 #' @examples
@@ -159,12 +159,12 @@ filter_stats <- function(x, distance = bitwise.dist,
 #' @references ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary
 #' Material for Frontiers Plant Genetics and Genomics 'Novel R tools for
 #' analysis of genome-wide population genetic data with emphasis on clonality'.
-#' DOI: \doi{10.5281/zenodo.17424}{10.5281/zenodo.17424}
+#' DOI: \doi{10.5281/zenodo.17424}
 #' 
 #' Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of 
 #' genome-wide population genetic data with emphasis on clonality. Front. Genet.
 #' 6:208. doi:
-#' \doi{10.3389/fgene.2015.00208}{10.3389/fgene.2015.00208}
+#' \doi{10.3389/fgene.2015.00208}
 #' 
 #' @author Zhian N. Kamvar
 #' @examples
@@ -208,12 +208,12 @@ cutoff_predictor <- function(thresholds, fraction = 0.5){
 #' @references ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary
 #' Material for Frontiers Plant Genetics and Genomics 'Novel R tools for
 #' analysis of genome-wide population genetic data with emphasis on clonality'.
-#' DOI: \doi{10.5281/zenodo.17424}{10.5281/zenodo.17424}
+#' DOI: \doi{10.5281/zenodo.17424}
 #' 
 #' Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of 
 #' genome-wide population genetic data with emphasis on clonality. Front. Genet.
 #' 6:208. doi:
-#' \doi{10.3389/fgene.2015.00208}{10.3389/fgene.2015.00208}
+#' \doi{10.3389/fgene.2015.00208}
 #' 
 #' @keywords internal
 #==============================================================================#
