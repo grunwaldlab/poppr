@@ -34,5 +34,5 @@ monpop
 SE Everhart, H Scherm, (2015) Fine-scale genetic structure of 
   *Monilinia fructicola* during brown rot epidemics within individual
   peach tree canopies. Phytopathology 105:542-549 doi:
-  \href{https://doi.org/10.1094/PHYTO-03-14-0088-R}{10.1094/PHYTO-03-14-0088-R}
+  \doi{10.1094/PHYTO-03-14-0088-R}
 }

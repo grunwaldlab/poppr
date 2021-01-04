@@ -238,12 +238,12 @@ genome-wide population genetic data with emphasis on clonality. Front. Genet.
 Grünwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis of Diversity,
 Selfing, and Genetic Differentiation in Populations of the Oomycete
 \emph{Aphanomyces euteiches}. Phytopathology 96:1134-1141 doi:
-\href{https://doi.org/10.1094/PHYTO-96-1134}{10.1094/PHYTO-96-1134}
+\doi{10.1094/PHYTO-96-1134}
 
 SE Everhart, H Scherm, (2015) Fine-scale genetic structure of \emph{Monilinia
 fructicola} during brown rot epidemics within individual peach tree canopies.
 Phytopathology 105:542-549 doi:
-\href{https://doi.org/10.1094/PHYTO-03-14-0088-R}{10.1094/PHYTO-03-14-0088-R}
+\doi{10.1094/PHYTO-03-14-0088-R}
 
 Bo Peng and Christopher Amos (2008) Forward-time simulations of nonrandom
 mating populations using simuPOP. \emph{bioinformatics}, 24 (11): 1408-1409.
@@ -253,17 +253,17 @@ Fry, Gregory A. Forbes, Valerie J. Fieland, Martha Cardenas, and Niklaus J.
 Grünwald. (2014) "The Irish potato famine pathogen \emph{Phytophthora
 infestans} originated in central Mexico rather than the Andes." Proceedings
 of the National Academy of Sciences 111:8791-8796. doi:
-\href{https://doi.org/10.1073/pnas.1401884111}{10.1073/pnas.1401884111}
+\doi{10.1073/pnas.1401884111}
 
 Kamvar, Z. N., Larsen, M. M., Kanaskie, A. M., Hansen, E. M., & Grünwald, N.
 J. (2015). Spatial and temporal analysis of populations of the sudden oak
 death pathogen in Oregon forests. Phytopathology 105:982-989. doi:
-\href{https://doi.org/10.1094/PHYTO-12-14-0350-FI}{10.1094/PHYTO-12-14-0350-FI}
+\doi{10.1094/PHYTO-12-14-0350-FI}
 
 Goss, E. M., Larsen, M., Chastagner, G. A., Givens, D. R., and Grünwald, N.
 J. 2009. Population genetic analysis infers migration pathways of
 \emph{Phytophthora ramorum} in US nurseries. PLoS Pathog. 5:e1000583. doi:
-\href{https://doi.org/10.1371/journal.ppat.1000583}{10.1371/journal.ppat.1000583}
+\doi{10.1371/journal.ppat.1000583}
 }
 \author{
 Zhian N. Kamvar, Jonah C. Brooks, Sydney E. Everhart, Javier F.
