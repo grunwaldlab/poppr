@@ -45,6 +45,7 @@ jobs:
         run: |
           tlmgr install colortbl
           tlmgr install mathtools
+          tlmgr install fullpage
 
       - name: Query dependencies
         run: |
