@@ -24,7 +24,7 @@ difference is the cutoff threshold defining the clonal lineage threshold.
 }
 \note{
 This function originally appeared in 
-  \href{https://doi.org/10.5281/zenodo.17424}{DOI: 10.5281/zenodo.17424}. 
+  \doi{10.5281/zenodo.17424}{DOI: 10.5281/zenodo.17424}. 
   This is a bit of a blunt instrument.
 }
 \examples{
@@ -45,12 +45,12 @@ sapply(pthresh, cutoff_predictor)
 ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary
 Material for Frontiers Plant Genetics and Genomics 'Novel R tools for
 analysis of genome-wide population genetic data with emphasis on clonality'.
-DOI: \href{https://doi.org/10.5281/zenodo.17424}{10.5281/zenodo.17424}
+DOI: \doi{10.5281/zenodo.17424}
 
 Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of 
 genome-wide population genetic data with emphasis on clonality. Front. Genet.
 6:208. doi:
-\href{https://doi.org/10.3389/fgene.2015.00208}{10.3389/fgene.2015.00208}
+\doi{10.3389/fgene.2015.00208}
 }
 \seealso{
 \code{\link{filter_stats}} \code{\link{mlg.filter}}

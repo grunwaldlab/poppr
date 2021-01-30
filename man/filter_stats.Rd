@@ -61,7 +61,7 @@ for mlg.filter utilizing all of the algorithms.
 }
 \note{
 This function originally appeared in 
-  \href{https://doi.org/10.5281/zenodo.17424}{DOI: 10.5281/zenodo.17424}
+  \doi{10.5281/zenodo.17424}{DOI: 10.5281/zenodo.17424}
 }
 \examples{
 
@@ -87,12 +87,12 @@ ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary
   Material for Frontiers Plant Genetics and Genomics 'Novel R tools for 
   analysis of genome-wide population genetic data with emphasis on
   clonality'. DOI:
-  \href{https://doi.org/10.5281/zenodo.17424}{10.5281/zenodo.17424}
+  \doi{10.5281/zenodo.17424}
   
   Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of 
   genome-wide population genetic data with emphasis on clonality. Front.
   Genet. 6:208. doi: 
-  \href{https://doi.org/10.3389/fgene.2015.00208}{10.3389/fgene.2015.00208}
+  \doi{10.3389/fgene.2015.00208}
 }
 \seealso{
 \code{\link{mlg.filter}} \code{\link{cutoff_predictor}} 

@@ -57,7 +57,7 @@
   if (!interactive() || stats::runif(1) > 0.1) return()
 
   tips <- c(
-    "\nNeed help? Try the poppr mailing list: http://groups.google.com/group/poppr.\n",
+    "\nNeed help? Try the poppr mailing list: http://groups.google.com/d/forum/poppr.\n",
     "\nUse suppressPackageStartupMessages(library(\"poppr\")) to eliminate package startup messages.\n"
   )
   

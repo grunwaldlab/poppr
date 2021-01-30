@@ -137,7 +137,7 @@
 #' @references
 #' Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of 
 #' genome-wide population genetic data with emphasis on clonality. 
-#' Frontiers in Genetics 6:208. <http://dx.doi.org/10.3389/fgene.2015.00208> 
+#' Frontiers in Genetics 6:208. \doi{10.3389/fgene.2015.00208}
 #' @export
 #' @md
 #' @keywords bootstrap
