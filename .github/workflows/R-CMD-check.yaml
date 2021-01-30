@@ -41,6 +41,9 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v1
       - uses: r-lib/actions/setup-tinytex@v1
+      - name: Install LaTeX packages
+        run: |
+          tlmgr install colortbl
 
       - name: Query dependencies
         run: |
