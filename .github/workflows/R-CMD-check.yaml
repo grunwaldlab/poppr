@@ -45,7 +45,8 @@ jobs:
         run: |
           tlmgr install colortbl
           tlmgr install mathtools
-          tlmgr install fullpage
+          tlmgr install preprint
+          tlmgr install natbib
 
       - name: Query dependencies
         run: |
