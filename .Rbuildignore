@@ -8,6 +8,7 @@
 ^vignettes/*.bbl$
 ^vignettes/*.log$
 ^vignettes/*.toc$
+^vignettes/*.Rmd$
 ^tools/*$
 ^\.travis\.yml$
 ^vignettes/figure

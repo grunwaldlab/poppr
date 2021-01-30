@@ -9,10 +9,6 @@ output:
     toc_depth: 2
     fig_width: 5
     fig_height: 5
-vignette: >
-  %\VignetteIndexEntry{Multilocus Genotype Analysis}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
