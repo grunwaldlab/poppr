@@ -82,7 +82,7 @@ output is a genclone-class or genind-class object." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.7</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@ output is a genclone-class or genind-class object." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -119,7 +119,7 @@ output is a genclone-class or genind-class object." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/grunwaldlab/poppr">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -147,15 +147,15 @@ a comma separated format and will parse most types of genalex data. The
 output is a <a href='genclone-class.html'>genclone-class</a> or genind-class object.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>read.genalex</span>(
-  <span class='kw'>genalex</span>,
-  ploidy = <span class='fl'>2</span>,
-  geo = <span class='fl'>FALSE</span>,
-  region = <span class='fl'>FALSE</span>,
-  genclone = <span class='fl'>TRUE</span>,
-  sep = <span class='st'>","</span>,
-  recode = <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>read.genalex</span><span class='op'>(</span>
+  <span class='va'>genalex</span>,
+  ploidy <span class='op'>=</span> <span class='fl'>2</span>,
+  geo <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  region <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  genclone <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  sep <span class='op'>=</span> <span class='st'>","</span>,
+  recode <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -247,15 +247,15 @@ genind, <code><a href='recode_polyploids.html'>recode_polyploids()</a></code></p
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'># \dontrun{</span>
-<span class='kw'>Aeut</span> <span class='op'>&lt;-</span> <span class='fu'>read.genalex</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"files/rootrot.csv"</span>, package=<span class='st'>"poppr"</span>))
+<span class='va'>Aeut</span> <span class='op'>&lt;-</span> <span class='fu'>read.genalex</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"files/rootrot.csv"</span>, package<span class='op'>=</span><span class='st'>"poppr"</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='kw'>genalex2</span> <span class='op'>&lt;-</span> <span class='fu'>read.genalex</span>(<span class='st'>"genalex2.csv"</span>, geo=<span class='fl'>TRUE</span>)
+<span class='va'>genalex2</span> <span class='op'>&lt;-</span> <span class='fu'>read.genalex</span><span class='op'>(</span><span class='st'>"genalex2.csv"</span>, geo<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='warning'>Warning: cannot open file 'genalex2.csv': No such file or directory</span></div><div class='output co'>#&gt; <span class='error'>Error in file(con, "r"): cannot open the connection</span></div><div class='input'><span class='co'># A genalex file with geographic coordinate data.</span>
 
-<span class='kw'>genalex3</span> <span class='op'>&lt;-</span> <span class='fu'>read.genalex</span>(<span class='st'>"genalex3.csv"</span>, region=<span class='fl'>TRUE</span>) 
+<span class='va'>genalex3</span> <span class='op'>&lt;-</span> <span class='fu'>read.genalex</span><span class='op'>(</span><span class='st'>"genalex3.csv"</span>, region<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span> 
 </div><div class='output co'>#&gt; <span class='warning'>Warning: cannot open file 'genalex3.csv': No such file or directory</span></div><div class='output co'>#&gt; <span class='error'>Error in file(con, "r"): cannot open the connection</span></div><div class='input'><span class='co'># A genalex file with regional information.</span>
 
-<span class='kw'>genalex4</span> <span class='op'>&lt;-</span> <span class='fu'>read.genalex</span>(<span class='st'>"genalex4.csv"</span>, region=<span class='fl'>TRUE</span>, geo=<span class='fl'>TRUE</span>) 
+<span class='va'>genalex4</span> <span class='op'>&lt;-</span> <span class='fu'>read.genalex</span><span class='op'>(</span><span class='st'>"genalex4.csv"</span>, region<span class='op'>=</span><span class='cn'>TRUE</span>, geo<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span> 
 </div><div class='output co'>#&gt; <span class='warning'>Warning: cannot open file 'genalex4.csv': No such file or directory</span></div><div class='output co'>#&gt; <span class='error'>Error in file(con, "r"): cannot open the connection</span></div><div class='input'><span class='co'># A genalex file with both regional and geographic information.</span>
 <span class='co'># }</span>
 </div></pre>
@@ -274,7 +274,7 @@ genind, <code><a href='recode_polyploids.html'>recode_polyploids()</a></code></p
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

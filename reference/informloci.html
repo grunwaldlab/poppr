@@ -84,7 +84,7 @@ allele frequency." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.7</span>
       </span>
     </div>
 
@@ -92,7 +92,7 @@ allele frequency." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -121,7 +121,7 @@ allele frequency." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/grunwaldlab/poppr">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -151,7 +151,7 @@ cutoff value for either percentage of differentiating genotypes or minor
 allele frequency.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>informloci</span>(<span class='kw'>pop</span>, cutoff = <span class='fl'>2</span><span class='op'>/</span><span class='fu'>nInd</span>(<span class='kw'>pop</span>), MAF = <span class='fl'>0.01</span>, quiet = <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>informloci</span><span class='op'>(</span><span class='va'>pop</span>, cutoff <span class='op'>=</span> <span class='fl'>2</span><span class='op'>/</span><span class='fu'>nInd</span><span class='op'>(</span><span class='va'>pop</span><span class='op'>)</span>, MAF <span class='op'>=</span> <span class='fl'>0.01</span>, quiet <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -206,16 +206,16 @@ FALSE</code>, nothing will be printed to screen.</p></td>
     <pre class="examples"><div class='input'><span class='co'># We will use a dummy data set to demonstrate how this detects uninformative</span>
 <span class='co'># loci using both MAF and a cutoff.</span>
 
-<span class='kw'>genos</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"A/A"</span>, <span class='st'>"A/B"</span>, <span class='st'>"A/C"</span>, <span class='st'>"B/B"</span>, <span class='st'>"B/C"</span>, <span class='st'>"C/C"</span>)
+<span class='va'>genos</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"A/A"</span>, <span class='st'>"A/B"</span>, <span class='st'>"A/C"</span>, <span class='st'>"B/B"</span>, <span class='st'>"B/C"</span>, <span class='st'>"C/C"</span><span class='op'>)</span>
 
-<span class='kw'>v</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='kw'>genos</span>, <span class='fl'>100</span>, replace = <span class='fl'>TRUE</span>)
-<span class='kw'>w</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='kw'>genos</span>[<span class='fl'>2</span>], <span class='fl'>99</span>), <span class='kw'>genos</span>[<span class='fl'>3</span>])           <span class='co'># found by cutoff</span>
-<span class='kw'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='kw'>genos</span>[<span class='fl'>1</span>], <span class='fl'>98</span>), <span class='kw'>genos</span>[<span class='fl'>3</span>], <span class='kw'>genos</span>[<span class='fl'>2</span>]) <span class='co'># found by MAF</span>
-<span class='kw'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='kw'>genos</span>[<span class='fl'>1</span>], <span class='fl'>99</span>), <span class='kw'>genos</span>[<span class='fl'>2</span>])           <span class='co'># found by both</span>
-<span class='kw'>z</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='kw'>genos</span>, <span class='fl'>100</span>, replace = <span class='fl'>TRUE</span>)
-<span class='kw'>dat</span> <span class='op'>&lt;-</span> <span class='fu'>df2genind</span>(<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(v = <span class='kw'>v</span>, w = <span class='kw'>w</span>, x = <span class='kw'>x</span>, y = <span class='kw'>y</span>, z = <span class='kw'>z</span>), sep = <span class='st'>"/"</span>)
+<span class='va'>v</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='va'>genos</span>, <span class='fl'>100</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>w</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='va'>genos</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>]</span>, <span class='fl'>99</span><span class='op'>)</span>, <span class='va'>genos</span><span class='op'>[</span><span class='fl'>3</span><span class='op'>]</span><span class='op'>)</span>           <span class='co'># found by cutoff</span>
+<span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='va'>genos</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>, <span class='fl'>98</span><span class='op'>)</span>, <span class='va'>genos</span><span class='op'>[</span><span class='fl'>3</span><span class='op'>]</span>, <span class='va'>genos</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span> <span class='co'># found by MAF</span>
+<span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='va'>genos</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>, <span class='fl'>99</span><span class='op'>)</span>, <span class='va'>genos</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span>           <span class='co'># found by both</span>
+<span class='va'>z</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='va'>genos</span>, <span class='fl'>100</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'>df2genind</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>v <span class='op'>=</span> <span class='va'>v</span>, w <span class='op'>=</span> <span class='va'>w</span>, x <span class='op'>=</span> <span class='va'>x</span>, y <span class='op'>=</span> <span class='va'>y</span>, z <span class='op'>=</span> <span class='va'>z</span><span class='op'>)</span>, sep <span class='op'>=</span> <span class='st'>"/"</span><span class='op'>)</span>
 
-<span class='fu'>informloci</span>(<span class='kw'>dat</span>)
+<span class='fu'>informloci</span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>cutoff value: 2 % ( 2 samples ).</span></div><div class='output co'>#&gt; <span class='message'>MAF         : 0.01</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'> Found 3 uninformative loci </span>
 #&gt; <span class='message'> ============================ </span>
@@ -239,7 +239,7 @@ FALSE</code>, nothing will be printed to screen.</p></td>
 #&gt;    - empty -</div><div class='input'>
 <span class='co'># \dontrun{</span>
 <span class='co'># Ignore MAF</span>
-<span class='fu'>informloci</span>(<span class='kw'>dat</span>, MAF = <span class='fl'>0</span>)
+<span class='fu'>informloci</span><span class='op'>(</span><span class='va'>dat</span>, MAF <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>cutoff value: 2 % ( 2 samples ).</span></div><div class='output co'>#&gt; <span class='message'>MAF         : 0</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'> Found 2 uninformative loci </span>
 #&gt; <span class='message'> ============================ </span>
@@ -261,7 +261,7 @@ FALSE</code>, nothing will be printed to screen.</p></td>
 #&gt;  // Optional content
 #&gt;    - empty -</div><div class='input'>
 <span class='co'># Ignore cutoff</span>
-<span class='fu'>informloci</span>(<span class='kw'>dat</span>, cutoff = <span class='fl'>0</span>)
+<span class='fu'>informloci</span><span class='op'>(</span><span class='va'>dat</span>, cutoff <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>cutoff value: 0 % ( 0 samples ).</span></div><div class='output co'>#&gt; <span class='message'>MAF         : 0.01</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'> Found 2 uninformative loci </span>
 #&gt; <span class='message'> ============================ </span>
@@ -283,8 +283,8 @@ FALSE</code>, nothing will be printed to screen.</p></td>
 #&gt;  // Optional content
 #&gt;    - empty -</div><div class='input'>
 <span class='co'># Real data</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>H3N2</span>)
-<span class='fu'>informloci</span>(<span class='kw'>H3N2</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>H3N2</span><span class='op'>)</span>
+<span class='fu'>informloci</span><span class='op'>(</span><span class='va'>H3N2</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>cutoff value: 0.105097214923805 % ( 2 samples ).</span></div><div class='output co'>#&gt; <span class='message'>MAF         : 0.01</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'> Found 5 uninformative loci </span>
 #&gt; <span class='message'> ============================ </span>
@@ -324,7 +324,7 @@ FALSE</code>, nothing will be printed to screen.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

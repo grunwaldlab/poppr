@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.7</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -117,7 +117,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/grunwaldlab/poppr">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -143,15 +143,15 @@
     <p>Probability of encountering a genotype more than once by chance</p>
     </div>
 
-    <pre class="usage"><span class='fu'>psex</span>(
-  <span class='kw'>gid</span>,
-  pop = <span class='kw'>NULL</span>,
-  by_pop = <span class='fl'>TRUE</span>,
-  freq = <span class='kw'>NULL</span>,
-  G = <span class='kw'>NULL</span>,
-  method = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"single"</span>, <span class='st'>"multiple"</span>),
-  <span class='kw'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>psex</span><span class='op'>(</span>
+  <span class='va'>gid</span>,
+  pop <span class='op'>=</span> <span class='cn'>NULL</span>,
+  by_pop <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  freq <span class='op'>=</span> <span class='cn'>NULL</span>,
+  G <span class='op'>=</span> <span class='cn'>NULL</span>,
+  method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"single"</span>, <span class='st'>"multiple"</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -231,7 +231,7 @@ alleles</a>. The default is to correct allele frequencies to 1/n</p></td>
   that genotype. This procedure is performed for all samples in the data.
   For example, if you have a genotype whose pgen value was 0.0001, with 5 
   observations out of 100 samples, the value of psex is computed like so:</p><pre>
-  <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>dbinom</a></span>(<span class='fl'>0</span><span class='op'>:</span><span class='fl'>4</span>, <span class='fl'>100</span>, <span class='fl'>0.0001</span>)</pre>
+  <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>dbinom</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>4</span>, <span class='fl'>100</span>, <span class='fl'>0.0001</span><span class='op'>)</span></pre>
 
 <h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>using by_pop = TRUE and modifying G:</h3>
 <p>It is possible to modify <code>G</code> for single or multiple encounters. With
@@ -247,13 +247,13 @@ alleles</a>. The default is to correct allele frequencies to 1/n</p></td>
   samples with the genotype in popualtions A and B are 4 and 6, respectively.
   In this case psex for this genotype would be calculated for each population
   separately if we don't specify <code>G</code>:</p><pre>
-  <span class='kw'>psexA</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>dbinom</a></span>(<span class='fl'>0</span><span class='op'>:</span><span class='fl'>3</span>, <span class='fl'>25</span>, <span class='fl'>0.005</span>)
-  <span class='kw'>psexB</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>dbinom</a></span>(<span class='fl'>0</span><span class='op'>:</span><span class='fl'>5</span>, <span class='fl'>75</span>, <span class='fl'>0.0001</span>)</pre><p>If we specify <code>G = 100</code>, then it changes to:</p><pre>
-  <span class='kw'>psexA</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>dbinom</a></span>(<span class='fl'>0</span><span class='op'>:</span><span class='fl'>3</span>, <span class='fl'>100</span>, <span class='fl'>0.005</span>)
-  <span class='kw'>psexB</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>dbinom</a></span>(<span class='fl'>0</span><span class='op'>:</span><span class='fl'>5</span>, <span class='fl'>100</span>, <span class='fl'>0.0001</span>)</pre><p>We could also specify G to be the number of genotypes observed in the 
+  <span class='va'>psexA</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>dbinom</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>3</span>, <span class='fl'>25</span>, <span class='fl'>0.005</span><span class='op'>)</span>
+  <span class='va'>psexB</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>dbinom</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>5</span>, <span class='fl'>75</span>, <span class='fl'>0.0001</span><span class='op'>)</span></pre><p>If we specify <code>G = 100</code>, then it changes to:</p><pre>
+  <span class='va'>psexA</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>dbinom</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>3</span>, <span class='fl'>100</span>, <span class='fl'>0.005</span><span class='op'>)</span>
+  <span class='va'>psexB</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>dbinom</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>5</span>, <span class='fl'>100</span>, <span class='fl'>0.0001</span><span class='op'>)</span></pre><p>We could also specify G to be the number of genotypes observed in the 
   population (let's say A = 10, B = 20)</p><pre>
-  <span class='kw'>psexA</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>dbinom</a></span>(<span class='fl'>0</span><span class='op'>:</span><span class='fl'>3</span>, <span class='fl'>10</span>, <span class='fl'>0.005</span>)
-  <span class='kw'>psexB</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>dbinom</a></span>(<span class='fl'>0</span><span class='op'>:</span><span class='fl'>5</span>, <span class='fl'>20</span>, <span class='fl'>0.0001</span>)</pre>
+  <span class='va'>psexA</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>dbinom</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>3</span>, <span class='fl'>10</span>, <span class='fl'>0.005</span><span class='op'>)</span>
+  <span class='va'>psexB</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>dbinom</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>5</span>, <span class='fl'>20</span>, <span class='fl'>0.0001</span><span class='op'>)</span></pre>
 <p>Unless <code>freq</code> is supplied, the function will automatically calculate
   the round-robin allele frequencies with <code><a href='rraf.html'>rraf</a></code> and <em>G</em>
   with <code><a href='mll.html'>nmll</a></code>.</p>
@@ -279,57 +279,57 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
     <p>Zhian N. Kamvar, Jonah Brooks, Stacy A. Krueger-Hadfield, Erik Sotka</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Pram</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>Pram</span><span class='op'>)</span>
 
 <span class='co'># With multiple encounters</span>
-<span class='kw'>Pram_psex</span> <span class='op'>&lt;-</span> <span class='fu'>psex</span>(<span class='kw'>Pram</span>, by_pop = <span class='fl'>FALSE</span>, method = <span class='st'>"multiple"</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span>(<span class='kw'>Pram_psex</span>, log = <span class='st'>"y"</span>, col = <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='kw'>Pram_psex</span> <span class='op'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span>))
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/abline.html'>abline</a></span>(h = <span class='fl'>0.05</span>, lty = <span class='fl'>2</span>)
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='st'>"Probability of multiple encounters"</span>)
+<span class='va'>Pram_psex</span> <span class='op'>&lt;-</span> <span class='fu'>psex</span><span class='op'>(</span><span class='va'>Pram</span>, by_pop <span class='op'>=</span> <span class='cn'>FALSE</span>, method <span class='op'>=</span> <span class='st'>"multiple"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Pram_psex</span>, log <span class='op'>=</span> <span class='st'>"y"</span>, col <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>Pram_psex</span> <span class='op'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/abline.html'>abline</a></span><span class='op'>(</span>h <span class='op'>=</span> <span class='fl'>0.05</span>, lty <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='st'>"Probability of multiple encounters"</span><span class='op'>)</span>
 </div><div class='img'><img src='psex-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># \dontrun{</span>
 
 <span class='co'># For a single encounter (default)</span>
-<span class='kw'>Pram_psex</span> <span class='op'>&lt;-</span> <span class='fu'>psex</span>(<span class='kw'>Pram</span>, by_pop = <span class='fl'>FALSE</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span>(<span class='kw'>Pram_psex</span>, log = <span class='st'>"y"</span>, col = <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='kw'>Pram_psex</span> <span class='op'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span>))
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/abline.html'>abline</a></span>(h = <span class='fl'>0.05</span>, lty = <span class='fl'>2</span>)
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='st'>"Probability of second encounter"</span>)
+<span class='va'>Pram_psex</span> <span class='op'>&lt;-</span> <span class='fu'>psex</span><span class='op'>(</span><span class='va'>Pram</span>, by_pop <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Pram_psex</span>, log <span class='op'>=</span> <span class='st'>"y"</span>, col <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>Pram_psex</span> <span class='op'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/abline.html'>abline</a></span><span class='op'>(</span>h <span class='op'>=</span> <span class='fl'>0.05</span>, lty <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='st'>"Probability of second encounter"</span><span class='op'>)</span>
 </div><div class='img'><img src='psex-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># This can be also done assuming populations structure</span>
-<span class='kw'>Pram_psex</span> <span class='op'>&lt;-</span> <span class='fu'>psex</span>(<span class='kw'>Pram</span>, by_pop = <span class='fl'>TRUE</span>, method = <span class='st'>"multiple"</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span>(<span class='kw'>Pram_psex</span>, log = <span class='st'>"y"</span>, col = <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='kw'>Pram_psex</span> <span class='op'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span>))
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/abline.html'>abline</a></span>(h = <span class='fl'>0.05</span>, lty = <span class='fl'>2</span>)
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='st'>"Probability of multiple encounters\nwith pop structure"</span>)
+<span class='va'>Pram_psex</span> <span class='op'>&lt;-</span> <span class='fu'>psex</span><span class='op'>(</span><span class='va'>Pram</span>, by_pop <span class='op'>=</span> <span class='cn'>TRUE</span>, method <span class='op'>=</span> <span class='st'>"multiple"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Pram_psex</span>, log <span class='op'>=</span> <span class='st'>"y"</span>, col <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>Pram_psex</span> <span class='op'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/abline.html'>abline</a></span><span class='op'>(</span>h <span class='op'>=</span> <span class='fl'>0.05</span>, lty <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='st'>"Probability of multiple encounters\nwith pop structure"</span><span class='op'>)</span>
 </div><div class='img'><img src='psex-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># The above, but correcting zero-value alleles by 1/(2*rrmlg) with no </span>
 <span class='co'># population structure assumed</span>
 <span class='co'># Type ?rare_allele_correction for details.</span>
-<span class='kw'>Pram_psex2</span> <span class='op'>&lt;-</span> <span class='fu'>psex</span>(<span class='kw'>Pram</span>, by_pop = <span class='fl'>FALSE</span>, d = <span class='st'>"rrmlg"</span>, mul = <span class='fl'>1</span><span class='op'>/</span><span class='fl'>2</span>, method = <span class='st'>"multiple"</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span>(<span class='kw'>Pram_psex2</span>, log = <span class='st'>"y"</span>, col = <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='kw'>Pram_psex2</span> <span class='op'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span>))
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/abline.html'>abline</a></span>(h = <span class='fl'>0.05</span>, lty = <span class='fl'>2</span>)
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='st'>"Probability of multiple encounters\nwith pop structure (1/(2*rrmlg))"</span>)
+<span class='va'>Pram_psex2</span> <span class='op'>&lt;-</span> <span class='fu'>psex</span><span class='op'>(</span><span class='va'>Pram</span>, by_pop <span class='op'>=</span> <span class='cn'>FALSE</span>, d <span class='op'>=</span> <span class='st'>"rrmlg"</span>, mul <span class='op'>=</span> <span class='fl'>1</span><span class='op'>/</span><span class='fl'>2</span>, method <span class='op'>=</span> <span class='st'>"multiple"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Pram_psex2</span>, log <span class='op'>=</span> <span class='st'>"y"</span>, col <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>Pram_psex2</span> <span class='op'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/abline.html'>abline</a></span><span class='op'>(</span>h <span class='op'>=</span> <span class='fl'>0.05</span>, lty <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='st'>"Probability of multiple encounters\nwith pop structure (1/(2*rrmlg))"</span><span class='op'>)</span>
 </div><div class='img'><img src='psex-4.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># We can also set G to the total population size</span>
-(<span class='kw'>G</span> <span class='op'>&lt;-</span> <span class='fu'>nInd</span>(<span class='kw'>Pram</span>))
-</div><div class='output co'>#&gt; [1] 729</div><div class='input'><span class='kw'>Pram_psex</span> <span class='op'>&lt;-</span> <span class='fu'>psex</span>(<span class='kw'>Pram</span>, by_pop = <span class='fl'>TRUE</span>, method = <span class='st'>"multiple"</span>, G = <span class='kw'>G</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span>(<span class='kw'>Pram_psex</span>, log = <span class='st'>"y"</span>, col = <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='kw'>Pram_psex</span> <span class='op'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span>))
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/abline.html'>abline</a></span>(h = <span class='fl'>0.05</span>, lty = <span class='fl'>2</span>)
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='st'>"Probability of multiple encounters\nwith pop structure G = 729"</span>)
+<span class='op'>(</span><span class='va'>G</span> <span class='op'>&lt;-</span> <span class='fu'>nInd</span><span class='op'>(</span><span class='va'>Pram</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 729</div><div class='input'><span class='va'>Pram_psex</span> <span class='op'>&lt;-</span> <span class='fu'>psex</span><span class='op'>(</span><span class='va'>Pram</span>, by_pop <span class='op'>=</span> <span class='cn'>TRUE</span>, method <span class='op'>=</span> <span class='st'>"multiple"</span>, G <span class='op'>=</span> <span class='va'>G</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Pram_psex</span>, log <span class='op'>=</span> <span class='st'>"y"</span>, col <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>Pram_psex</span> <span class='op'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/abline.html'>abline</a></span><span class='op'>(</span>h <span class='op'>=</span> <span class='fl'>0.05</span>, lty <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='st'>"Probability of multiple encounters\nwith pop structure G = 729"</span><span class='op'>)</span>
 </div><div class='img'><img src='psex-5.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Or we can set G to the number of unique MLGs</span>
-(<span class='kw'>G</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/colSums.html'>rowSums</a></span>(<span class='fu'><a href='mlg.html'>mlg.table</a></span>(<span class='kw'>Pram</span>, plot = <span class='fl'>FALSE</span>) <span class='op'>&gt;</span> <span class='fl'>0</span>))
+<span class='op'>(</span><span class='va'>G</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/colSums.html'>rowSums</a></span><span class='op'>(</span><span class='fu'><a href='mlg.html'>mlg.table</a></span><span class='op'>(</span><span class='va'>Pram</span>, plot <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>&gt;</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;    Nursery_CA    Nursery_OR    JHallCr_OR NFChetHigh_OR      Coast_OR 
 #&gt;            30            19            30            35            12 
 #&gt;   HunterCr_OR   Winchuck_OR ChetcoMain_OR  PistolRSF_OR 
-#&gt;             4             9             7             2 </div><div class='input'><span class='kw'>Pram_psex</span> <span class='op'>&lt;-</span> <span class='fu'>psex</span>(<span class='kw'>Pram</span>, by_pop = <span class='fl'>TRUE</span>, method = <span class='st'>"multiple"</span>, G = <span class='kw'>G</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span>(<span class='kw'>Pram_psex</span>, log = <span class='st'>"y"</span>, col = <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='kw'>Pram_psex</span> <span class='op'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span>))
-</div><div class='output co'>#&gt; <span class='warning'>Warning: 179 y values &lt;= 0 omitted from logarithmic plot</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/abline.html'>abline</a></span>(h = <span class='fl'>0.05</span>, lty = <span class='fl'>2</span>)
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='st'>"Probability of multiple encounters\nwith pop structure G = nmll"</span>)
+#&gt;             4             9             7             2 </div><div class='input'><span class='va'>Pram_psex</span> <span class='op'>&lt;-</span> <span class='fu'>psex</span><span class='op'>(</span><span class='va'>Pram</span>, by_pop <span class='op'>=</span> <span class='cn'>TRUE</span>, method <span class='op'>=</span> <span class='st'>"multiple"</span>, G <span class='op'>=</span> <span class='va'>G</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Pram_psex</span>, log <span class='op'>=</span> <span class='st'>"y"</span>, col <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>Pram_psex</span> <span class='op'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: 179 y values &lt;= 0 omitted from logarithmic plot</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/abline.html'>abline</a></span><span class='op'>(</span>h <span class='op'>=</span> <span class='fl'>0.05</span>, lty <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='st'>"Probability of multiple encounters\nwith pop structure G = nmll"</span><span class='op'>)</span>
 </div><div class='img'><img src='psex-6.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## An example of supplying previously calculated frequencies and G</span>
 <span class='co'># From Parks and Werth, 1993, using the first three genotypes.</span>
 
 <span class='co'># The row names indicate the number of samples found with that genotype</span>
-<span class='kw'>x</span> <span class='op'>&lt;-</span> <span class='st'>"
+<span class='va'>x</span> <span class='op'>&lt;-</span> <span class='st'>"
  Hk Lap Mdh2 Pgm1 Pgm2 X6Pgd2
 54 12 12 12 23 22 11
 36 22 22 11 22 33 11
@@ -337,33 +337,33 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
 
 <span class='co'># Since we aren't representing the whole data set here, we are defining the</span>
 <span class='co'># allele frequencies before the analysis.</span>
-<span class='kw'>afreq</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(Hk.1 = <span class='fl'>0.167</span>, Hk.2 = <span class='fl'>0.795</span>, Hk.3 = <span class='fl'>0.038</span>, 
-           Lap.1 = <span class='fl'>0.190</span>, Lap.2 = <span class='fl'>0.798</span>, Lap.3 = <span class='fl'>0.012</span>,
-           Mdh2.0 = <span class='fl'>0.011</span>, Mdh2.1 = <span class='fl'>0.967</span>, Mdh2.2 = <span class='fl'>0.022</span>,
-           Pgm1.2 = <span class='fl'>0.279</span>, Pgm1.3 = <span class='fl'>0.529</span>, Pgm1.4 = <span class='fl'>0.162</span>, Pgm1.5 = <span class='fl'>0.029</span>,
-           Pgm2.1 = <span class='fl'>0.128</span>, Pgm2.2 = <span class='fl'>0.385</span>, Pgm2.3 = <span class='fl'>0.487</span>,
-           X6Pgd2.1 = <span class='fl'>0.526</span>, X6Pgd2.2 = <span class='fl'>0.051</span>, X6Pgd2.3 = <span class='fl'>0.423</span>)
+<span class='va'>afreq</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>Hk.1 <span class='op'>=</span> <span class='fl'>0.167</span>, Hk.2 <span class='op'>=</span> <span class='fl'>0.795</span>, Hk.3 <span class='op'>=</span> <span class='fl'>0.038</span>, 
+           Lap.1 <span class='op'>=</span> <span class='fl'>0.190</span>, Lap.2 <span class='op'>=</span> <span class='fl'>0.798</span>, Lap.3 <span class='op'>=</span> <span class='fl'>0.012</span>,
+           Mdh2.0 <span class='op'>=</span> <span class='fl'>0.011</span>, Mdh2.1 <span class='op'>=</span> <span class='fl'>0.967</span>, Mdh2.2 <span class='op'>=</span> <span class='fl'>0.022</span>,
+           Pgm1.2 <span class='op'>=</span> <span class='fl'>0.279</span>, Pgm1.3 <span class='op'>=</span> <span class='fl'>0.529</span>, Pgm1.4 <span class='op'>=</span> <span class='fl'>0.162</span>, Pgm1.5 <span class='op'>=</span> <span class='fl'>0.029</span>,
+           Pgm2.1 <span class='op'>=</span> <span class='fl'>0.128</span>, Pgm2.2 <span class='op'>=</span> <span class='fl'>0.385</span>, Pgm2.3 <span class='op'>=</span> <span class='fl'>0.487</span>,
+           X6Pgd2.1 <span class='op'>=</span> <span class='fl'>0.526</span>, X6Pgd2.2 <span class='op'>=</span> <span class='fl'>0.051</span>, X6Pgd2.3 <span class='op'>=</span> <span class='fl'>0.423</span><span class='op'>)</span>
 
-<span class='kw'>xtab</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.table</a></span>(text = <span class='kw'>x</span>, header = <span class='fl'>TRUE</span>, row.names = <span class='fl'>1</span>)
+<span class='va'>xtab</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.table</a></span><span class='op'>(</span>text <span class='op'>=</span> <span class='va'>x</span>, header <span class='op'>=</span> <span class='cn'>TRUE</span>, row.names <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 
 <span class='co'># Here we are expanding the number of samples to their observed values.</span>
 <span class='co'># Since we have already defined the allele frequencies, this step is actually</span>
 <span class='co'># not necessary. </span>
-<span class='kw'>all_samples</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span>(<span class='kw'>xtab</span>), <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>as.integer</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span>(<span class='kw'>xtab</span>)))
-<span class='kw'>xgid</span>        <span class='op'>&lt;-</span> <span class='fu'>df2genind</span>(<span class='kw'>xtab</span>[<span class='kw'>all_samples</span>, ], ncode = <span class='fl'>1</span>)
+<span class='va'>all_samples</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span><span class='op'>(</span><span class='va'>xtab</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>as.integer</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span><span class='op'>(</span><span class='va'>xtab</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>xgid</span>        <span class='op'>&lt;-</span> <span class='fu'>df2genind</span><span class='op'>(</span><span class='va'>xtab</span><span class='op'>[</span><span class='va'>all_samples</span>, <span class='op'>]</span>, ncode <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 
-<span class='kw'>freqs</span> <span class='op'>&lt;-</span> <span class='kw'>afreq</span>[<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='fu'>tab</span>(<span class='kw'>xgid</span>))] <span class='co'># only used alleles in the sample</span>
-<span class='kw'>pSex</span>  <span class='op'>&lt;-</span> <span class='fu'>psex</span>(<span class='kw'>xgid</span>, by_pop = <span class='fl'>FALSE</span>, freq = <span class='kw'>freqs</span>, G = <span class='fl'>45</span>)
+<span class='va'>freqs</span> <span class='op'>&lt;-</span> <span class='va'>afreq</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='fu'>tab</span><span class='op'>(</span><span class='va'>xgid</span><span class='op'>)</span><span class='op'>)</span><span class='op'>]</span> <span class='co'># only used alleles in the sample</span>
+<span class='va'>pSex</span>  <span class='op'>&lt;-</span> <span class='fu'>psex</span><span class='op'>(</span><span class='va'>xgid</span>, by_pop <span class='op'>=</span> <span class='cn'>FALSE</span>, freq <span class='op'>=</span> <span class='va'>freqs</span>, G <span class='op'>=</span> <span class='fl'>45</span><span class='op'>)</span>
 
 <span class='co'># Note, pgen returns log values for each locus, here we take the sum across</span>
 <span class='co'># all loci and take the exponent to give us the value of pgen for each sample</span>
-<span class='kw'>pGen</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/colSums.html'>rowSums</a></span>(<span class='fu'><a href='pgen.html'>pgen</a></span>(<span class='kw'>xgid</span>, by_pop = <span class='fl'>FALSE</span>, freq = <span class='kw'>freqs</span>)))
+<span class='va'>pGen</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/colSums.html'>rowSums</a></span><span class='op'>(</span><span class='fu'><a href='pgen.html'>pgen</a></span><span class='op'>(</span><span class='va'>xgid</span>, by_pop <span class='op'>=</span> <span class='cn'>FALSE</span>, freq <span class='op'>=</span> <span class='va'>freqs</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='kw'>res</span>  <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span>(<span class='kw'>pGen</span>), <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span>(<span class='kw'>pSex</span>)), ncol = <span class='fl'>2</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='kw'>res</span>) <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Pgen"</span>, <span class='st'>"Psex"</span>)
-<span class='kw'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span>(<span class='kw'>xtab</span>, nRamet = <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span>(<span class='kw'>xtab</span>), <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span>(<span class='kw'>res</span>, <span class='fl'>5</span>))
-<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span>(<span class='kw'>res</span>) <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span>
-<span class='kw'>res</span> <span class='co'># Compare to the first three rows of Table 2 in Parks &amp; Werth, 1993</span>
+<span class='va'>res</span>  <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='va'>pGen</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='va'>pSex</span><span class='op'>)</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Pgen"</span>, <span class='st'>"Psex"</span><span class='op'>)</span>
+<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>xtab</span>, nRamet <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span><span class='op'>(</span><span class='va'>xtab</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span><span class='op'>(</span><span class='va'>res</span>, <span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span>
+<span class='va'>res</span> <span class='co'># Compare to the first three rows of Table 2 in Parks &amp; Werth, 1993</span>
 </div><div class='output co'>#&gt;   Hk Lap Mdh2 Pgm1 Pgm2 X6Pgd2 nRamet    Pgen    Psex
 #&gt; 1 12  12   12   23   22     11     54 0.00004 0.00186
 #&gt; 2 22  22   11   22   33     11     36 0.00192 0.08295
@@ -384,7 +384,7 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

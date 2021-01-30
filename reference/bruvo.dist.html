@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.7</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -117,7 +117,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/grunwaldlab/poppr">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -143,16 +143,16 @@
     <p>Calculate the average Bruvo's distance over all loci in a population.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>bruvo.dist</span>(<span class='kw'>pop</span>, replen = <span class='fl'>1</span>, add = <span class='fl'>TRUE</span>, loss = <span class='fl'>TRUE</span>, by_locus = <span class='fl'>FALSE</span>)
+    <pre class="usage"><span class='fu'>bruvo.dist</span><span class='op'>(</span><span class='va'>pop</span>, replen <span class='op'>=</span> <span class='fl'>1</span>, add <span class='op'>=</span> <span class='cn'>TRUE</span>, loss <span class='op'>=</span> <span class='cn'>TRUE</span>, by_locus <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'>bruvo.between</span>(
-  <span class='kw'>query</span>,
-  <span class='kw'>ref</span>,
-  replen = <span class='fl'>1</span>,
-  add = <span class='fl'>TRUE</span>,
-  loss = <span class='fl'>TRUE</span>,
-  by_locus = <span class='fl'>FALSE</span>
-)</pre>
+<span class='fu'>bruvo.between</span><span class='op'>(</span>
+  <span class='va'>query</span>,
+  <span class='va'>ref</span>,
+  replen <span class='op'>=</span> <span class='fl'>1</span>,
+  add <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  loss <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  by_locus <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -328,17 +328,17 @@ All other values are NaN</p></li>
 <span class='co'># representation of the data.</span>
 
 <span class='co'># Load the nancycats dataset and construct the repeat vector.</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>nancycats</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='fu'>alleles</span>(<span class='kw'>nancycats</span>)) <span class='op'>&lt;-</span> <span class='fu'>locNames</span>(<span class='kw'>nancycats</span>) <span class='co'># small bug in this data set</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>nancycats</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='fu'>alleles</span><span class='op'>(</span><span class='va'>nancycats</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'>locNames</span><span class='op'>(</span><span class='va'>nancycats</span><span class='op'>)</span> <span class='co'># small bug in this data set</span>
 <span class='co'># Assume the alleles are all dinucleotide repeats.</span>
-<span class='kw'>ssr</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>2</span>, <span class='fu'>nLoc</span>(<span class='kw'>nancycats</span>))
-<span class='fu'><a href='test_replen.html'>test_replen</a></span>(<span class='kw'>nancycats</span>, <span class='kw'>ssr</span>)         <span class='co'># Are the repeat lengths consistent?</span>
+<span class='va'>ssr</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fu'>nLoc</span><span class='op'>(</span><span class='va'>nancycats</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='test_replen.html'>test_replen</a></span><span class='op'>(</span><span class='va'>nancycats</span>, <span class='va'>ssr</span><span class='op'>)</span>         <span class='co'># Are the repeat lengths consistent?</span>
 </div><div class='output co'>#&gt;  fca8 fca23 fca43 fca45 fca77 fca78 fca90 fca96 fca37 
-#&gt; FALSE  TRUE FALSE  TRUE  TRUE  TRUE FALSE FALSE  TRUE </div><div class='input'>(<span class='kw'>ssr</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fix_replen.html'>fix_replen</a></span>(<span class='kw'>nancycats</span>, <span class='kw'>ssr</span>)) <span class='co'># Nope. We need to fix them.</span>
+#&gt; FALSE  TRUE FALSE  TRUE  TRUE  TRUE FALSE FALSE  TRUE </div><div class='input'><span class='op'>(</span><span class='va'>ssr</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fix_replen.html'>fix_replen</a></span><span class='op'>(</span><span class='va'>nancycats</span>, <span class='va'>ssr</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Nope. We need to fix them.</span>
 </div><div class='output co'>#&gt;    fca8   fca23   fca43   fca45   fca77   fca78   fca90   fca96   fca37 
 #&gt; 1.99999 2.00000 1.99999 2.00000 2.00000 2.00000 1.99999 1.99999 2.00000 </div><div class='input'>
 <span class='co'># Analyze the first population in nancycats</span>
-<span class='fu'>bruvo.dist</span>(<span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='kw'>nancycats</span>, <span class='fl'>1</span>), replen = <span class='kw'>ssr</span>)
+<span class='fu'>bruvo.dist</span><span class='op'>(</span><span class='fu'><a href='popsub.html'>popsub</a></span><span class='op'>(</span><span class='va'>nancycats</span>, <span class='fl'>1</span><span class='op'>)</span>, replen <span class='op'>=</span> <span class='va'>ssr</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;           N215      N216      N217      N218      N219      N220      N221
 #&gt; N216 0.2377930                                                            
 #&gt; N217 0.3359375 0.5029297                                                  
@@ -362,7 +362,7 @@ All other values are NaN</p></li>
 <span class='co'># \dontrun{</span>
 
 <span class='co'># get the per locus estimates:</span>
-<span class='fu'>bruvo.dist</span>(<span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='kw'>nancycats</span>, <span class='fl'>1</span>), replen = <span class='kw'>ssr</span>, by_locus = <span class='fl'>TRUE</span>)
+<span class='fu'>bruvo.dist</span><span class='op'>(</span><span class='fu'><a href='popsub.html'>popsub</a></span><span class='op'>(</span><span class='va'>nancycats</span>, <span class='fl'>1</span><span class='op'>)</span>, replen <span class='op'>=</span> <span class='va'>ssr</span>, by_locus <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $fca8
 #&gt;          N215     N216     N217     N218     N219     N220     N221     N222
 #&gt; N216       NA                                                               
@@ -542,8 +542,8 @@ All other values are NaN</p></li>
 #&gt; N224 0.000 0.000 0.500 0.000 0.000 0.000 0.000 0.375 0.375
 #&gt; </div><div class='input'>
 <span class='co'># View each population as a heatmap.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>sapply</a></span>(<span class='fu'>popNames</span>(<span class='kw'>nancycats</span>), <span class='fu'>function</span>(<span class='kw'>x</span>) 
-<span class='fu'><a href='https://rdrr.io/r/stats/heatmap.html'>heatmap</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='fu'>bruvo.dist</span>(<span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='kw'>nancycats</span>, <span class='kw'>x</span>), replen = <span class='kw'>ssr</span>)), symm=<span class='fl'>TRUE</span>))
+<span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>sapply</a></span><span class='op'>(</span><span class='fu'>popNames</span><span class='op'>(</span><span class='va'>nancycats</span><span class='op'>)</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> 
+<span class='fu'><a href='https://rdrr.io/r/stats/heatmap.html'>heatmap</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='fu'>bruvo.dist</span><span class='op'>(</span><span class='fu'><a href='popsub.html'>popsub</a></span><span class='op'>(</span><span class='va'>nancycats</span>, <span class='va'>x</span><span class='op'>)</span>, replen <span class='op'>=</span> <span class='va'>ssr</span><span class='op'>)</span><span class='op'>)</span>, symm<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='img'><img src='bruvo.dist-1.png' alt='' width='700' height='433' /></div><div class='img'><img src='bruvo.dist-2.png' alt='' width='700' height='433' /></div><div class='img'><img src='bruvo.dist-3.png' alt='' width='700' height='433' /></div><div class='img'><img src='bruvo.dist-4.png' alt='' width='700' height='433' /></div><div class='img'><img src='bruvo.dist-5.png' alt='' width='700' height='433' /></div><div class='img'><img src='bruvo.dist-6.png' alt='' width='700' height='433' /></div><div class='img'><img src='bruvo.dist-7.png' alt='' width='700' height='433' /></div><div class='img'><img src='bruvo.dist-8.png' alt='' width='700' height='433' /></div><div class='img'><img src='bruvo.dist-9.png' alt='' width='700' height='433' /></div><div class='img'><img src='bruvo.dist-10.png' alt='' width='700' height='433' /></div><div class='img'><img src='bruvo.dist-11.png' alt='' width='700' height='433' /></div><div class='img'><img src='bruvo.dist-12.png' alt='' width='700' height='433' /></div><div class='img'><img src='bruvo.dist-13.png' alt='' width='700' height='433' /></div><div class='img'><img src='bruvo.dist-14.png' alt='' width='700' height='433' /></div><div class='img'><img src='bruvo.dist-15.png' alt='' width='700' height='433' /></div><div class='img'><img src='bruvo.dist-16.png' alt='' width='700' height='433' /></div><div class='img'><img src='bruvo.dist-17.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt;        P01        P02        P03        P04        P05        P06       
 #&gt; rowInd Integer,10 Integer,22 Integer,12 Integer,23 Integer,15 Integer,11
 #&gt; colInd Integer,10 Integer,22 Integer,12 Integer,23 Integer,15 Integer,11
@@ -575,7 +575,7 @@ All other values are NaN</p></li>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

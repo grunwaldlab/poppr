@@ -83,7 +83,7 @@ population strata." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.7</span>
       </span>
     </div>
 
@@ -91,7 +91,7 @@ population strata." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -120,7 +120,7 @@ population strata." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/grunwaldlab/poppr">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -148,7 +148,7 @@ object.</h1>
 population strata.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>clonecorrect</span>(<span class='kw'>pop</span>, strata = <span class='fl'>1</span>, combine = <span class='fl'>FALSE</span>, keep = <span class='fl'>1</span>)</pre>
+    <pre class="usage"><span class='fu'>clonecorrect</span><span class='op'>(</span><span class='va'>pop</span>, strata <span class='op'>=</span> <span class='fl'>1</span>, combine <span class='op'>=</span> <span class='cn'>FALSE</span>, keep <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -194,73 +194,73 @@ can set <code>keep = c(1,3)</code>.</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># LOAD A. euteiches data set</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Aeut</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>Aeut</span><span class='op'>)</span>
 
 <span class='co'># Redefine it as a genclone object</span>
-<span class='kw'>Aeut</span> <span class='op'>&lt;-</span> <span class='fu'><a href='bootgen2genind.html'>as.genclone</a></span>(<span class='kw'>Aeut</span>)
-<span class='fu'>strata</span>(<span class='kw'>Aeut</span>) <span class='op'>&lt;-</span> <span class='fu'>other</span>(<span class='kw'>Aeut</span>)<span class='op'>$</span><span class='kw'>population_hierarchy</span>[<span class='op'>-</span><span class='fl'>1</span>]
+<span class='va'>Aeut</span> <span class='op'>&lt;-</span> <span class='fu'><a href='bootgen2genind.html'>as.genclone</a></span><span class='op'>(</span><span class='va'>Aeut</span><span class='op'>)</span>
+<span class='fu'>strata</span><span class='op'>(</span><span class='va'>Aeut</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'>other</span><span class='op'>(</span><span class='va'>Aeut</span><span class='op'>)</span><span class='op'>$</span><span class='va'>population_hierarchy</span><span class='op'>[</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>]</span>
 
 <span class='co'># Check the number of multilocus genotypes</span>
-<span class='fu'><a href='mlg.html'>mlg</a></span>(<span class='kw'>Aeut</span>)
+<span class='fu'><a href='mlg.html'>mlg</a></span><span class='op'>(</span><span class='va'>Aeut</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; #############################
 #&gt; # Number of Individuals:  187 
 #&gt; # Number of MLG:  119 
-#&gt; #############################</div><div class='output co'>#&gt; [1] 119</div><div class='input'><span class='fu'>popNames</span>(<span class='kw'>Aeut</span>)
+#&gt; #############################</div><div class='output co'>#&gt; [1] 119</div><div class='input'><span class='fu'>popNames</span><span class='op'>(</span><span class='va'>Aeut</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] "Athena"     "Mt. Vernon"</div><div class='input'>
 <span class='co'># Clone correct at the population level.</span>
-<span class='kw'>Aeut.pop</span> <span class='op'>&lt;-</span> <span class='fu'>clonecorrect</span>(<span class='kw'>Aeut</span>, strata =  <span class='op'>~</span><span class='kw'>Pop</span>)
-<span class='fu'><a href='mlg.html'>mlg</a></span>(<span class='kw'>Aeut.pop</span>)
+<span class='va'>Aeut.pop</span> <span class='op'>&lt;-</span> <span class='fu'>clonecorrect</span><span class='op'>(</span><span class='va'>Aeut</span>, strata <span class='op'>=</span>  <span class='op'>~</span><span class='va'>Pop</span><span class='op'>)</span>
+<span class='fu'><a href='mlg.html'>mlg</a></span><span class='op'>(</span><span class='va'>Aeut.pop</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; #############################
 #&gt; # Number of Individuals:  120 
 #&gt; # Number of MLG:  119 
-#&gt; #############################</div><div class='output co'>#&gt; [1] 119</div><div class='input'><span class='fu'>popNames</span>(<span class='kw'>Aeut.pop</span>)
+#&gt; #############################</div><div class='output co'>#&gt; [1] 119</div><div class='input'><span class='fu'>popNames</span><span class='op'>(</span><span class='va'>Aeut.pop</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] "Athena"     "Mt. Vernon"</div><div class='input'>
 <span class='co'># \dontrun{</span>
 <span class='co'># Clone correct at the subpopulation level with respect to population and</span>
 <span class='co'># combine.</span>
-<span class='kw'>Aeut.subpop</span> <span class='op'>&lt;-</span> <span class='fu'>clonecorrect</span>(<span class='kw'>Aeut</span>, strata = <span class='op'>~</span><span class='kw'>Pop</span><span class='op'>/</span><span class='kw'>Subpop</span>, combine=<span class='fl'>TRUE</span>)
-<span class='fu'><a href='mlg.html'>mlg</a></span>(<span class='kw'>Aeut.subpop</span>)
+<span class='va'>Aeut.subpop</span> <span class='op'>&lt;-</span> <span class='fu'>clonecorrect</span><span class='op'>(</span><span class='va'>Aeut</span>, strata <span class='op'>=</span> <span class='op'>~</span><span class='va'>Pop</span><span class='op'>/</span><span class='va'>Subpop</span>, combine<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'><a href='mlg.html'>mlg</a></span><span class='op'>(</span><span class='va'>Aeut.subpop</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; #############################
 #&gt; # Number of Individuals:  141 
 #&gt; # Number of MLG:  119 
-#&gt; #############################</div><div class='output co'>#&gt; [1] 119</div><div class='input'><span class='fu'>popNames</span>(<span class='kw'>Aeut.subpop</span>)
+#&gt; #############################</div><div class='output co'>#&gt; [1] 119</div><div class='input'><span class='fu'>popNames</span><span class='op'>(</span><span class='va'>Aeut.subpop</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;  [1] "Athena_1"     "Athena_2"     "Athena_3"     "Athena_4"     "Athena_5"    
 #&gt;  [6] "Athena_6"     "Athena_7"     "Athena_8"     "Athena_9"     "Athena_10"   
 #&gt; [11] "Mt. Vernon_1" "Mt. Vernon_2" "Mt. Vernon_3" "Mt. Vernon_4" "Mt. Vernon_5"
 #&gt; [16] "Mt. Vernon_6" "Mt. Vernon_7" "Mt. Vernon_8"</div><div class='input'>
 <span class='co'># Do the same, but set to the population level.</span>
-<span class='kw'>Aeut.subpop2</span> <span class='op'>&lt;-</span> <span class='fu'>clonecorrect</span>(<span class='kw'>Aeut</span>, strata = <span class='op'>~</span><span class='kw'>Pop</span><span class='op'>/</span><span class='kw'>Subpop</span>, keep=<span class='fl'>1</span>)
-<span class='fu'><a href='mlg.html'>mlg</a></span>(<span class='kw'>Aeut.subpop2</span>)
+<span class='va'>Aeut.subpop2</span> <span class='op'>&lt;-</span> <span class='fu'>clonecorrect</span><span class='op'>(</span><span class='va'>Aeut</span>, strata <span class='op'>=</span> <span class='op'>~</span><span class='va'>Pop</span><span class='op'>/</span><span class='va'>Subpop</span>, keep<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
+<span class='fu'><a href='mlg.html'>mlg</a></span><span class='op'>(</span><span class='va'>Aeut.subpop2</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; #############################
 #&gt; # Number of Individuals:  141 
 #&gt; # Number of MLG:  119 
-#&gt; #############################</div><div class='output co'>#&gt; [1] 119</div><div class='input'><span class='fu'>popNames</span>(<span class='kw'>Aeut.subpop2</span>)
+#&gt; #############################</div><div class='output co'>#&gt; [1] 119</div><div class='input'><span class='fu'>popNames</span><span class='op'>(</span><span class='va'>Aeut.subpop2</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] "Athena"     "Mt. Vernon"</div><div class='input'>
 <span class='co'># LOAD H3N2 dataset</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>H3N2</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>H3N2</span><span class='op'>)</span>
 
-<span class='fu'>strata</span>(<span class='kw'>H3N2</span>) <span class='op'>&lt;-</span> <span class='fu'>other</span>(<span class='kw'>H3N2</span>)<span class='op'>$</span><span class='kw'>x</span>
+<span class='fu'>strata</span><span class='op'>(</span><span class='va'>H3N2</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'>other</span><span class='op'>(</span><span class='va'>H3N2</span><span class='op'>)</span><span class='op'>$</span><span class='va'>x</span>
 
 <span class='co'># Extract only the individuals located in China</span>
-<span class='kw'>country</span> <span class='op'>&lt;-</span> <span class='fu'>clonecorrect</span>(<span class='kw'>H3N2</span>, strata =  <span class='op'>~</span><span class='kw'>country</span>)
+<span class='va'>country</span> <span class='op'>&lt;-</span> <span class='fu'>clonecorrect</span><span class='op'>(</span><span class='va'>H3N2</span>, strata <span class='op'>=</span>  <span class='op'>~</span><span class='va'>country</span><span class='op'>)</span>
 
 <span class='co'># How many isolates did we have from China before clone correction?</span>
-<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='fu'>strata</span>(<span class='kw'>H3N2</span>, <span class='op'>~</span><span class='kw'>country</span>) <span class='op'>==</span> <span class='st'>"China"</span>) <span class='co'># 155</span>
+<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='fu'>strata</span><span class='op'>(</span><span class='va'>H3N2</span>, <span class='op'>~</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>==</span> <span class='st'>"China"</span><span class='op'>)</span> <span class='co'># 155</span>
 </div><div class='output co'>#&gt; [1] 155</div><div class='input'>
 <span class='co'># How many unique isolates from China after clone correction?</span>
-<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='fu'>strata</span>(<span class='kw'>country</span>, <span class='op'>~</span><span class='kw'>country</span>) <span class='op'>==</span> <span class='st'>"China"</span>) <span class='co'># 79</span>
+<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='fu'>strata</span><span class='op'>(</span><span class='va'>country</span>, <span class='op'>~</span><span class='va'>country</span><span class='op'>)</span> <span class='op'>==</span> <span class='st'>"China"</span><span class='op'>)</span> <span class='co'># 79</span>
 </div><div class='output co'>#&gt; [1] 79</div><div class='input'>
 <span class='co'># Something a little more complicated. (This could take a few minutes on</span>
 <span class='co'># slower computers)</span>
 
 <span class='co'># setting the hierarchy to be Country &gt; Year &gt; Month  </span>
-<span class='kw'>c.y.m</span> <span class='op'>&lt;-</span> <span class='fu'>clonecorrect</span>(<span class='kw'>H3N2</span>, strata =  <span class='op'>~</span><span class='kw'>year</span><span class='op'>/</span><span class='kw'>month</span><span class='op'>/</span><span class='kw'>country</span>)
+<span class='va'>c.y.m</span> <span class='op'>&lt;-</span> <span class='fu'>clonecorrect</span><span class='op'>(</span><span class='va'>H3N2</span>, strata <span class='op'>=</span>  <span class='op'>~</span><span class='va'>year</span><span class='op'>/</span><span class='va'>month</span><span class='op'>/</span><span class='va'>country</span><span class='op'>)</span>
 
 <span class='co'># How many isolates in the original data set?</span>
-<span class='fu'>nInd</span>(<span class='kw'>H3N2</span>) <span class='co'># 1903</span>
+<span class='fu'>nInd</span><span class='op'>(</span><span class='va'>H3N2</span><span class='op'>)</span> <span class='co'># 1903</span>
 </div><div class='output co'>#&gt; [1] 1903</div><div class='input'>
 <span class='co'># How many after we clone corrected for country, year, and month?</span>
-<span class='fu'>nInd</span>(<span class='kw'>c.y.m</span>) <span class='co'># 1190</span>
+<span class='fu'>nInd</span><span class='op'>(</span><span class='va'>c.y.m</span><span class='op'>)</span> <span class='co'># 1190</span>
 </div><div class='output co'>#&gt; [1] 1190</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
@@ -278,7 +278,7 @@ can set <code>keep = c(1,3)</code>.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

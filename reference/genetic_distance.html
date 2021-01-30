@@ -81,7 +81,7 @@ be applicable for distances between individuals." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.7</span>
       </span>
     </div>
 
@@ -89,7 +89,7 @@ be applicable for distances between individuals." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -118,7 +118,7 @@ be applicable for distances between individuals." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/grunwaldlab/poppr">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -145,17 +145,17 @@ be applicable for distances between individuals." />
 be applicable for distances between individuals.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>nei.dist</span>(<span class='kw'>x</span>, warning = <span class='fl'>TRUE</span>)
+    <pre class="usage"><span class='fu'>nei.dist</span><span class='op'>(</span><span class='va'>x</span>, warning <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
-<span class='fu'>edwards.dist</span>(<span class='kw'>x</span>)
+<span class='fu'>edwards.dist</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 
-<span class='fu'>rogers.dist</span>(<span class='kw'>x</span>)
+<span class='fu'>rogers.dist</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 
-<span class='fu'>reynolds.dist</span>(<span class='kw'>x</span>)
+<span class='fu'>reynolds.dist</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 
-<span class='fu'>provesti.dist</span>(<span class='kw'>x</span>)
+<span class='fu'>provesti.dist</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 
-<span class='kw'>prevosti.dist</span></pre>
+<span class='va'>prevosti.dist</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -241,8 +241,8 @@ Daniel Chessel (ade4)</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>nancycats</span>)
-(<span class='kw'>nan9</span>   <span class='op'>&lt;-</span> <span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='kw'>nancycats</span>, <span class='fl'>9</span>))
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>nancycats</span><span class='op'>)</span>
+<span class='op'>(</span><span class='va'>nan9</span>   <span class='op'>&lt;-</span> <span class='fu'><a href='popsub.html'>popsub</a></span><span class='op'>(</span><span class='va'>nancycats</span>, <span class='fl'>9</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; /// GENIND OBJECT /////////
 #&gt; 
 #&gt;  // 9 individuals; 9 loci; 43 alleles; size: 16.8 Kb
@@ -259,7 +259,7 @@ Daniel Chessel (ade4)</p>
 #&gt;  // Optional content
 #&gt;    @pop: population of each individual (group size range: 9-9)
 #&gt;    @other: a list containing: xy 
-#&gt; </div><div class='input'>(<span class='kw'>neinan</span> <span class='op'>&lt;-</span> <span class='fu'>nei.dist</span>(<span class='kw'>nan9</span>))
+#&gt; </div><div class='input'><span class='op'>(</span><span class='va'>neinan</span> <span class='op'>&lt;-</span> <span class='fu'>nei.dist</span><span class='op'>(</span><span class='va'>nan9</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;           N104      N105      N106      N107      N108      N109      N111
 #&gt; N105 1.0579046                                                            
 #&gt; N106 0.5219437 0.5990190                                                  
@@ -277,7 +277,7 @@ Daniel Chessel (ade4)</p>
 #&gt; N109          
 #&gt; N111          
 #&gt; N112          
-#&gt; N113 1.5251102</div><div class='input'>(<span class='kw'>ednan</span>  <span class='op'>&lt;-</span> <span class='fu'>edwards.dist</span>(<span class='kw'>nan9</span>))
+#&gt; N113 1.5251102</div><div class='input'><span class='op'>(</span><span class='va'>ednan</span>  <span class='op'>&lt;-</span> <span class='fu'>edwards.dist</span><span class='op'>(</span><span class='va'>nan9</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;           N104      N105      N106      N107      N108      N109      N111
 #&gt; N105 0.7517229                                                            
 #&gt; N106 0.6127062 0.6387116                                                  
@@ -295,7 +295,7 @@ Daniel Chessel (ade4)</p>
 #&gt; N109          
 #&gt; N111          
 #&gt; N112          
-#&gt; N113 0.8687726</div><div class='input'>(<span class='kw'>rodnan</span> <span class='op'>&lt;-</span> <span class='fu'>rogers.dist</span>(<span class='kw'>nan9</span>))
+#&gt; N113 0.8687726</div><div class='input'><span class='op'>(</span><span class='va'>rodnan</span> <span class='op'>&lt;-</span> <span class='fu'>rogers.dist</span><span class='op'>(</span><span class='va'>nan9</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;           N104      N105      N106      N107      N108      N109      N111
 #&gt; N105 0.5813390                                                            
 #&gt; N106 0.4295584 0.5000000                                                  
@@ -313,7 +313,7 @@ Daniel Chessel (ade4)</p>
 #&gt; N109          
 #&gt; N111          
 #&gt; N112          
-#&gt; N113 0.6829183</div><div class='input'>(<span class='kw'>reynan</span> <span class='op'>&lt;-</span> <span class='fu'>reynolds.dist</span>(<span class='kw'>nan9</span>))
+#&gt; N113 0.6829183</div><div class='input'><span class='op'>(</span><span class='va'>reynan</span> <span class='op'>&lt;-</span> <span class='fu'>reynolds.dist</span><span class='op'>(</span><span class='va'>nan9</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;           N104      N105      N106      N107      N108      N109      N111
 #&gt; N105 0.7934920                                                            
 #&gt; N106 0.6255432 0.6915641                                                  
@@ -331,7 +331,7 @@ Daniel Chessel (ade4)</p>
 #&gt; N109          
 #&gt; N111          
 #&gt; N112          
-#&gt; N113 0.7620008</div><div class='input'>(<span class='kw'>pronan</span> <span class='op'>&lt;-</span> <span class='fu'>prevosti.dist</span>(<span class='kw'>nan9</span>))
+#&gt; N113 0.7620008</div><div class='input'><span class='op'>(</span><span class='va'>pronan</span> <span class='op'>&lt;-</span> <span class='fu'>prevosti.dist</span><span class='op'>(</span><span class='va'>nan9</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;           N104      N105      N106      N107      N108      N109      N111
 #&gt; N105 0.6111111                                                            
 #&gt; N106 0.4444444 0.5000000                                                  
@@ -366,7 +366,7 @@ Daniel Chessel (ade4)</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

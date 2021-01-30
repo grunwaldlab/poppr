@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.7</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -117,7 +117,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/grunwaldlab/poppr">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -143,7 +143,7 @@
     <p>Attempts to fix inconsistent repeat lengths found by <code>test_replen</code></p>
     </div>
 
-    <pre class="usage"><span class='fu'>fix_replen</span>(<span class='kw'>gid</span>, <span class='kw'>replen</span>, e = <span class='fl'>1e-05</span>, fix_some = <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>fix_replen</span><span class='op'>(</span><span class='va'>gid</span>, <span class='va'>replen</span>, e <span class='op'>=</span> <span class='fl'>1e-05</span>, fix_some <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -175,7 +175,8 @@ fixed will. If <code>FALSE</code>, the original repeat lengths will not be fixed
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function is modified from the version used in 
-  <a href='https://doi.org/10.5281/zenodo.13007'>https://doi.org/10.5281/zenodo.13007</a>.<br /> Before being fed into the
+  doi: <a href='https://doi.org/10.5281/zenodo.13007'>10.5281/zenodo.13007</a>
+.<br /> Before being fed into the
   algorithm to calculate Bruvo's distance, the amplicon length is divided by
   the repeat unit length. Because of the amplified primer sequence attached
   to sequence repeat, this division does not always result in an integer and
@@ -196,11 +197,12 @@ fixed will. If <code>FALSE</code>, the original repeat lengths will not be fixed
     <p>Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M. 
   Hansen, &amp; Niklaus J. Grünwald. Sudden_Oak_Death_in_Oregon_Forests: Spatial
   and temporal population dynamics of the sudden oak death epidemic in Oregon
-  Forests. ZENODO, https://doi.org/10.5281/zenodo.13007, 2014.</p>  
+  Forests. ZENODO, doi: <a href='https://doi.org/10.5281/zenodo.13007'>10.5281/zenodo.13007</a>
+, 2014.</p>  
 <p>Kamvar, Z. N., Larsen, M. M., Kanaskie, A. M., Hansen, E. M., &amp; Grünwald,
   N. J. (2015). Spatial and temporal analysis of populations of the sudden
   oak death pathogen in Oregon forests. Phytopathology 105:982-989.
-  doi: <a href='https://doi.org/10.1094/PHYTO-12-14-0350-FI'>10.1094/PHYTO-12-14-0350-FI</a></p>  
+  doi: doi: <a href='https://doi.org/10.1094/PHYTO-12-14-0350-FI'>10.1094/PHYTO-12-14-0350-FI</a></p>  
 <p>Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and Hinrich 
   Schulenburg. A simple method for the calculation of microsatellite genotype
   distances irrespective of ploidy level. Molecular Ecology, 13(7):2101-2106,
@@ -215,33 +217,33 @@ fixed will. If <code>FALSE</code>, the original repeat lengths will not be fixed
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Pram</span>)
-(<span class='kw'>Pram_replen</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/setNames.html'>setNames</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>, <span class='fl'>2</span>, <span class='fl'>4</span>, <span class='fl'>4</span>, <span class='fl'>4</span>), <span class='fu'>locNames</span>(<span class='kw'>Pram</span>)))
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>Pram</span><span class='op'>)</span>
+<span class='op'>(</span><span class='va'>Pram_replen</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/setNames.html'>setNames</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>, <span class='fl'>2</span>, <span class='fl'>4</span>, <span class='fl'>4</span>, <span class='fl'>4</span><span class='op'>)</span>, <span class='fu'>locNames</span><span class='op'>(</span><span class='va'>Pram</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;  PrMS6A1  Pr9C3A1 PrMS39A1 PrMS45A1 PrMS43A1 
-#&gt;        3        2        4        4        4 </div><div class='input'><span class='fu'>fix_replen</span>(<span class='kw'>Pram</span>, <span class='kw'>Pram_replen</span>)
+#&gt;        3        2        4        4        4 </div><div class='input'><span class='fu'>fix_replen</span><span class='op'>(</span><span class='va'>Pram</span>, <span class='va'>Pram_replen</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;  PrMS6A1  Pr9C3A1 PrMS39A1 PrMS45A1 PrMS43A1 
 #&gt;  3.00000  2.00000  3.99999  4.00000  4.00000 </div><div class='input'><span class='co'># Let's start with an example of a tetranucleotide repeat motif and imagine</span>
 <span class='co'># that there are twenty alleles all 1 step apart:</span>
-(<span class='kw'>x</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>20L</span> <span class='op'>*</span> <span class='fl'>4L</span>)
+<span class='op'>(</span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>20L</span> <span class='op'>*</span> <span class='fl'>4L</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;  [1]  4  8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80</div><div class='input'><span class='co'># These are the true lengths of the different alleles. Now, let's add the</span>
 <span class='co'># primer sequence to them. </span>
-(<span class='kw'>PxP</span> <span class='op'>&lt;-</span> <span class='kw'>x</span> <span class='op'>+</span> <span class='fl'>21</span> <span class='op'>+</span> <span class='fl'>21</span>)
+<span class='op'>(</span><span class='va'>PxP</span> <span class='op'>&lt;-</span> <span class='va'>x</span> <span class='op'>+</span> <span class='fl'>21</span> <span class='op'>+</span> <span class='fl'>21</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;  [1]  46  50  54  58  62  66  70  74  78  82  86  90  94  98 102 106 110 114 118
 #&gt; [20] 122</div><div class='input'><span class='co'># Now we make sure that x / 4 is equal to 1:20, which we know each have</span>
 <span class='co'># 1 difference.</span>
-<span class='kw'>x</span><span class='op'>/</span><span class='fl'>4</span>
+<span class='va'>x</span><span class='op'>/</span><span class='fl'>4</span>
 </div><div class='output co'>#&gt;  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20</div><div class='input'><span class='co'># Now, we divide the sequence with the primers by 4 and see what happens.</span>
-(<span class='kw'>PxPc</span> <span class='op'>&lt;-</span> <span class='kw'>PxP</span><span class='op'>/</span><span class='fl'>4</span>)
+<span class='op'>(</span><span class='va'>PxPc</span> <span class='op'>&lt;-</span> <span class='va'>PxP</span><span class='op'>/</span><span class='fl'>4</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;  [1] 11.5 12.5 13.5 14.5 15.5 16.5 17.5 18.5 19.5 20.5 21.5 22.5 23.5 24.5 25.5
-#&gt; [16] 26.5 27.5 28.5 29.5 30.5</div><div class='input'>(<span class='kw'>PxPcr</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span>(<span class='kw'>PxPc</span>))
-</div><div class='output co'>#&gt;  [1] 12 12 14 14 16 16 18 18 20 20 22 22 24 24 26 26 28 28 30 30</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/diff.html'>diff</a></span>(<span class='kw'>PxPcr</span>) <span class='co'># we expect all 1s</span>
+#&gt; [16] 26.5 27.5 28.5 29.5 30.5</div><div class='input'><span class='op'>(</span><span class='va'>PxPcr</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span><span class='op'>(</span><span class='va'>PxPc</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  [1] 12 12 14 14 16 16 18 18 20 20 22 22 24 24 26 26 28 28 30 30</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/diff.html'>diff</a></span><span class='op'>(</span><span class='va'>PxPcr</span><span class='op'>)</span> <span class='co'># we expect all 1s</span>
 </div><div class='output co'>#&gt;  [1] 0 2 0 2 0 2 0 2 0 2 0 2 0 2 0 2 0 2 0</div><div class='input'>
 <span class='co'># Let's try that again by subtracting a tiny amount from 4</span>
-(<span class='kw'>PxPc</span> <span class='op'>&lt;-</span> <span class='kw'>PxP</span><span class='op'>/</span>(<span class='fl'>4</span> <span class='op'>-</span> <span class='fl'>1e-5</span>))
+<span class='op'>(</span><span class='va'>PxPc</span> <span class='op'>&lt;-</span> <span class='va'>PxP</span><span class='op'>/</span><span class='op'>(</span><span class='fl'>4</span> <span class='op'>-</span> <span class='fl'>1e-5</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;  [1] 11.50003 12.50003 13.50003 14.50004 15.50004 16.50004 17.50004 18.50005
 #&gt;  [9] 19.50005 20.50005 21.50005 22.50006 23.50006 24.50006 25.50006 26.50007
-#&gt; [17] 27.50007 28.50007 29.50007 30.50008</div><div class='input'>(<span class='kw'>PxPcr</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span>(<span class='kw'>PxPc</span>))
-</div><div class='output co'>#&gt;  [1] 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/diff.html'>diff</a></span>(<span class='kw'>PxPcr</span>)
+#&gt; [17] 27.50007 28.50007 29.50007 30.50008</div><div class='input'><span class='op'>(</span><span class='va'>PxPcr</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span><span class='op'>(</span><span class='va'>PxPc</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  [1] 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/diff.html'>diff</a></span><span class='op'>(</span><span class='va'>PxPcr</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -258,7 +260,7 @@ fixed will. If <code>FALSE</code>, the original repeat lengths will not be fixed
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

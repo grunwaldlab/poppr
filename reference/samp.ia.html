@@ -82,7 +82,7 @@ function will randomly sample sites to calculate the index of association." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.7</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@ function will randomly sample sites to calculate the index of association." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -119,7 +119,7 @@ function will randomly sample sites to calculate the index of association." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/grunwaldlab/poppr">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -147,7 +147,7 @@ sense to calculate the index of association over that many loci, this
 function will randomly sample sites to calculate the index of association.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>samp.ia</span>(<span class='kw'>x</span>, n.snp = <span class='fl'>100L</span>, reps = <span class='fl'>100L</span>, threads = <span class='fl'>1L</span>, quiet = <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>samp.ia</span><span class='op'>(</span><span class='va'>x</span>, n.snp <span class='op'>=</span> <span class='fl'>100L</span>, reps <span class='op'>=</span> <span class='fl'>100L</span>, threads <span class='op'>=</span> <span class='fl'>1L</span>, quiet <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -221,20 +221,20 @@ diploid.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># with structured snps assuming 1e4 positions</span>
-<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>999</span>)
-<span class='kw'>x</span> <span class='op'>&lt;-</span> <span class='fu'>glSim</span>(n.ind = <span class='fl'>10</span>, n.snp.nonstruc = <span class='fl'>5e2</span>, 
-           n.snp.struc = <span class='fl'>5e2</span>, ploidy = <span class='fl'>2</span>,
-           parallel = <span class='fl'>FALSE</span>)
-<span class='fu'>position</span>(<span class='kw'>x</span>) <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sort.html'>sort</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='fl'>1e4</span>, <span class='fl'>1e3</span>))
-<span class='kw'>res</span> <span class='op'>&lt;-</span> <span class='fu'>samp.ia</span>(<span class='kw'>x</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span>(<span class='kw'>res</span>, breaks = <span class='st'>"fd"</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>999</span><span class='op'>)</span>
+<span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'>glSim</span><span class='op'>(</span>n.ind <span class='op'>=</span> <span class='fl'>10</span>, n.snp.nonstruc <span class='op'>=</span> <span class='fl'>5e2</span>, 
+           n.snp.struc <span class='op'>=</span> <span class='fl'>5e2</span>, ploidy <span class='op'>=</span> <span class='fl'>2</span>,
+           parallel <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>position</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sort.html'>sort</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1e4</span>, <span class='fl'>1e3</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>samp.ia</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span><span class='op'>(</span><span class='va'>res</span>, breaks <span class='op'>=</span> <span class='st'>"fd"</span><span class='op'>)</span>
 </div><div class='img'><img src='samp.ia-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># with unstructured snps assuming 1e4 positions</span>
-<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>999</span>)
-<span class='kw'>x</span> <span class='op'>&lt;-</span> <span class='fu'>glSim</span>(n.ind = <span class='fl'>10</span>, n.snp.nonstruc = <span class='fl'>1e3</span>, ploidy = <span class='fl'>2</span>)
-<span class='fu'>position</span>(<span class='kw'>x</span>) <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sort.html'>sort</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='fl'>1e4</span>, <span class='fl'>1e3</span>))
-<span class='kw'>res</span> <span class='op'>&lt;-</span> <span class='fu'>samp.ia</span>(<span class='kw'>x</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span>(<span class='kw'>res</span>, breaks = <span class='st'>"fd"</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>999</span><span class='op'>)</span>
+<span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'>glSim</span><span class='op'>(</span>n.ind <span class='op'>=</span> <span class='fl'>10</span>, n.snp.nonstruc <span class='op'>=</span> <span class='fl'>1e3</span>, ploidy <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
+<span class='fu'>position</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sort.html'>sort</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1e4</span>, <span class='fl'>1e3</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>samp.ia</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span><span class='op'>(</span><span class='va'>res</span>, breaks <span class='op'>=</span> <span class='st'>"fd"</span><span class='op'>)</span>
 </div><div class='img'><img src='samp.ia-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -251,7 +251,7 @@ diploid.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

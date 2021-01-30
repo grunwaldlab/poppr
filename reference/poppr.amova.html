@@ -83,7 +83,7 @@ implementation of AMOVA. See ade4::amova() (ade4) and pegas::amova()
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.7</span>
       </span>
     </div>
 
@@ -91,7 +91,7 @@ implementation of AMOVA. See ade4::amova() (ade4) and pegas::amova()
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -120,7 +120,7 @@ implementation of AMOVA. See ade4::amova() (ade4) and pegas::amova()
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/grunwaldlab/poppr">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -149,26 +149,26 @@ implementation of AMOVA. See <code><a href='https://rdrr.io/pkg/ade4/man/amova.h
 (pegas) for details on the specific implementation.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>poppr.amova</span>(
-  <span class='kw'>x</span>,
-  hier = <span class='kw'>NULL</span>,
-  clonecorrect = <span class='fl'>FALSE</span>,
-  within = <span class='fl'>TRUE</span>,
-  dist = <span class='kw'>NULL</span>,
-  squared = <span class='fl'>TRUE</span>,
-  freq = <span class='fl'>TRUE</span>,
-  correction = <span class='st'>"quasieuclid"</span>,
-  sep = <span class='st'>"_"</span>,
-  filter = <span class='fl'>FALSE</span>,
-  threshold = <span class='fl'>0</span>,
-  algorithm = <span class='st'>"farthest_neighbor"</span>,
-  threads = <span class='fl'>1L</span>,
-  missing = <span class='st'>"loci"</span>,
-  cutoff = <span class='fl'>0.05</span>,
-  quiet = <span class='fl'>FALSE</span>,
-  method = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ade4"</span>, <span class='st'>"pegas"</span>),
-  nperm = <span class='fl'>0</span>
-)</pre>
+    <pre class="usage"><span class='fu'>poppr.amova</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  hier <span class='op'>=</span> <span class='cn'>NULL</span>,
+  clonecorrect <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  within <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  dist <span class='op'>=</span> <span class='cn'>NULL</span>,
+  squared <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  freq <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  correction <span class='op'>=</span> <span class='st'>"quasieuclid"</span>,
+  sep <span class='op'>=</span> <span class='st'>"_"</span>,
+  filter <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  threshold <span class='op'>=</span> <span class='fl'>0</span>,
+  algorithm <span class='op'>=</span> <span class='st'>"farthest_neighbor"</span>,
+  threads <span class='op'>=</span> <span class='fl'>1L</span>,
+  missing <span class='op'>=</span> <span class='st'>"loci"</span>,
+  cutoff <span class='op'>=</span> <span class='fl'>0.05</span>,
+  quiet <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ade4"</span>, <span class='st'>"pegas"</span><span class='op'>)</span>,
+  nperm <span class='op'>=</span> <span class='fl'>0</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -401,10 +401,10 @@ Autopolyploids <em>Submitted</em>.</p>
 <code><a href='bootgen2genind.html'>as.genambig()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Aeut</span>)
-<span class='fu'>strata</span>(<span class='kw'>Aeut</span>) <span class='op'>&lt;-</span> <span class='fu'>other</span>(<span class='kw'>Aeut</span>)<span class='op'>$</span><span class='kw'>population_hierarchy</span>[<span class='op'>-</span><span class='fl'>1</span>]
-<span class='kw'>agc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='bootgen2genind.html'>as.genclone</a></span>(<span class='kw'>Aeut</span>)
-<span class='kw'>agc</span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>Aeut</span><span class='op'>)</span>
+<span class='fu'>strata</span><span class='op'>(</span><span class='va'>Aeut</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'>other</span><span class='op'>(</span><span class='va'>Aeut</span><span class='op'>)</span><span class='op'>$</span><span class='va'>population_hierarchy</span><span class='op'>[</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>]</span>
+<span class='va'>agc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='bootgen2genind.html'>as.genclone</a></span><span class='op'>(</span><span class='va'>Aeut</span><span class='op'>)</span>
+<span class='va'>agc</span>
 </div><div class='output co'>#&gt; 
 #&gt; This is a genclone object
 #&gt; -------------------------
@@ -417,9 +417,9 @@ Autopolyploids <em>Submitted</em>.</p>
 #&gt; Population information:
 #&gt; 
 #&gt;      2 strata - Pop, Subpop
-#&gt;      2 populations defined - Athena, Mt. Vernon</div><div class='input'><span class='kw'>amova.result</span> <span class='op'>&lt;-</span> <span class='fu'>poppr.amova</span>(<span class='kw'>agc</span>, <span class='op'>~</span><span class='kw'>Pop</span><span class='op'>/</span><span class='kw'>Subpop</span>)
+#&gt;      2 populations defined - Athena, Mt. Vernon</div><div class='input'><span class='va'>amova.result</span> <span class='op'>&lt;-</span> <span class='fu'>poppr.amova</span><span class='op'>(</span><span class='va'>agc</span>, <span class='op'>~</span><span class='va'>Pop</span><span class='op'>/</span><span class='va'>Subpop</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'> No missing values detected.</span></div><div class='input'><span class='kw'>amova.result</span>
+#&gt; <span class='message'> No missing values detected.</span></div><div class='input'><span class='va'>amova.result</span>
 </div><div class='output co'>#&gt; $call
 #&gt; ade4::amova(samples = xtab, distances = xdist, structures = xstruct)
 #&gt; 
@@ -442,9 +442,9 @@ Autopolyploids <em>Submitted</em>.</p>
 #&gt; Phi-samples-total 0.7841427
 #&gt; Phi-samples-Pop   0.2803128
 #&gt; Phi-Pop-total     0.7000679
-#&gt; </div><div class='input'><span class='kw'>amova.test</span> <span class='op'>&lt;-</span> <span class='fu'>randtest</span>(<span class='kw'>amova.result</span>) <span class='co'># Test for significance</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span>(<span class='kw'>amova.test</span>)
-</div><div class='img'><img src='poppr.amova-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='kw'>amova.test</span>
+#&gt; </div><div class='input'><span class='va'>amova.test</span> <span class='op'>&lt;-</span> <span class='fu'>randtest</span><span class='op'>(</span><span class='va'>amova.result</span><span class='op'>)</span> <span class='co'># Test for significance</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>amova.test</span><span class='op'>)</span>
+</div><div class='img'><img src='poppr.amova-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='va'>amova.test</span>
 </div><div class='output co'>#&gt; class: krandtest lightkrandtest 
 #&gt; Monte-Carlo tests
 #&gt; Call: randtest.amova(xtest = amova.result)
@@ -461,9 +461,9 @@ Autopolyploids <em>Submitted</em>.</p>
 <span class='co'># \dontrun{</span>
 
 <span class='co'># You can get the same results with the pegas implementation</span>
-<span class='kw'>amova.pegas</span> <span class='op'>&lt;-</span> <span class='fu'>poppr.amova</span>(<span class='kw'>agc</span>, <span class='op'>~</span><span class='kw'>Pop</span><span class='op'>/</span><span class='kw'>Subpop</span>, method = <span class='st'>"pegas"</span>)
+<span class='va'>amova.pegas</span> <span class='op'>&lt;-</span> <span class='fu'>poppr.amova</span><span class='op'>(</span><span class='va'>agc</span>, <span class='op'>~</span><span class='va'>Pop</span><span class='op'>/</span><span class='va'>Subpop</span>, method <span class='op'>=</span> <span class='st'>"pegas"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'> No missing values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Zero distance(s)</span></div><div class='input'><span class='kw'>amova.pegas</span>
+#&gt; <span class='message'> No missing values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Zero distance(s)</span></div><div class='input'><span class='va'>amova.pegas</span>
 </div><div class='output co'>#&gt; 
 #&gt; 	Analysis of Molecular Variance
 #&gt; 
@@ -486,13 +486,13 @@ Autopolyploids <em>Submitted</em>.</p>
 #&gt; Variance coefficients:
 #&gt;        a        b        c 
 #&gt; 10.29589 11.16949 93.36898 
-#&gt; </div><div class='input'><span class='kw'>amova.pegas</span><span class='op'>$</span><span class='kw'>varcomp</span><span class='op'>/</span><span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='kw'>amova.pegas</span><span class='op'>$</span><span class='kw'>varcomp</span>)
+#&gt; </div><div class='input'><span class='va'>amova.pegas</span><span class='op'>$</span><span class='va'>varcomp</span><span class='op'>/</span><span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>amova.pegas</span><span class='op'>$</span><span class='va'>varcomp</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;        Pop     Subpop      Error 
 #&gt; 0.70006786 0.08407483 0.21585732 </div><div class='input'>
 <span class='co'># Clone correction is possible</span>
-<span class='kw'>amova.cc.result</span> <span class='op'>&lt;-</span> <span class='fu'>poppr.amova</span>(<span class='kw'>agc</span>, <span class='op'>~</span><span class='kw'>Pop</span><span class='op'>/</span><span class='kw'>Subpop</span>, clonecorrect = <span class='fl'>TRUE</span>)
+<span class='va'>amova.cc.result</span> <span class='op'>&lt;-</span> <span class='fu'>poppr.amova</span><span class='op'>(</span><span class='va'>agc</span>, <span class='op'>~</span><span class='va'>Pop</span><span class='op'>/</span><span class='va'>Subpop</span>, clonecorrect <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'> No missing values detected.</span></div><div class='input'><span class='kw'>amova.cc.result</span>
+#&gt; <span class='message'> No missing values detected.</span></div><div class='input'><span class='va'>amova.cc.result</span>
 </div><div class='output co'>#&gt; $call
 #&gt; ade4::amova(samples = xtab, distances = xdist, structures = xstruct)
 #&gt; 
@@ -515,9 +515,9 @@ Autopolyploids <em>Submitted</em>.</p>
 #&gt; Phi-samples-total 0.7288303
 #&gt; Phi-samples-Pop   0.1837727
 #&gt; Phi-Pop-total     0.6677768
-#&gt; </div><div class='input'><span class='kw'>amova.cc.test</span> <span class='op'>&lt;-</span> <span class='fu'>randtest</span>(<span class='kw'>amova.cc.result</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span>(<span class='kw'>amova.cc.test</span>)
-</div><div class='img'><img src='poppr.amova-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='kw'>amova.cc.test</span>
+#&gt; </div><div class='input'><span class='va'>amova.cc.test</span> <span class='op'>&lt;-</span> <span class='fu'>randtest</span><span class='op'>(</span><span class='va'>amova.cc.result</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>amova.cc.test</span><span class='op'>)</span>
+</div><div class='img'><img src='poppr.amova-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='va'>amova.cc.test</span>
 </div><div class='output co'>#&gt; class: krandtest lightkrandtest 
 #&gt; Monte-Carlo tests
 #&gt; Call: randtest.amova(xtest = amova.cc.result)
@@ -533,9 +533,9 @@ Autopolyploids <em>Submitted</em>.</p>
 #&gt; </div><div class='input'>
 
 <span class='co'># Example with filtering</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>monpop</span>)
-<span class='fu'>splitStrata</span>(<span class='kw'>monpop</span>) <span class='op'>&lt;-</span> <span class='op'>~</span><span class='kw'>Tree</span><span class='op'>/</span><span class='kw'>Year</span><span class='op'>/</span><span class='kw'>Symptom</span>
-<span class='fu'>poppr.amova</span>(<span class='kw'>monpop</span>, <span class='op'>~</span><span class='kw'>Symptom</span><span class='op'>/</span><span class='kw'>Year</span>) <span class='co'># gets a warning of zero distances</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>monpop</span><span class='op'>)</span>
+<span class='fu'>splitStrata</span><span class='op'>(</span><span class='va'>monpop</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='op'>~</span><span class='va'>Tree</span><span class='op'>/</span><span class='va'>Year</span><span class='op'>/</span><span class='va'>Symptom</span>
+<span class='fu'>poppr.amova</span><span class='op'>(</span><span class='va'>monpop</span>, <span class='op'>~</span><span class='va'>Symptom</span><span class='op'>/</span><span class='va'>Year</span><span class='op'>)</span> <span class='co'># gets a warning of zero distances</span>
 </div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'> No loci with missing values above 5% found.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Zero distance(s)</span></div><div class='output co'>#&gt; <span class='message'>Distance matrix is non-euclidean.</span></div><div class='output co'>#&gt; <span class='message'>Using quasieuclid correction method. See ?quasieuclid for details.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Zero distance(s)</span></div><div class='output co'>#&gt; $call
 #&gt; ade4::amova(samples = xtab, distances = xdist, structures = xstruct)
@@ -559,7 +559,7 @@ Autopolyploids <em>Submitted</em>.</p>
 #&gt; Phi-samples-total    0.08313087
 #&gt; Phi-samples-Symptom  0.12151770
 #&gt; Phi-Symptom-total   -0.04369677
-#&gt; </div><div class='input'><span class='fu'>poppr.amova</span>(<span class='kw'>monpop</span>, <span class='op'>~</span><span class='kw'>Symptom</span><span class='op'>/</span><span class='kw'>Year</span>, filter = <span class='fl'>TRUE</span>, threshold = <span class='fl'>0.1</span>) <span class='co'># no warning</span>
+#&gt; </div><div class='input'><span class='fu'>poppr.amova</span><span class='op'>(</span><span class='va'>monpop</span>, <span class='op'>~</span><span class='va'>Symptom</span><span class='op'>/</span><span class='va'>Year</span>, filter <span class='op'>=</span> <span class='cn'>TRUE</span>, threshold <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span> <span class='co'># no warning</span>
 </div><div class='output co'>#&gt; <span class='message'>Filtering ...</span></div><div class='output co'>#&gt; <span class='message'>Original multilocus genotypes   ... 264</span></div><div class='output co'>#&gt; <span class='message'>Contracted multilocus genotypes ... 236</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'> No loci with missing values above 5% found.</span></div><div class='output co'>#&gt; <span class='message'>Distance matrix is non-euclidean.</span></div><div class='output co'>#&gt; <span class='message'>Using quasieuclid correction method. See ?quasieuclid for details.</span></div><div class='output co'>#&gt; $call
 #&gt; ade4::amova(samples = xtab, distances = xdist, structures = xstruct)
@@ -602,7 +602,7 @@ Autopolyploids <em>Submitted</em>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

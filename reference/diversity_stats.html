@@ -81,7 +81,7 @@ genotypes per population." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.7</span>
       </span>
     </div>
 
@@ -89,7 +89,7 @@ genotypes per population." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -118,7 +118,7 @@ genotypes per population." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/grunwaldlab/poppr">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -145,7 +145,7 @@ genotypes per population." />
 genotypes per population.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>diversity_stats</span>(<span class='kw'>z</span>, H = <span class='fl'>TRUE</span>, G = <span class='fl'>TRUE</span>, lambda = <span class='fl'>TRUE</span>, E5 = <span class='fl'>TRUE</span>, <span class='kw'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>diversity_stats</span><span class='op'>(</span><span class='va'>z</span>, H <span class='op'>=</span> <span class='cn'>TRUE</span>, G <span class='op'>=</span> <span class='cn'>TRUE</span>, lambda <span class='op'>=</span> <span class='cn'>TRUE</span>, E5 <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -199,10 +199,10 @@ The calculations of H, G, and lambda are all performed by
     <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://grunwaldlab.github.io/poppr'>poppr</a></span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Pinf</span>)
-<span class='kw'>tab</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mlg.html'>mlg.table</a></span>(<span class='kw'>Pinf</span>, plot = <span class='fl'>FALSE</span>)
-<span class='fu'>diversity_stats</span>(<span class='kw'>tab</span>)
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://grunwaldlab.github.io/poppr/'>poppr</a></span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>Pinf</span><span class='op'>)</span>
+<span class='va'>tab</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mlg.html'>mlg.table</a></span><span class='op'>(</span><span class='va'>Pinf</span>, plot <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>diversity_stats</span><span class='op'>(</span><span class='va'>tab</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                Index
 #&gt; Pop                    H        G    lambda       E.5
 #&gt;   South America 3.267944 23.29032 0.9570637 0.8825297
@@ -210,26 +210,26 @@ The calculations of H, G, and lambda are all performed by
 <span class='co'># Example using the poweRlaw package to calculate the negative slope of the</span>
 <span class='co'># Pareto distribution.</span>
 
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'><a href='https://github.com/csgillespie/poweRlaw'>"poweRlaw"</a></span>)
-<span class='kw'>power_law_beta</span> <span class='op'>&lt;-</span> <span class='fu'>function</span>(<span class='kw'>x</span>){
-  <span class='kw'>xpow</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/poweRlaw/man/displ.html'>displ</a></span>(<span class='kw'>x</span>[<span class='kw'>x</span> <span class='op'>&gt;</span> <span class='fl'>0</span>])                 <span class='co'># Generate the distribution</span>
-  <span class='kw'>xpow</span><span class='op'>$</span><span class='fu'>setPars</span>(<span class='fu'><a href='https://rdrr.io/pkg/poweRlaw/man/estimate_pars.html'>estimate_pars</a></span>(<span class='kw'>xpow</span>))       <span class='co'># Estimate the parameters</span>
-  <span class='kw'>xdat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span>(<span class='kw'>xpow</span>, draw = <span class='fl'>FALSE</span>)        <span class='co'># Extract the data</span>
-  <span class='kw'>xlm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='kw'>y</span>) <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span>(<span class='kw'>x</span>), data = <span class='kw'>xdat</span>) <span class='co'># Run log-log linear model for slope</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/function.html'>return</a></span>(<span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span>(<span class='kw'>xlm</span>)[<span class='fl'>2</span>])
-}
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='st'><a href='https://github.com/csgillespie/poweRlaw'>"poweRlaw"</a></span><span class='op'>)</span>
+<span class='va'>power_law_beta</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>{</span>
+  <span class='va'>xpow</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/poweRlaw/man/displ.html'>displ</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>[</span><span class='va'>x</span> <span class='op'>&gt;</span> <span class='fl'>0</span><span class='op'>]</span><span class='op'>)</span>                 <span class='co'># Generate the distribution</span>
+  <span class='va'>xpow</span><span class='op'>$</span><span class='fu'>setPars</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/poweRlaw/man/estimate_pars.html'>estimate_pars</a></span><span class='op'>(</span><span class='va'>xpow</span><span class='op'>)</span><span class='op'>)</span>       <span class='co'># Estimate the parameters</span>
+  <span class='va'>xdat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>xpow</span>, draw <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>        <span class='co'># Extract the data</span>
+  <span class='va'>xlm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>y</span><span class='op'>)</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>, data <span class='op'>=</span> <span class='va'>xdat</span><span class='op'>)</span> <span class='co'># Run log-log linear model for slope</span>
+  <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>xlm</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span>
+<span class='op'>}</span>
 
-<span class='kw'>Beta</span> <span class='op'>&lt;-</span> <span class='fu'>function</span>(<span class='kw'>x</span>){
-  <span class='kw'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/drop.html'>drop</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='kw'>x</span>))
-  <span class='co'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='kw'>x</span>)) <span class='op'>&gt;</span> <span class='fl'>1</span>){
-    <span class='kw'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/apply.html'>apply</a></span>(<span class='kw'>x</span>, <span class='fl'>1</span>, <span class='kw'>power_law_beta</span>)
-  } <span class='co'>else</span> {
-    <span class='kw'>res</span> <span class='op'>&lt;-</span> <span class='fu'>power_law_beta</span>(<span class='kw'>x</span>)
-  }
-  <span class='fu'><a href='https://rdrr.io/r/base/function.html'>return</a></span>(<span class='kw'>res</span>)
-}
+<span class='va'>Beta</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>{</span>
+  <span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/drop.html'>drop</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>&gt;</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>{</span>
+    <span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/apply.html'>apply</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='fl'>1</span>, <span class='va'>power_law_beta</span><span class='op'>)</span>
+  <span class='op'>}</span> <span class='kw'>else</span> <span class='op'>{</span>
+    <span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>power_law_beta</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
+  <span class='op'>}</span>
+  <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span>
+<span class='op'>}</span>
 
-<span class='fu'>diversity_stats</span>(<span class='kw'>tab</span>, B = <span class='kw'>Beta</span>)
+<span class='fu'>diversity_stats</span><span class='op'>(</span><span class='va'>tab</span>, B <span class='op'>=</span> <span class='va'>Beta</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                Index
 #&gt; Pop                    H        G    lambda       E.5        B
 #&gt;   South America 3.267944 23.29032 0.9570637 0.8825297 2.087440
@@ -250,7 +250,7 @@ The calculations of H, G, and lambda are all performed by
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

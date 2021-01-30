@@ -83,7 +83,7 @@ distance." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.7</span>
       </span>
     </div>
 
@@ -91,7 +91,7 @@ distance." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -120,7 +120,7 @@ distance." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/grunwaldlab/poppr">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -148,28 +148,28 @@ distance.</h1>
 distance.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>bruvo.msn</span>(
-  <span class='kw'>gid</span>,
-  replen = <span class='fl'>1</span>,
-  add = <span class='fl'>TRUE</span>,
-  loss = <span class='fl'>TRUE</span>,
-  mlg.compute = <span class='st'>"original"</span>,
-  palette = <span class='kw'>topo.colors</span>,
-  sublist = <span class='st'>"All"</span>,
-  exclude = <span class='kw'>NULL</span>,
-  blacklist = <span class='kw'>NULL</span>,
-  vertex.label = <span class='st'>"MLG"</span>,
-  gscale = <span class='fl'>TRUE</span>,
-  glim = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>0.8</span>),
-  gadj = <span class='fl'>3</span>,
-  gweight = <span class='fl'>1</span>,
-  wscale = <span class='fl'>TRUE</span>,
-  showplot = <span class='fl'>TRUE</span>,
-  include.ties = <span class='fl'>FALSE</span>,
-  threshold = <span class='kw'>NULL</span>,
-  clustering.algorithm = <span class='kw'>NULL</span>,
-  <span class='kw'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>bruvo.msn</span><span class='op'>(</span>
+  <span class='va'>gid</span>,
+  replen <span class='op'>=</span> <span class='fl'>1</span>,
+  add <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  loss <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  mlg.compute <span class='op'>=</span> <span class='st'>"original"</span>,
+  palette <span class='op'>=</span> <span class='va'>topo.colors</span>,
+  sublist <span class='op'>=</span> <span class='st'>"All"</span>,
+  exclude <span class='op'>=</span> <span class='cn'>NULL</span>,
+  blacklist <span class='op'>=</span> <span class='cn'>NULL</span>,
+  vertex.label <span class='op'>=</span> <span class='st'>"MLG"</span>,
+  gscale <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  glim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0.8</span><span class='op'>)</span>,
+  gadj <span class='op'>=</span> <span class='fl'>3</span>,
+  gweight <span class='op'>=</span> <span class='fl'>1</span>,
+  wscale <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  showplot <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  include.ties <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  threshold <span class='op'>=</span> <span class='cn'>NULL</span>,
+  clustering.algorithm <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -368,17 +368,17 @@ override the algorithm in the data set. See Details.</p></td>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'># Load the data set.</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>nancycats</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>nancycats</span><span class='op'>)</span>
 
 <span class='co'># View populations 8 and 9 with default colors. </span>
-<span class='fu'>bruvo.msn</span>(<span class='kw'>nancycats</span>, replen = <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), sublist=<span class='fl'>8</span><span class='op'>:</span><span class='fl'>9</span>, vertex.label=<span class='st'>"inds"</span>, 
-          vertex.label.cex=<span class='fl'>0.7</span>, vertex.label.dist=<span class='fl'>0.4</span>)
+<span class='fu'>bruvo.msn</span><span class='op'>(</span><span class='va'>nancycats</span>, replen <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>9</span><span class='op'>)</span>, sublist<span class='op'>=</span><span class='fl'>8</span><span class='op'>:</span><span class='fl'>9</span>, vertex.label<span class='op'>=</span><span class='st'>"inds"</span>, 
+          vertex.label.cex<span class='op'>=</span><span class='fl'>0.7</span>, vertex.label.dist<span class='op'>=</span><span class='fl'>0.4</span><span class='op'>)</span>
 </div><div class='img'><img src='bruvo.msn-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH f4d4c1f UNW- 19 18 -- 
+#&gt; IGRAPH 3cfb5ec UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
 #&gt; | (v/x), color (v/c), label (v/c), weight (e/n), color (e/c), width
 #&gt; | (e/n)
-#&gt; + edges from f4d4c1f (vertex names):
+#&gt; + edges from 3cfb5ec (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -391,14 +391,14 @@ override the algorithm in the data set. See Details.</p></td>
 #&gt; "#4C00FF" "#00E5FF" 
 #&gt; </div><div class='input'><span class='co'># \dontrun{</span>
 <span class='co'># View heat colors.</span>
-<span class='fu'>bruvo.msn</span>(<span class='kw'>nancycats</span>, replen=<span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), sublist=<span class='fl'>8</span><span class='op'>:</span><span class='fl'>9</span>, vertex.label=<span class='st'>"inds"</span>, 
-palette=<span class='kw'>heat.colors</span>, vertex.label.cex=<span class='fl'>0.7</span>, vertex.label.dist=<span class='fl'>0.4</span>)
+<span class='fu'>bruvo.msn</span><span class='op'>(</span><span class='va'>nancycats</span>, replen<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>9</span><span class='op'>)</span>, sublist<span class='op'>=</span><span class='fl'>8</span><span class='op'>:</span><span class='fl'>9</span>, vertex.label<span class='op'>=</span><span class='st'>"inds"</span>, 
+palette<span class='op'>=</span><span class='va'>heat.colors</span>, vertex.label.cex<span class='op'>=</span><span class='fl'>0.7</span>, vertex.label.dist<span class='op'>=</span><span class='fl'>0.4</span><span class='op'>)</span>
 </div><div class='img'><img src='bruvo.msn-2.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH 28f4de9 UNW- 19 18 -- 
+#&gt; IGRAPH 58b6b8e UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
 #&gt; | (v/x), color (v/c), label (v/c), weight (e/n), color (e/c), width
 #&gt; | (e/n)
-#&gt; + edges from 28f4de9 (vertex names):
+#&gt; + edges from 58b6b8e (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -411,15 +411,15 @@ palette=<span class='kw'>heat.colors</span>, vertex.label.cex=<span class='fl'>0
 #&gt; "#FF0000" "#FFFF00" 
 #&gt; </div><div class='input'>
 <span class='co'># View custom colors. Here, we use black and orange.</span>
-<span class='fu'>bruvo.msn</span>(<span class='kw'>nancycats</span>, replen=<span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), sublist=<span class='fl'>8</span><span class='op'>:</span><span class='fl'>9</span>, vertex.label=<span class='st'>"inds"</span>, 
-palette = <span class='fu'><a href='https://rdrr.io/r/grDevices/colorRamp.html'>colorRampPalette</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"orange"</span>, <span class='st'>"black"</span>)), vertex.label.cex=<span class='fl'>0.7</span>, 
-vertex.label.dist=<span class='fl'>0.4</span>)
+<span class='fu'>bruvo.msn</span><span class='op'>(</span><span class='va'>nancycats</span>, replen<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>9</span><span class='op'>)</span>, sublist<span class='op'>=</span><span class='fl'>8</span><span class='op'>:</span><span class='fl'>9</span>, vertex.label<span class='op'>=</span><span class='st'>"inds"</span>, 
+palette <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/colorRamp.html'>colorRampPalette</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"orange"</span>, <span class='st'>"black"</span><span class='op'>)</span><span class='op'>)</span>, vertex.label.cex<span class='op'>=</span><span class='fl'>0.7</span>, 
+vertex.label.dist<span class='op'>=</span><span class='fl'>0.4</span><span class='op'>)</span>
 </div><div class='img'><img src='bruvo.msn-3.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH 1c07545 UNW- 19 18 -- 
+#&gt; IGRAPH d9bf5eb UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
 #&gt; | (v/x), color (v/c), label (v/c), weight (e/n), color (e/c), width
 #&gt; | (e/n)
-#&gt; + edges from 1c07545 (vertex names):
+#&gt; + edges from d9bf5eb (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -432,15 +432,15 @@ vertex.label.dist=<span class='fl'>0.4</span>)
 #&gt; "#FFA500" "#000000" 
 #&gt; </div><div class='input'>
 <span class='co'># View with darker shades of grey (setting the upper limit to 1/2 black 1/2 white).</span>
-<span class='fu'>bruvo.msn</span>(<span class='kw'>nancycats</span>, replen=<span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), sublist=<span class='fl'>8</span><span class='op'>:</span><span class='fl'>9</span>, vertex.label=<span class='st'>"inds"</span>, 
-palette = <span class='fu'><a href='https://rdrr.io/r/grDevices/colorRamp.html'>colorRampPalette</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"orange"</span>, <span class='st'>"black"</span>)), vertex.label.cex=<span class='fl'>0.7</span>, 
-vertex.label.dist=<span class='fl'>0.4</span>, glim=<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>0.5</span>))
+<span class='fu'>bruvo.msn</span><span class='op'>(</span><span class='va'>nancycats</span>, replen<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>9</span><span class='op'>)</span>, sublist<span class='op'>=</span><span class='fl'>8</span><span class='op'>:</span><span class='fl'>9</span>, vertex.label<span class='op'>=</span><span class='st'>"inds"</span>, 
+palette <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/colorRamp.html'>colorRampPalette</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"orange"</span>, <span class='st'>"black"</span><span class='op'>)</span><span class='op'>)</span>, vertex.label.cex<span class='op'>=</span><span class='fl'>0.7</span>, 
+vertex.label.dist<span class='op'>=</span><span class='fl'>0.4</span>, glim<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0.5</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='img'><img src='bruvo.msn-4.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH f6504d3 UNW- 19 18 -- 
+#&gt; IGRAPH 2ed23d3 UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
 #&gt; | (v/x), color (v/c), label (v/c), weight (e/n), color (e/c), width
 #&gt; | (e/n)
-#&gt; + edges from f6504d3 (vertex names):
+#&gt; + edges from 2ed23d3 (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -453,15 +453,15 @@ vertex.label.dist=<span class='fl'>0.4</span>, glim=<span class='fu'><a href='ht
 #&gt; "#FFA500" "#000000" 
 #&gt; </div><div class='input'>
 <span class='co'># View with no grey scaling.</span>
-<span class='fu'>bruvo.msn</span>(<span class='kw'>nancycats</span>, replen=<span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), sublist=<span class='fl'>8</span><span class='op'>:</span><span class='fl'>9</span>, vertex.label=<span class='st'>"inds"</span>, 
-palette = <span class='fu'><a href='https://rdrr.io/r/grDevices/colorRamp.html'>colorRampPalette</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"orange"</span>, <span class='st'>"black"</span>)), vertex.label.cex=<span class='fl'>0.7</span>, 
-vertex.label.dist=<span class='fl'>0.4</span>, gscale=<span class='fl'>FALSE</span>)
+<span class='fu'>bruvo.msn</span><span class='op'>(</span><span class='va'>nancycats</span>, replen<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>9</span><span class='op'>)</span>, sublist<span class='op'>=</span><span class='fl'>8</span><span class='op'>:</span><span class='fl'>9</span>, vertex.label<span class='op'>=</span><span class='st'>"inds"</span>, 
+palette <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/colorRamp.html'>colorRampPalette</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"orange"</span>, <span class='st'>"black"</span><span class='op'>)</span><span class='op'>)</span>, vertex.label.cex<span class='op'>=</span><span class='fl'>0.7</span>, 
+vertex.label.dist<span class='op'>=</span><span class='fl'>0.4</span>, gscale<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
 </div><div class='img'><img src='bruvo.msn-5.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH db99afd UNW- 19 18 -- 
+#&gt; IGRAPH b207961 UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
 #&gt; | (v/x), color (v/c), label (v/c), weight (e/n), color (e/c), width
 #&gt; | (e/n)
-#&gt; + edges from db99afd (vertex names):
+#&gt; + edges from b207961 (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -474,15 +474,15 @@ vertex.label.dist=<span class='fl'>0.4</span>, gscale=<span class='fl'>FALSE</sp
 #&gt; "#FFA500" "#000000" 
 #&gt; </div><div class='input'>
 <span class='co'># View with no line widths.</span>
-<span class='fu'>bruvo.msn</span>(<span class='kw'>nancycats</span>, replen=<span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), sublist=<span class='fl'>8</span><span class='op'>:</span><span class='fl'>9</span>, vertex.label=<span class='st'>"inds"</span>, 
-palette = <span class='fu'><a href='https://rdrr.io/r/grDevices/colorRamp.html'>colorRampPalette</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"orange"</span>, <span class='st'>"black"</span>)), vertex.label.cex=<span class='fl'>0.7</span>, 
-vertex.label.dist=<span class='fl'>0.4</span>, wscale=<span class='fl'>FALSE</span>)
+<span class='fu'>bruvo.msn</span><span class='op'>(</span><span class='va'>nancycats</span>, replen<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>9</span><span class='op'>)</span>, sublist<span class='op'>=</span><span class='fl'>8</span><span class='op'>:</span><span class='fl'>9</span>, vertex.label<span class='op'>=</span><span class='st'>"inds"</span>, 
+palette <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/colorRamp.html'>colorRampPalette</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"orange"</span>, <span class='st'>"black"</span><span class='op'>)</span><span class='op'>)</span>, vertex.label.cex<span class='op'>=</span><span class='fl'>0.7</span>, 
+vertex.label.dist<span class='op'>=</span><span class='fl'>0.4</span>, wscale<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
 </div><div class='img'><img src='bruvo.msn-6.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH 0b5e0d1 UNW- 19 18 -- 
+#&gt; IGRAPH dd87028 UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
 #&gt; | (v/x), color (v/c), label (v/c), weight (e/n), color (e/c), width
 #&gt; | (e/n)
-#&gt; + edges from 0b5e0d1 (vertex names):
+#&gt; + edges from dd87028 (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -495,15 +495,15 @@ vertex.label.dist=<span class='fl'>0.4</span>, wscale=<span class='fl'>FALSE</sp
 #&gt; "#FFA500" "#000000" 
 #&gt; </div><div class='input'>
 <span class='co'># View with no scaling at all.</span>
-<span class='fu'>bruvo.msn</span>(<span class='kw'>nancycats</span>, replen=<span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), sublist=<span class='fl'>8</span><span class='op'>:</span><span class='fl'>9</span>, vertex.label=<span class='st'>"inds"</span>, 
-palette = <span class='fu'><a href='https://rdrr.io/r/grDevices/colorRamp.html'>colorRampPalette</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"orange"</span>, <span class='st'>"black"</span>)), vertex.label.cex=<span class='fl'>0.7</span>, 
-vertex.label.dist=<span class='fl'>0.4</span>, gscale=<span class='fl'>FALSE</span>)
+<span class='fu'>bruvo.msn</span><span class='op'>(</span><span class='va'>nancycats</span>, replen<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>9</span><span class='op'>)</span>, sublist<span class='op'>=</span><span class='fl'>8</span><span class='op'>:</span><span class='fl'>9</span>, vertex.label<span class='op'>=</span><span class='st'>"inds"</span>, 
+palette <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/colorRamp.html'>colorRampPalette</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"orange"</span>, <span class='st'>"black"</span><span class='op'>)</span><span class='op'>)</span>, vertex.label.cex<span class='op'>=</span><span class='fl'>0.7</span>, 
+vertex.label.dist<span class='op'>=</span><span class='fl'>0.4</span>, gscale<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
 </div><div class='img'><img src='bruvo.msn-7.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH 4e2c0eb UNW- 19 18 -- 
+#&gt; IGRAPH bf73265 UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
 #&gt; | (v/x), color (v/c), label (v/c), weight (e/n), color (e/c), width
 #&gt; | (e/n)
-#&gt; + edges from 4e2c0eb (vertex names):
+#&gt; + edges from bf73265 (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -516,13 +516,13 @@ vertex.label.dist=<span class='fl'>0.4</span>, gscale=<span class='fl'>FALSE</sp
 #&gt; "#FFA500" "#000000" 
 #&gt; </div><div class='input'>
 <span class='co'># View the whole population, but without labels.</span>
-<span class='fu'>bruvo.msn</span>(<span class='kw'>nancycats</span>, replen=<span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), vertex.label=<span class='fl'>NA</span>)
+<span class='fu'>bruvo.msn</span><span class='op'>(</span><span class='va'>nancycats</span>, replen<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>9</span><span class='op'>)</span>, vertex.label<span class='op'>=</span><span class='cn'>NA</span><span class='op'>)</span>
 </div><div class='img'><img src='bruvo.msn-8.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH fe3c92f UNW- 237 236 -- 
+#&gt; IGRAPH 496f98d UNW- 237 236 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
 #&gt; | (v/x), color (v/c), label (v/l), weight (e/n), color (e/c), width
 #&gt; | (e/n)
-#&gt; + edges from fe3c92f (vertex names):
+#&gt; + edges from 496f98d (vertex names):
 #&gt;  [1] N215--N216 N215--N113 N215--N130 N215--N246 N215--N296 N216--N83 
 #&gt;  [7] N216--N165 N216--N182 N217--N223 N218--N293 N219--N221 N219--N79 
 #&gt; [13] N219--N84  N219--N189 N219--N182 N219--N270 N220--N222 N220--N57 
@@ -559,7 +559,7 @@ vertex.label.dist=<span class='fl'>0.4</span>, gscale=<span class='fl'>FALSE</sp
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

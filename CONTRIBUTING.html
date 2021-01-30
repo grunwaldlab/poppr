@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.7</span>
       </span>
     </div>
 
@@ -87,7 +87,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -116,7 +116,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/grunwaldlab/poppr">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -155,17 +155,15 @@
 <h4 class="hasAnchor">
 <a href="#ensure-your-r-version-and-poppr-version-are-up-to-date" class="anchor"></a>Ensure your R version and poppr version are up-to-date.</h4>
 <p>To check your versions of R and poppr, you can run the following code</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw">R.version.string</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html">packageVersion</a></span>(<span class="st">"poppr"</span>)
-</pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">R.version.string</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html">packageVersion</a></span><span class="op">(</span><span class="st">"poppr"</span><span class="op">)</span></code></pre></div>
 <p>Your output will look something like this:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="kw">R.version.string</span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">R.version.string</span>
 <span class="co">#&gt; [1] "R version 3.4.1 (2017-06-30)"</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html">packageVersion</a></span>(<span class="st">"poppr"</span>)
-<span class="co">#&gt; [1] '2.5.0'</span>
-</pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html">packageVersion</a></span><span class="op">(</span><span class="st">"poppr"</span><span class="op">)</span>
+<span class="co">#&gt; [1] '2.5.0'</span></code></pre></div>
 <p>You can check this against the versions reported at <a href="https://r-project.org" class="uri">https://r-project.org</a> and <a href="https://cran.r-project.org/package=poppr" class="uri">https://cran.r-project.org/package=poppr</a>.</p>
 </div>
 <div id="make-sure-your-problem-is-reproducible-and-minimal" class="section level4">
@@ -174,19 +172,18 @@
 <p>A minimal reproducible example (reprex) ensures that the maintainers will be able to address the issue in a timely manner.</p>
 <p>The easiest way of doing this is to use the <a href="https://cran.r-project.org/package=reprex">reprex package</a>, which has excellent documentation on how to create a reprex: <a href="https://github.com/jennybc/reprex#what-is-a-reprex" class="uri">https://github.com/jennybc/reprex#what-is-a-reprex</a>.</p>
 <p>Here’s an example of how to do this for a poppr-specific example:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"reprex"</span>)
-<span class="fu">reprex</span>({
-  <span class="fu"><a href="https://rdrr.io/r/base/message.html">suppressPackageStartupMessages</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st"><a href="https://grunwaldlab.github.io/poppr">"poppr"</a></span>))
-  <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="kw">Pinf</span>)
-  <span class="kw">Pinf.bd</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/bruvo.dist.html">bruvo.dist</a></span>(<span class="kw">Pinf</span>)
-})
-</pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st">"reprex"</span><span class="op">)</span>
+<span class="fu">reprex</span><span class="op">(</span><span class="op">{</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/message.html">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://grunwaldlab.github.io/poppr/">"poppr"</a></span><span class="op">)</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">Pinf</span><span class="op">)</span>
+  <span class="va">Pinf.bd</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/bruvo.dist.html">bruvo.dist</a></span><span class="op">(</span><span class="va">Pinf</span><span class="op">)</span>
+<span class="op">}</span><span class="op">)</span></code></pre></div>
 <p>This will copy the rendered code to your clipboard so you can paste it directly to the github issue like this:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/message.html">suppressPackageStartupMessages</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st"><a href="https://grunwaldlab.github.io/poppr">"poppr"</a></span>))
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="kw">Pinf</span>)
-<span class="kw">Pinf.bd</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/bruvo.dist.html">bruvo.dist</a></span>(<span class="kw">Pinf</span>)
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/message.html">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://grunwaldlab.github.io/poppr/">"poppr"</a></span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">Pinf</span><span class="op">)</span>
+<span class="va">Pinf.bd</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/bruvo.dist.html">bruvo.dist</a></span><span class="op">(</span><span class="va">Pinf</span><span class="op">)</span>
 <span class="co">#&gt; Warning in bruvo.dist(Pinf): </span>
 <span class="co">#&gt;  -------------------------------------------------------------- </span>
 <span class="co">#&gt;                         !!! ALERT !!! </span>
@@ -197,8 +194,7 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Repeat length vector for loci is not equal to the number of loci represented.</span>
 <span class="co">#&gt; Estimating repeat lengths from data:</span>
-<span class="co">#&gt;  c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2)</span>
-</pre></div>
+<span class="co">#&gt;  c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2)</span></code></pre></div>
 <p>Please make sure that your examples run in a reasonable amount of time. Usually maintainers will have to run these examples several times in order to fix the issue. If an example takes more than 1 minute to run, please find a way to reduce the size of the example.</p>
 </div>
 </div>
@@ -267,7 +263,7 @@ All the checks on <a href="https://travis-ci.org/grunwaldlab/poppr" class="uri">
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

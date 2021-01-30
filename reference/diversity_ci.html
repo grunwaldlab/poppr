@@ -83,7 +83,7 @@ the results." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.7</span>
       </span>
     </div>
 
@@ -91,7 +91,7 @@ the results." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -120,7 +120,7 @@ the results." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/grunwaldlab/poppr">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -149,19 +149,19 @@ intervals is not perfect (See Details). Please be cautious when interpreting
 the results.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>diversity_ci</span>(
-  <span class='kw'>tab</span>,
-  n = <span class='fl'>1000</span>,
-  n.boot = <span class='fl'>1L</span>,
-  ci = <span class='fl'>95</span>,
-  total = <span class='fl'>TRUE</span>,
-  rarefy = <span class='fl'>FALSE</span>,
-  n.rare = <span class='fl'>10</span>,
-  plot = <span class='fl'>TRUE</span>,
-  raw = <span class='fl'>TRUE</span>,
-  center = <span class='fl'>TRUE</span>,
-  <span class='kw'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>diversity_ci</span><span class='op'>(</span>
+  <span class='va'>tab</span>,
+  n <span class='op'>=</span> <span class='fl'>1000</span>,
+  n.boot <span class='op'>=</span> <span class='fl'>1L</span>,
+  ci <span class='op'>=</span> <span class='fl'>95</span>,
+  total <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  rarefy <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  n.rare <span class='op'>=</span> <span class='fl'>10</span>,
+  plot <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  raw <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  center <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -329,9 +329,9 @@ of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
     <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://grunwaldlab.github.io/poppr'>poppr</a></span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Pinf</span>)
-<span class='fu'>diversity_ci</span>(<span class='kw'>Pinf</span>, n = <span class='fl'>100L</span>)
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://grunwaldlab.github.io/poppr/'>poppr</a></span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>Pinf</span><span class='op'>)</span>
+<span class='fu'>diversity_ci</span><span class='op'>(</span><span class='va'>Pinf</span>, n <span class='op'>=</span> <span class='fl'>100L</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Confidence Intervals have been centered around observed statistic.</span>
 #&gt; <span class='message'>Please see ?diversity_ci for details.</span></div><div class='img'><img src='diversity_ci-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $obs
@@ -425,7 +425,7 @@ of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
 #&gt; 
 #&gt; </div><div class='input'><span class='co'># \dontrun{</span>
 <span class='co'># With pretty results</span>
-<span class='fu'>diversity_ci</span>(<span class='kw'>Pinf</span>, n = <span class='fl'>100L</span>, raw = <span class='fl'>FALSE</span>)
+<span class='fu'>diversity_ci</span><span class='op'>(</span><span class='va'>Pinf</span>, n <span class='op'>=</span> <span class='fl'>100L</span>, raw <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Confidence Intervals have been centered around observed statistic.</span>
 #&gt; <span class='message'>Please see ?diversity_ci for details.</span></div><div class='img'><img src='diversity_ci-2.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt;                  H H.est           H.ci    G G.est             G.ci lambda
@@ -437,32 +437,32 @@ of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
 #&gt; North America      0.951 (0.956, 0.986) 0.871   0.857 (0.781, 0.961)
 #&gt; Total              0.971 (0.976, 0.989) 0.875   0.849 (0.794, 0.955)</div><div class='input'>
 <span class='co'># This can be done in a parallel fasion (OSX uses "multicore", Windows uses "snow")</span>
-<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='fu'>diversity_ci</span>(<span class='kw'>Pinf</span>, <span class='fl'>10000L</span>, parallel = <span class='st'>"multicore"</span>, ncpus = <span class='fl'>4L</span>))
+<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='fu'>diversity_ci</span><span class='op'>(</span><span class='va'>Pinf</span>, <span class='fl'>10000L</span>, parallel <span class='op'>=</span> <span class='st'>"multicore"</span>, ncpus <span class='op'>=</span> <span class='fl'>4L</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Confidence Intervals have been centered around observed statistic.</span>
 #&gt; <span class='message'>Please see ?diversity_ci for details.</span></div><div class='img'><img src='diversity_ci-3.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;  10.981   3.582   5.634 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='fu'>diversity_ci</span>(<span class='kw'>Pinf</span>, <span class='fl'>10000L</span>))
+#&gt;   9.477   3.157   6.156 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='fu'>diversity_ci</span><span class='op'>(</span><span class='va'>Pinf</span>, <span class='fl'>10000L</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Confidence Intervals have been centered around observed statistic.</span>
 #&gt; <span class='message'>Please see ?diversity_ci for details.</span></div><div class='img'><img src='diversity_ci-4.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   8.080   0.210   8.301 </div><div class='input'>
+#&gt;   6.857   0.139   7.257 </div><div class='input'>
 <span class='co'># We often get many requests for a clonal fraction statistic. As this is </span>
 <span class='co'># simply the number of observed MLGs over the number of samples, we </span>
 <span class='co'># recommended that people calculate it themselves. With this function, you</span>
 <span class='co'># can add it in:</span>
 
-<span class='kw'>CF</span> <span class='op'>&lt;-</span> <span class='fu'>function</span>(<span class='kw'>x</span>){
- <span class='kw'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/drop.html'>drop</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='kw'>x</span>))
- <span class='co'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='kw'>x</span>)) <span class='op'>&gt;</span> <span class='fl'>1</span>){
-   <span class='kw'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/colSums.html'>rowSums</a></span>(<span class='kw'>x</span> <span class='op'>&gt;</span> <span class='fl'>0</span>)<span class='op'>/</span><span class='fu'><a href='https://rdrr.io/r/base/colSums.html'>rowSums</a></span>(<span class='kw'>x</span>)
- } <span class='co'>else</span> {
-   <span class='kw'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='kw'>x</span> <span class='op'>&gt;</span> <span class='fl'>0</span>)<span class='op'>/</span><span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='kw'>x</span>)
- }
- <span class='fu'><a href='https://rdrr.io/r/base/function.html'>return</a></span>(<span class='kw'>res</span>)
-}
+<span class='va'>CF</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>{</span>
+ <span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/drop.html'>drop</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span>
+ <span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>&gt;</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>{</span>
+   <span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/colSums.html'>rowSums</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>&gt;</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>/</span><span class='fu'><a href='https://rdrr.io/r/base/colSums.html'>rowSums</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
+ <span class='op'>}</span> <span class='kw'>else</span> <span class='op'>{</span>
+   <span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>&gt;</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>/</span><span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
+ <span class='op'>}</span>
+ <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span>
+<span class='op'>}</span>
 <span class='co'># Show pretty results</span>
 
-<span class='fu'>diversity_ci</span>(<span class='kw'>Pinf</span>, <span class='fl'>1000L</span>, CF = <span class='kw'>CF</span>, center = <span class='fl'>TRUE</span>, raw = <span class='fl'>FALSE</span>)
+<span class='fu'>diversity_ci</span><span class='op'>(</span><span class='va'>Pinf</span>, <span class='fl'>1000L</span>, CF <span class='op'>=</span> <span class='va'>CF</span>, center <span class='op'>=</span> <span class='cn'>TRUE</span>, raw <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Confidence Intervals have been centered around observed statistic.</span>
 #&gt; <span class='message'>Please see ?diversity_ci for details.</span></div><div class='img'><img src='diversity_ci-5.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt;                  H H.est           H.ci    G G.est             G.ci lambda
@@ -476,7 +476,7 @@ of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
 #&gt;               CF.est          CF.ci
 #&gt; South America  0.528 (0.665, 0.862)
 #&gt; North America  0.583 (0.808, 0.984)
-#&gt; Total          0.558 (0.771, 0.903)</div><div class='input'><span class='fu'>diversity_ci</span>(<span class='kw'>Pinf</span>, <span class='fl'>1000L</span>, CF = <span class='kw'>CF</span>, rarefy = <span class='fl'>TRUE</span>, raw = <span class='fl'>FALSE</span>)
+#&gt; Total          0.558 (0.771, 0.903)</div><div class='input'><span class='fu'>diversity_ci</span><span class='op'>(</span><span class='va'>Pinf</span>, <span class='fl'>1000L</span>, CF <span class='op'>=</span> <span class='va'>CF</span>, rarefy <span class='op'>=</span> <span class='cn'>TRUE</span>, raw <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Samples for rarefaction: 38</span></div><div class='img'><img src='diversity_ci-6.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt;                  H H.est           H.ci    G G.est             G.ci lambda
 #&gt; South America 3.27  3.27           &lt;NA&gt; 23.3  23.3             &lt;NA&gt;  0.957
@@ -507,7 +507,7 @@ of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

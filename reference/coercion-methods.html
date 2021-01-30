@@ -81,7 +81,7 @@ that can be passed to the genind initializer." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.7</span>
       </span>
     </div>
 
@@ -89,7 +89,7 @@ that can be passed to the genind initializer." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -118,7 +118,7 @@ that can be passed to the genind initializer." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/grunwaldlab/poppr">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -145,13 +145,13 @@ that can be passed to the genind initializer." />
 that can be passed to the genind initializer.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>bootgen2genind</span>(<span class='kw'>bg</span>)
+    <pre class="usage"><span class='fu'>bootgen2genind</span><span class='op'>(</span><span class='va'>bg</span><span class='op'>)</span>
 
-<span class='fu'>as.genclone</span>(<span class='kw'>x</span>, <span class='kw'>...</span>, <span class='kw'>mlg</span>, mlgclass = <span class='fl'>TRUE</span>)
+<span class='fu'>as.genclone</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, <span class='va'>mlg</span>, mlgclass <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
-<span class='fu'>genclone2genind</span>(<span class='kw'>x</span>)
+<span class='fu'>genclone2genind</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 
-<span class='fu'>as.genambig</span>(<span class='kw'>x</span>)</pre>
+<span class='fu'>as.genambig</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -195,8 +195,8 @@ class.</p>
     <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Aeut</span>)
-<span class='kw'>Aeut</span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>Aeut</span><span class='op'>)</span>
+<span class='va'>Aeut</span>
 </div><div class='output co'>#&gt; /// GENIND OBJECT /////////
 #&gt; 
 #&gt;  // 187 individuals; 56 loci; 56 alleles; size: 68.9 Kb
@@ -213,8 +213,8 @@ class.</p>
 #&gt;    @other: a list containing: population_hierarchy 
 #&gt; </div><div class='input'>
 <span class='co'># Conversion to genclone --------------------------------------------------</span>
-<span class='kw'>Aeut.gc</span> <span class='op'>&lt;-</span> <span class='fu'>as.genclone</span>(<span class='kw'>Aeut</span>)
-<span class='kw'>Aeut.gc</span>
+<span class='va'>Aeut.gc</span> <span class='op'>&lt;-</span> <span class='fu'>as.genclone</span><span class='op'>(</span><span class='va'>Aeut</span><span class='op'>)</span>
+<span class='va'>Aeut.gc</span>
 </div><div class='output co'>#&gt; 
 #&gt; This is a genclone object
 #&gt; -------------------------
@@ -229,8 +229,8 @@ class.</p>
 #&gt;      0 strata. 
 #&gt;      2 populations defined - Athena, Mt. Vernon</div><div class='input'>
 <span class='co'># Conversion to genind ----------------------------------------------------</span>
-<span class='kw'>Aeut.gi</span> <span class='op'>&lt;-</span> <span class='fu'>genclone2genind</span>(<span class='kw'>Aeut.gc</span>)
-<span class='kw'>Aeut.gi</span>
+<span class='va'>Aeut.gi</span> <span class='op'>&lt;-</span> <span class='fu'>genclone2genind</span><span class='op'>(</span><span class='va'>Aeut.gc</span><span class='op'>)</span>
+<span class='va'>Aeut.gi</span>
 </div><div class='output co'>#&gt; /// GENIND OBJECT /////////
 #&gt; 
 #&gt;  // 187 individuals; 56 loci; 56 alleles; size: 68.2 Kb
@@ -247,11 +247,11 @@ class.</p>
 #&gt;    @other: a list containing: population_hierarchy 
 #&gt; </div><div class='input'>
 <span class='co'># Conversion to polysat's "genambig" class --------------------------------</span>
-<span class='co'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='st'><a href='https://github.com/lvclark/polysat/wiki'>"polysat"</a></span>)) {
-  <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Pinf</span>)
-  <span class='kw'>Pinf.gb</span> <span class='op'>&lt;-</span> <span class='fu'>as.genambig</span>(<span class='kw'>Pinf</span>)
-  <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='kw'>Pinf.gb</span>)
-}
+<span class='kw'>if</span> <span class='op'>(</span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>require</a></span><span class='op'>(</span><span class='st'><a href='https://github.com/lvclark/polysat/wiki'>"polysat"</a></span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
+  <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>Pinf</span><span class='op'>)</span>
+  <span class='va'>Pinf.gb</span> <span class='op'>&lt;-</span> <span class='fu'>as.genambig</span><span class='op'>(</span><span class='va'>Pinf</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>Pinf.gb</span><span class='op'>)</span>
+<span class='op'>}</span>
 </div><div class='output co'>#&gt; <span class='message'>Loading required package: polysat</span></div><div class='output co'>#&gt; Dataset with allele copy number ambiguity.
 #&gt; Insert dataset description here.
 #&gt; Number of missing genotypes: 10
@@ -259,11 +259,11 @@ class.</p>
 #&gt; 2 populations.
 #&gt; Ploidies: 2 3 NA
 #&gt; Length(s) of microsatellite repeats: NA</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>nancycats</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>nancycats</span><span class='op'>)</span>
 
 <span class='co'># Conversion to bootgen for random sampling of loci -----------------------</span>
-<span class='kw'>nan.bg</span>  <span class='op'>&lt;-</span> <span class='fu'>new</span>(<span class='st'>"bootgen"</span>, <span class='kw'>nancycats</span>[pop = <span class='fl'>9</span>])
-<span class='kw'>nan.bg</span>
+<span class='va'>nan.bg</span>  <span class='op'>&lt;-</span> <span class='fu'>new</span><span class='op'>(</span><span class='st'>"bootgen"</span>, <span class='va'>nancycats</span><span class='op'>[</span>pop <span class='op'>=</span> <span class='fl'>9</span><span class='op'>]</span><span class='op'>)</span>
+<span class='va'>nan.bg</span>
 </div><div class='output co'>#&gt; An object of class "bootgen"
 #&gt; Slot "type":
 #&gt; [1] "codom"
@@ -519,8 +519,8 @@ class.</p>
 #&gt; NULL
 #&gt; </div><div class='input'>
 <span class='co'># Conversion back to genind -----------------------------------------------</span>
-<span class='kw'>nan.gid</span> <span class='op'>&lt;-</span> <span class='fu'>bootgen2genind</span>(<span class='kw'>nan.bg</span>)
-<span class='kw'>nan.gid</span>
+<span class='va'>nan.gid</span> <span class='op'>&lt;-</span> <span class='fu'>bootgen2genind</span><span class='op'>(</span><span class='va'>nan.bg</span><span class='op'>)</span>
+<span class='va'>nan.gid</span>
 </div><div class='output co'>#&gt; /// GENIND OBJECT /////////
 #&gt; 
 #&gt;  // 9 individuals; 9 loci; 108 alleles; size: 25.7 Kb
@@ -552,7 +552,7 @@ class.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

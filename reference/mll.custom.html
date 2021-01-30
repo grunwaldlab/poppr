@@ -81,7 +81,7 @@ data set." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.7</span>
       </span>
     </div>
 
@@ -89,7 +89,7 @@ data set." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -118,7 +118,7 @@ data set." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/grunwaldlab/poppr">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -145,13 +145,13 @@ data set." />
 data set.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mll.custom</span>(<span class='kw'>x</span>, set = <span class='fl'>TRUE</span>, <span class='kw'>value</span>)
+    <pre class="usage"><span class='fu'>mll.custom</span><span class='op'>(</span><span class='va'>x</span>, set <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>value</span><span class='op'>)</span>
 
-<span class='fu'>mll.custom</span>(<span class='kw'>x</span>, set = <span class='fl'>TRUE</span>) <span class='op'>&lt;-</span> <span class='kw'>value</span>
+<span class='fu'>mll.custom</span><span class='op'>(</span><span class='va'>x</span>, set <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
 
-<span class='fu'>mll.levels</span>(<span class='kw'>x</span>, set = <span class='fl'>TRUE</span>, <span class='kw'>value</span>)
+<span class='fu'>mll.levels</span><span class='op'>(</span><span class='va'>x</span>, set <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>value</span><span class='op'>)</span>
 
-<span class='fu'>mll.levels</span>(<span class='kw'>x</span>, set = <span class='fl'>TRUE</span>) <span class='op'>&lt;-</span> <span class='kw'>value</span></pre>
+<span class='fu'>mll.levels</span><span class='op'>(</span><span class='va'>x</span>, set <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -183,22 +183,22 @@ This can be a vector of ANYTHING that can be turned into a factor.</p></td>
     <p>Zhian N. Kamvar</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>partial_clone</span>)
-<span class='kw'>pc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='bootgen2genind.html'>as.genclone</a></span>(<span class='kw'>partial_clone</span>)
-<span class='fu'>mll.custom</span>(<span class='kw'>pc</span>) <span class='op'>&lt;-</span> <span class='kw'>LETTERS</span>[<span class='fu'><a href='mll.html'>mll</a></span>(<span class='kw'>pc</span>)]
-<span class='fu'><a href='mll.html'>mll</a></span>(<span class='kw'>pc</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>partial_clone</span><span class='op'>)</span>
+<span class='va'>pc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='bootgen2genind.html'>as.genclone</a></span><span class='op'>(</span><span class='va'>partial_clone</span><span class='op'>)</span>
+<span class='fu'>mll.custom</span><span class='op'>(</span><span class='va'>pc</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>LETTERS</span><span class='op'>[</span><span class='fu'><a href='mll.html'>mll</a></span><span class='op'>(</span><span class='va'>pc</span><span class='op'>)</span><span class='op'>]</span>
+<span class='fu'><a href='mll.html'>mll</a></span><span class='op'>(</span><span class='va'>pc</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;  [1] H I W X V U J C V K X I Y D L B N A I I I Z G M W C Q V F T V L E Y M U O M
 #&gt; [39] M M B S R M W P A K Y D
 #&gt; Levels: A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</div><div class='input'>
 <span class='co'># Let's say we had a mistake and the A mlg was actually B. </span>
-<span class='fu'>mll.levels</span>(<span class='kw'>pc</span>)[<span class='fu'>mll.levels</span>(<span class='kw'>pc</span>) <span class='op'>==</span> <span class='st'>"A"</span>] <span class='op'>&lt;-</span> <span class='st'>"B"</span>
-<span class='fu'><a href='mll.html'>mll</a></span>(<span class='kw'>pc</span>)
+<span class='fu'>mll.levels</span><span class='op'>(</span><span class='va'>pc</span><span class='op'>)</span><span class='op'>[</span><span class='fu'>mll.levels</span><span class='op'>(</span><span class='va'>pc</span><span class='op'>)</span> <span class='op'>==</span> <span class='st'>"A"</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='st'>"B"</span>
+<span class='fu'><a href='mll.html'>mll</a></span><span class='op'>(</span><span class='va'>pc</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;  [1] H I W X V U J C V K X I Y D L B N B I I I Z G M W C Q V F T V L E Y M U O M
 #&gt; [39] M M B S R M W P B K Y D
 #&gt; Levels: B C D E F G H I J K L M N O P Q R S T U V W X Y Z</div><div class='input'>
 <span class='co'># Set the MLL back to the original definition.</span>
-<span class='fu'><a href='mll.html'>mll</a></span>(<span class='kw'>pc</span>) <span class='op'>&lt;-</span> <span class='st'>"original"</span>
-<span class='fu'><a href='mll.html'>mll</a></span>(<span class='kw'>pc</span>)
+<span class='fu'><a href='mll.html'>mll</a></span><span class='op'>(</span><span class='va'>pc</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='st'>"original"</span>
+<span class='fu'><a href='mll.html'>mll</a></span><span class='op'>(</span><span class='va'>pc</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;  [1]  8  9 23 24 22 21 10  3 22 11 24  9 25  4 12  2 14  1  9  9  9 26  7 13 23
 #&gt; [26]  3 17 22  6 20 22 12  5 25 13 21 15 13 13 13  2 19 18 13 23 16  1 11 25  4</div></pre>
   </div>
@@ -216,7 +216,7 @@ This can be a vector of ANYTHING that can be turned into a factor.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
