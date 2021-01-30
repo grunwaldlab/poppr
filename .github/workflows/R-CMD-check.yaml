@@ -45,7 +45,6 @@ jobs:
         run: |
           tlmgr install colortbl
           tlmgr install mathtools
-          tlmgr install longtable
           tlmgr install inputenc
           tlmgr install graphicx
           tlmgr install fullpage
