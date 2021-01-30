@@ -84,11 +84,11 @@
 #'
 #'   Examples of analyses are available in a primer written by Niklaus J.
 #'   Grünwald, Zhian N. Kamvar, and Sydney E.  Everhart at
-#'   <http://grunwaldlab.github.io/Population_Genetics_in_R>.}
+#'   <http://grunwaldlab.github.io/Population_Genetics_in_R/>.}
 #'   
 #'   \subsection{Getting help}{ If you have a specific question or issue with 
 #'   \pkg{poppr}, feel free to contribute to the google group at 
-#'   <https://groups.google.com/group/poppr>. If you find a bug and 
+#'   <https://groups.google.com/d/forum/poppr>. If you find a bug and 
 #'   are a github user, you can submit bug reports at 
 #'   <https://github.com/grunwaldlab/poppr/issues>. Otherwise, leave a
 #'   message on the groups. Personal emails are highly discouraged as they do 
@@ -238,24 +238,23 @@
 #' 
 #' Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for genetic
 #' analysis of populations with clonal, partially clonal, and/or sexual
-#' reproduction. PeerJ 2:e281 <https://doi.org/10.7717/peerj.281>
+#' reproduction. PeerJ 2:e281 \doi{10.7717/peerj.281}
 #' 
 #' Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of 
 #' genome-wide population genetic data with emphasis on clonality. Front. Genet.
-#' 6:208. doi: 10.3389/fgene.2015.00208 
-#' <https://doi.org/10.3389/fgene.2015.00208>
+#' 6:208. \doi{10.3389/fgene.2015.00208}
 #' 
 #' --------- Papers referencing data sets ---------
 #' 
 #' Grünwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis of Diversity, 
 #' Selfing, and Genetic Differentiation in Populations of the Oomycete 
 #' *Aphanomyces euteiches*. Phytopathology 96:1134-1141 doi: 
-#' \href{https://doi.org/10.1094/PHYTO-96-1134}{10.1094/PHYTO-96-1134}
+#' \doi{10.1094/PHYTO-96-1134}
 #' 
 #' SE Everhart, H Scherm, (2015) Fine-scale genetic structure of *Monilinia
 #' fructicola* during brown rot epidemics within individual peach tree canopies.
 #' Phytopathology 105:542-549 doi: 
-#' \href{https://doi.org/10.1094/PHYTO-03-14-0088-R}{10.1094/PHYTO-03-14-0088-R}
+#' \doi{10.1094/PHYTO-03-14-0088-R}
 #' 
 #' Bo Peng and Christopher Amos (2008) Forward-time simulations of nonrandom 
 #' mating populations using simuPOP. *bioinformatics*, 24 (11): 1408-1409.
@@ -265,18 +264,18 @@
 #' Grünwald. (2014) "The Irish potato famine pathogen *Phytophthora 
 #' infestans* originated in central Mexico rather than the Andes." Proceedings 
 #' of the National Academy of Sciences 111:8791-8796. doi: 
-#' \href{https://doi.org/10.1073/pnas.1401884111}{10.1073/pnas.1401884111}
+#' \doi{10.1073/pnas.1401884111}
 #' 
 #' Kamvar, Z. N., Larsen, M. M., Kanaskie, A. M., Hansen, E. M., & Grünwald, N.
 #' J. (2015). Spatial and temporal analysis of populations of the sudden oak
 #' death pathogen in Oregon forests. Phytopathology 105:982-989. doi: 
-#' \href{https://doi.org/10.1094/PHYTO-12-14-0350-FI}{10.1094/PHYTO-12-14-0350-FI}
+#' \doi{10.1094/PHYTO-12-14-0350-FI}
 #' 
 #' 
 #' Goss, E. M., Larsen, M., Chastagner, G. A., Givens, D. R., and Grünwald, N. 
 #' J. 2009. Population genetic analysis infers migration pathways of 
 #' *Phytophthora ramorum* in US nurseries. PLoS Pathog. 5:e1000583. doi: 
-#' \href{https://doi.org/10.1371/journal.ppat.1000583}{10.1371/journal.ppat.1000583}
+#' \doi{10.1371/journal.ppat.1000583}
 #'   
 #' 
 #' @name poppr-package
@@ -299,7 +298,7 @@ NULL
 #' @references Grunwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis of
 #'   Diversity, Selfing, and Genetic Differentiation in Populations of the 
 #'   Oomycete *Aphanomyces euteiches*. Phytopathology 96:1134-1141
-#'   doi: \href{https://doi.org/10.1094/PHYTO-96-1134}{10.1094/PHYTO-96-1134}
+#'   doi: \doi{10.1094/PHYTO-96-1134}
 #==============================================================================#
 NULL
 #==============================================================================#
@@ -344,7 +343,7 @@ NULL
 #'   Cardenas, and Niklaus J. Grünwald. "The Irish potato famine pathogen 
 #'   *Phytophthora infestans* originated in central Mexico rather than the 
 #'   Andes." Proceedings of the National Academy of Sciences 111:8791-8796. doi:
-#'   \href{https://doi.org/10.1073/pnas.1401884111}{10.1073/pnas.1401884111}
+#'   \doi{10.1073/pnas.1401884111}
 #==============================================================================#
 NULL
 #==============================================================================#
@@ -360,7 +359,7 @@ NULL
 #' @docType data
 #' @usage data(Pram)
 #' @description This is the data set from 
-#'   <https://doi.org/10.5281/zenodo.13007>. It has been converted to the 
+#'   \doi{10.5281/zenodo.13007}. It has been converted to the 
 #'   genclone object as of poppr version 2.0. It contains 729 samples of the 
 #'   Sudden Oak Death pathogen *Phytophthora ramorum* genotyped over five 
 #'   microsatellite loci (Kamvar et. al., 2015). 513 samples were collected from
@@ -378,19 +377,19 @@ NULL
 #'   Grünwald, N. J. (2015). Spatial and temporal analysis of populations of the
 #'   sudden oak death pathogen in Oregon forests. Phytopathology 105:982-989. 
 #'   doi:
-#'   \href{https://doi.org/10.1094/PHYTO-12-14-0350-FI}{10.1094/PHYTO-12-14-0350-FI}
+#'   \doi{10.1094/PHYTO-12-14-0350-FI}
 #'   
 #'   
 #'   Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M. Hansen, & 
 #'   Niklaus J. Grünwald. 2014. Sudden_Oak_Death_in_Oregon_Forests: Spatial and 
 #'   temporal population dynamics of the sudden oak death epidemic in Oregon 
 #'   Forests. ZENODO, doi:
-#'   \href{https://doi.org/10.5281/zenodo.13007}{10.5281/zenodo.13007}
+#'   \doi{10.5281/zenodo.13007}
 #'   
 #'   Goss, E. M., Larsen, M., Chastagner, G. A., Givens, D. R., and Grünwald, N.
 #'   J. 2009. Population genetic analysis infers migration pathways of 
 #'   *Phytophthora ramorum* in US nurseries. PLoS Pathog. 5:e1000583. doi:
-#'   \href{https://doi.org/10.1371/journal.ppat.1000583}{10.1371/journal.ppat.1000583}
+#'   \doi{10.1371/journal.ppat.1000583}
 #'   
 #' @examples
 #' data(Pram)
@@ -424,7 +423,7 @@ NULL
 #' @references SE Everhart, H Scherm, (2015) Fine-scale genetic structure of 
 #'   *Monilinia fructicola* during brown rot epidemics within individual
 #'   peach tree canopies. Phytopathology 105:542-549 doi:
-#'   \href{https://doi.org/10.1094/PHYTO-03-14-0088-R}{10.1094/PHYTO-03-14-0088-R}
+#'   \doi{10.1094/PHYTO-03-14-0088-R}
 #'   
 #' @examples
 #' data(monpop)

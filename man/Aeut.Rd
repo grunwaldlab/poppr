@@ -22,5 +22,5 @@ The Aeut dataset consists of 187 isolates of the Oomycete root
 Grunwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis of
   Diversity, Selfing, and Genetic Differentiation in Populations of the 
   Oomycete *Aphanomyces euteiches*. Phytopathology 96:1134-1141
-  doi: \href{https://doi.org/10.1094/PHYTO-96-1134}{10.1094/PHYTO-96-1134}
+  doi: \doi{10.1094/PHYTO-96-1134}
 }
