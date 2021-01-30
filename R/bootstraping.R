@@ -402,7 +402,7 @@ diversity_stats <- function(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...
 #' 
 #' 
 #' @param tab a table produced from the \pkg{poppr} function 
-#'   [poppr::mlg.table()]. MLGs in columns and populations in rows
+#'   [mlg.table()]. MLGs in columns and populations in rows
 #' @param n an integer > 0 specifying the number of bootstrap replicates to 
 #'   perform (corresponds to `R` in the function [boot::boot()].
 #' @param n.boot an integer specifying the number of samples to be drawn in each

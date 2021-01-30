@@ -1072,14 +1072,14 @@ print_command(funk)
     populations in your data set you wish to **retain**. For example:
     `sublist = c(pop_z, pop_y)` or `sublist = 1:2`.
 
--   `blacklist -` vector of populations or integers representing the
+-   `exclude -` vector of populations or integers representing the
     populations in your data set you wish to **exclude**. This can take
     the same type of arguments as sublist, and can be used in
     conjunction with sublist for when you want a range of populations,
     but know that there is one in there that you do not want to analyze.
-    For example: `sublist = 1:15, blacklist = pop_x`. One very useful
-    thing about the blacklist is that it allows the user to be extremely
-    paranoid about the data. You can set the blacklist to contain
+    For example: `sublist = 1:15, exclude = pop_x`. One very useful
+    thing about the exclude is that it allows the user to be extremely
+    paranoid about the data. You can set the exclude to contain
     populations that are not even in your data set and it will still
     work!
 
@@ -1121,8 +1121,8 @@ You can see that the population factors are correct and that the size of
 the data set is considerably smaller. Let's see the data set without the
 North American countries.
 
-```{r popsub_blacklist}
-v_na_minus <- popsub(H3N2, blacklist = c("USA", "Canada"))
+```{r popsub_exclude}
+v_na_minus <- popsub(H3N2, exclude = c("USA", "Canada"))
 popNames(v_na_minus)
 ```
 Let"s make sure that the number of individuals in both data sets is
@@ -1141,7 +1141,7 @@ any countries in North America. We can easily do this by using the
 ```{r popsub_combine}
 vsort <- sort(popNames(H3N2))[1:10]
 vsort
-valph <- popsub(H3N2, sublist = vsort, blacklist = c("USA", "Canada"))
+valph <- popsub(H3N2, sublist = vsort, exclude = c("USA", "Canada"))
 popNames(valph)
 ```
 
@@ -1578,7 +1578,7 @@ print_command(funk)
 
 -   `sublist -` Populations to include (Defaults to "ALL"). see `popsub()`
 
--   `blacklist -` Populations to exclude. see `popsub()`
+-   `exclude -` Populations to exclude. see `popsub()`
 
 -   `mlgsub -` see `mlg.table()` Only analyze specified MLGs. The
     vector for this flag can be produced by this function as you will
@@ -1667,7 +1667,7 @@ print_command(funk)
 
 -   `sublist -` Populations to include (Defaults to "ALL"). see `popsub()`
 
--   `blacklist -` Populations to exclude. see `popsub()`
+-   `exclude -` Populations to exclude. see `popsub()`
 
 -   `mlgsub -` a vector containing the indices of MLGs you wish to
     subset your table with.

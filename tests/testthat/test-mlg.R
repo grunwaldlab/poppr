@@ -96,9 +96,13 @@ test_that("multilocus genotype matrix can utilize strata", {
   expect_equal(nrow(pcont), 2)
 })
 
-test_that("mlg.table can take a subset of sublist and blacklist", {
+test_that("mlg.table can take a subset of sublist and exclude", {
   skip_on_cran()
-  nomex <- mlg.table(Pinf, strata = ~Country, sublist = 1:4, blacklist = 3, plot = FALSE)
+  expect_warning({
+    nm <- mlg.table(Pinf, strata = ~Country, sublist = 1:4, blacklist = 3, plot = FALSE)
+  }, 'exclude = 3', fixed = TRUE)
+  nomex <- mlg.table(Pinf, strata = ~Country, sublist = 1:4, exclude = 3, plot = FALSE)
+  expect_identical(nm, nomex)
   expect_equal(nrow(nomex), 3)
   expect_true(!"Mexico" %in% rownames(nomex))
   expect_true(all(rownames(nomex) %in% popNames(setPop(Pinf, ~Country))))
@@ -164,7 +168,7 @@ test_that("mlg.crosspop will work with subsetted genclone objects", {
   expect_warning(z <- mlg.crosspop(Athena, mlgsub = c(14, 2:5), quiet = TRUE), "The following multilocus genotypes are not defined in this dataset: 2, 3, 4, 5")
 })
 
-test_that("mlg.crosspop can take sublist and blacklist", {
+test_that("mlg.crosspop can take sublist and exclude", {
   skip_on_cran()
   strata(Aeut) <- other(Aeut)$population_hierarchy
   agc          <- as.genclone(Aeut)
@@ -176,11 +180,14 @@ test_that("mlg.crosspop can take sublist and blacklist", {
 1L), .Names = c("9", "10")), MLG.32 = structure(c(1L, 1L), .Names = c("7", 
 "9")), MLG.52 = structure(c(1L, 1L), .Names = c("5", "9"))), .Names = c("MLG.13", 
 "MLG.23", "MLG.24", "MLG.32", "MLG.52"))
-  
-  expect_output(show(mlg.crosspop(Athena, blacklist = 1)), "MLG.13: \\(2 inds\\) 8 9")
-  expect_output(show(mlg.crosspop(Athena, blacklist = "1")), "MLG.13: \\(2 inds\\) 8 9")
-  expect_output(show(mlg.crosspop(Athena, sublist = 1:10, blacklist = "1")), "MLG.13: \\(2 inds\\) 8 9")
-  expect_equivalent(mlg.crosspop(Athena, sublist = 1:10, blacklist = "1", quiet = TRUE), expectation)
+  expect_warning({
+    bres <- mlg.crosspop(Athena, sublist = 1:10, blacklist = "1", quiet = TRUE)
+  }, 'exclude = "1"', fixed = TRUE)
+  expect_output(show(mlg.crosspop(Athena, exclude = 1)), "MLG.13: \\(2 inds\\) 8 9")
+  expect_output(show(mlg.crosspop(Athena, exclude = "1")), "MLG.13: \\(2 inds\\) 8 9")
+  expect_output(show(mlg.crosspop(Athena, sublist = 1:10, exclude = "1")), "MLG.13: \\(2 inds\\) 8 9")
+  expect_equivalent(mlg.crosspop(Athena, sublist = 1:10, exclude = "1", quiet = TRUE), expectation)
+  expect_equivalent(bres, expectation)
 })
 
 test_that("mlg.crosspop can return a data frame", {

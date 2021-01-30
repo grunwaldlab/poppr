@@ -2,9 +2,19 @@
 % Please edit documentation in R/bruvo.r
 \name{bruvo.dist}
 \alias{bruvo.dist}
+\alias{bruvo.between}
 \title{Bruvo's distance for microsatellites}
 \usage{
 bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE, by_locus = FALSE)
+
+bruvo.between(
+  query,
+  ref,
+  replen = 1,
+  add = TRUE,
+  loss = TRUE,
+  by_locus = FALSE
+)
 }
 \arguments{
 \item{pop}{a \code{\link{genind}} or \code{\link{genclone}} object}
@@ -25,6 +35,10 @@ the genome loss model presented in Bruvo et al. 2004. See the
 is \code{by_locus = FALSE}, indicating that Bruvo's distance is to be
 averaged over all loci. When \code{by_locus = TRUE}, a list of distance
 matrices will be returned.}
+
+\item{query}{a \code{\link{genind}} or \code{\link{genclone}} object}
+
+\item{ref}{a \code{\link{genind}} or \code{\link{genclone}} object}
 }
 \value{
 an object of class \code{\link{dist}} or a list of these objects if
@@ -86,6 +100,13 @@ Bruvo's distance between two alleles is calculated as
   they will be treated as triploids.
   }
 }
+\section{Functions}{
+\itemize{
+\item \code{bruvo.between}: Bruvo's distance between a query and a reference
+Only diferences between query individuals and reference individuals will be reported
+All other values are NaN
+}}
+
 \note{
 Do not use missingno with this function.
   \subsection{Missing alleles and Bruvo's distance in \pkg{poppr} versions < 2.5}{
@@ -170,4 +191,6 @@ Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and
 }
 \author{
 Zhian N. Kamvar
+
+David Folarin
 }

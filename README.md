@@ -1,8 +1,7 @@
 # Poppr version 2 <img src="man/figures/small_logo.png" align="right" height="98"/>
 
 <!-- badges: start -->
-
-
+[![R build status](https://github.com/grunwaldlab/poppr/workflows/R-CMD-check/badge.svg)](https://github.com/grunwaldlab/poppr/actions)
 <!-- badges: end -->
 
 ## What is *poppr*?
@@ -52,7 +51,7 @@ If you use *poppr* at all, please specify the version and cite:
 
 If you use *poppr* in a presentation please mention it as the *poppr* R package,
 specify the version, and use our logo: 
-[(png)](https://github.com/grunwaldlab/poppr/tree/master/vignettes/jalapeno_logo.png) | [(svg)](https://github.com/grunwaldlab/poppr/tree/master/vignettes/jalapeno_logo.svg).
+[(png)](https://github.com/grunwaldlab/poppr/tree/main/vignettes/jalapeno_logo.png) | [(svg)](https://github.com/grunwaldlab/poppr/tree/main/vignettes/jalapeno_logo.svg).
 
 Additionally, if you use any following functionalities:
 
@@ -99,13 +98,13 @@ To install this package from github, make sure you have the following:
 
 - [Xcode](https://developer.apple.com/xcode/) (OSX)
     OR [Rtools](https://cran.r-project.org/bin/windows/Rtools/) (Windows)
-- [devtools](https://github.com/r-lib/devtools) (to install, use: `install.packages("devtools")`)
+- [{remotes}](https://github.com/r-lib/remotes) (to install, use: `install.packages("remotes")`)
 
 For Linux users, make sure that the function `getOption("unzip")` returns
 `"unzip"` or `"internal"`. If it doesn't, then run `options(unzip =
 "internal")`.
 
-Once you have devtools and a C compiler installed, you can use the 
+Once you have {remotes} and a C compiler installed, you can use the 
 `install_github()` function to install the current version from github.
 
 #### Stable version
@@ -114,8 +113,12 @@ This release will contain bug fixes and new, documented, and stable features
 that will be included in future releases. Note: if you don't have LaTeX
 installed, you should set `build_vignettes = FALSE`.
 
+> Note: As of 2020-06-12 the default branch is the "main" branch to avoid the
+> "master/slave" terminology. For reference, see the 
+> [IETF draft memo](https://tools.ietf.org/id/draft-knodel-terminology-00.html#rfc.section.1.1.1).
+
 ```R
-devtools::install_github(repo = "grunwaldlab/poppr", build_vignettes = TRUE)
+remotes::install_github(repo = "grunwaldlab/poppr@main", build_vignettes = TRUE)
 library("poppr")
 ```
 
@@ -125,10 +128,10 @@ All new features in testing will be released on different branches. These
 features will be in various stages of development and may or may not be 
 documented. Install with caution. The below command would install features on 
 the branch called "devel". Note that these branches might be out of date
-from the master branch.
+from the main branch.
 
 ```R
-devtools::install_github(repo = "grunwaldlab/poppr@devel", build_vignettes = TRUE)
+remotes::install_github(repo = "grunwaldlab/poppr@devel", build_vignettes = TRUE)
 library("poppr")
 ```
 
@@ -167,7 +170,7 @@ https://grunwaldlab.github.io/Population_Genetics_in_R.
 ## Contributing
 
 Please note that this project is released with a [Contributor Code of
-Conduct](https://github.com/grunwaldlab/poppr/tree/master/CODE_OF_CONDUCT.md). By 
+Conduct](https://github.com/grunwaldlab/poppr/tree/main/CODE_OF_CONDUCT.md). By 
 participating in this project you agree to abide by its
 terms. If you wish to contribute code to *poppr*, please fork the repository and
 create a pull request with your added feature.

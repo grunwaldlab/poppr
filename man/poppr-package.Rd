@@ -15,7 +15,7 @@ To cite \pkg{poppr}, please use \code{citation("poppr")}. When referring to
 beginning of a sentence.
 }
 \details{
-This package relies on the \pkg{\link[adegenet]{adegenet}} package.
+This package relies on the \pkg{\link[adegenet:adegenet.package]{adegenet}} package.
 It is built around the \linkS4class{genind} and
 \linkS4class{genlight} object. Genind objects store genetic
 information in a table of allele frequencies while genlight objects store
@@ -59,7 +59,7 @@ not allow others to learn.}
 
 
 Below are descriptions and links to functions found in \pkg{poppr}. Be
-aware that all functions in \pkg{\link[adegenet]{adegenet}} are also
+aware that all functions in \pkg{\link[adegenet:adegenet.package]{adegenet}} are also
 available. The functions are documented as:
 \itemize{
 \item \code{function_name()} (data type) - Description

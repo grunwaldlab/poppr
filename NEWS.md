@@ -1,3 +1,25 @@
+poppr 2.9.0
+===========
+
+NEW FEATURES
+------------
+
+* `bruvo.between()` will calculate bruvo's distances between a query dataset
+  and a reference dataset (@davefol, #223)
+
+DEPRECATION
+-----------
+
+* The argument `blacklist` has been deprecated in favor of `exclude` for the
+  following functions: `bruvo.msn()`, `poppr.msn()`, `clonecorrect()`, `poppr()`, 
+  `mlg.table()`, `mlg.crosspop()`, and `popsub()`. It will be removed in the
+  poppr version 2.10 (@zkamvar, #218)
+
+GITHUB
+------
+
+* The default branch for the repository is now "main" (@zkamvar, #218)
+
 poppr 2.8.7
 ===========
 

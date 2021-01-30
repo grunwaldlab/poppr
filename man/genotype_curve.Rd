@@ -17,7 +17,7 @@ genotype_curve(
 }
 \arguments{
 \item{gen}{a \code{\linkS4class{genclone}}, \code{\linkS4class{genind}}, or
-\code{\link[pegas]{loci}} object.}
+\code{\link[pegas:read.loci]{loci}} object.}
 
 \item{sample}{an \code{integer} defining the number of times loci will be 
 resampled without replacement.}
@@ -58,7 +58,7 @@ of multilocus genotypes observed.
 }
 \details{
 Internally, this function works by converting the data into a 
-  \code{\link[pegas]{loci}} object, which represents genotypes as a data 
+  \code{\link[pegas:read.loci]{loci}} object, which represents genotypes as a data 
   frame of factors. Random samples are taken of 1 to n-1 columns of the 
   matrix and the number of unique rows are counted to determine the number of
   multilocus genotypes in that random sample. This function does not take 
