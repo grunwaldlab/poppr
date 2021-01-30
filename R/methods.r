@@ -222,7 +222,7 @@ setMethod(
     replen <- match_replen_to_loci(locNames(gen), replen)
     ploid  <- max(ploidy(gen))
     popdf  <- genind2df(gen, sep = "/", usepop = FALSE)
-    mat    <- generate_bruvo_mat(popdf, maxploid = ploid, sep = "/", mat = TRUE)
+    mat    <- generate_bruvo_mat(popdf, maxploid = ploid, sep = "/", mat_type = "numeric")
     mat[is.na(mat)] <- 0
     slot(.Object, "mat")       <- mat
     slot(.Object, "replen")    <- replen

@@ -221,6 +221,47 @@ test_that("not specifying a file for genind2genalex will generate a tempfile", {
   expect_is(read.genalex(f), "genclone")
 })
 
+test_that("genind2genalex() handles snp data appropriately", {
+  # context: https://github.com/grunwaldlab/poppr/issues/231
+  tmp <- tempfile(fileext = ".csv")
+  on.exit(unlink(tmp), add = TRUE)
+  x <- new("genind", tab = structure(c(NA, 2L, 2L, 2L, 2L, NA, 0L, 0L,
+0L, 0L, NA, 2L, 2L, 2L, 2L, NA, 0L, 0L, 0L, 0L, 1L, 1L, 2L, 2L,
+1L, 1L, 1L, 0L, 0L, 1L), .Dim = 5:6, .Dimnames = list(c("TT056001.trim",
+"TT060001.trim", "TT062001.trim", "TT063001.trim", "TT064001.trim"
+), c("loc87_pos30.A", "loc87_pos30.G", "loc106_pos31.G", "loc106_pos31.T",
+"loc345_pos27.G", "loc345_pos27.T"))), loc.fac = structure(c(1L,
+1L, 2L, 2L, 3L, 3L), .Label = c("loc87_pos30", "loc106_pos31",
+"loc345_pos27"), class = "factor"), loc.n.all = c(loc87_pos30 = 2L,
+loc106_pos31 = 2L, loc345_pos27 = 2L), all.names = list(loc87_pos30 = c("A",
+"G"), loc106_pos31 = c("G", "T"), loc345_pos27 = c("G", "T")),
+    ploidy = c(2L, 2L, 2L, 2L, 2L), type = "codom", other = list(),
+    call = .local(x = x, i = i, j = j, loc = ..1, drop = drop),
+    pop = NULL, strata = NULL, hierarchy = NULL)
+  expect_output(genind2genalex(x, tmp), "Extracting the table ...")
+  y <- read.genalex(tmp)
+  expect_equal(genind2df(x, pop = FALSE), genind2df(y, pop = FALSE))
+})
+
+test_that("fill_zero() works with character and numeric data", {
+  char <- "A"
+  num  <- "13"
+
+  # Default
+  expect_equal(fill_zero(char, 2), "0/A")
+  expect_equal(fill_zero(num, 2), "0/13")
+  expect_equal(fill_zero(char, 3, character(0)), "0/0/A")
+  expect_equal(fill_zero(num, 3, character(0)), "0/0/13")
+
+  # As character vector
+  expect_equal(fill_zero(char, 3, "character"), c("0", "0", "A"))
+  expect_equal(fill_zero(num, 3, "character"), c("0", "0", "13"))
+
+  # As numeric vector
+  expect_equal(expect_warning(fill_zero(char, 3, "numeric")), c(0, 0, NA_real_))
+  expect_equal(fill_zero(num, 3, "numeric"), c(0.0, 0.0, 13.0))
+})
+
 test_that("genind2genalex will prevent a file from being overwritten", {
   skip_on_cran()
   f <- tempfile()

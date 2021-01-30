@@ -634,17 +634,17 @@ genind2genalex <- function(gid, filename = "", overwrite = FALSE, quiet = FALSE,
   the_gid <- as.character(pop(gid))
   df      <- genind2df(gid, sep = "/", usepop = FALSE)
   if (any(ploid > 1)){
-    df <- generate_bruvo_mat(df, maxploid = max(ploid), sep = "/", mat = TRUE)
+    df <- generate_bruvo_mat(df, maxploid = max(ploid), sep = "/", mat_type = "character")
   }
   df[is.na(df)] <- 0
   
   # making sure that the individual names are included.
   if(all(indNames(gid) == "") | is.null(indNames(gid))){
-    indNames(gid) <- paste("ind", 1:nInd(gid), sep="")
+    indNames(gid) <- paste("ind", seq(nInd(gid)), sep="")
   }
   df <- cbind(indNames(gid), the_gid, df)
   # setting the NA replacement. This doesn't work too well. 
-  replacement <- ifelse(gid@type == "PA", "-1", "0")
+  replacement <- if(gid@type == "PA") "-1" else "0"
   if(!quiet) cat("Writing the table to", filename, "... ")
   
   if(geo == TRUE & !is.null(gid$other[[geodf]])){

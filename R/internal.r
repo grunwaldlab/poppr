@@ -1614,52 +1614,55 @@ make_poppr_plot_title <- function(samp, file = NULL, N = NULL, pop = NULL){
   return(plot_title)
 }
 
-#==============================================================================#
-# fill a single genotype with zeroes if the number of alleles is maxploid.
-#
-# Public functions utilizing this function:
-# # none
-#
-# Private functions utilizing this function:
-# # fill_zero_locus
-#==============================================================================#
-fill_zero <- function(x, maxploid, mat = FALSE){
+#' Pad a single locus genotype with zeroes according the maximum ploidy.
+#'
+#' @param x a vector of alleles for a single individual at a single locus
+#' @param maxploid the maximum ploidy to pad
+#' @param mat_type if the final output is to be a matrix with one column per
+#'   allele, what type of matrix should it be. Acceptable are: numeric and character.
+#' @noRd
+#' @return a vector of length 1 (default) or of length maxploid.
+#' @seealso used by: [fill_zero_locus()]
+fill_zero <- function(x, maxploid, mat_type = character(0)){
   if (length(x) < maxploid){
-    if (!mat){
+    # If the genotype is less than the max ploidy, fill it with a zero
+    if (length(mat_type)) {
+      fill <- as(0L, mat_type)
+      pad  <- rep(fill, maxploid - length(x))
+      res  <- c(pad, as(x, mat_type))
+    } else {
       zeroes <- paste(rep(0, maxploid - length(x)), collapse = "/")
       res    <- paste(x, collapse = "/")
       res    <- paste(zeroes, res, sep = "/")     
-    } else {
-      res <- c(rep(0.0, maxploid - length(x)), as.numeric(x))
     }
- 
   } else {
-    if (!mat){
-      res <- paste(x, collapse = "/")
+    # If the genotype is the right format_type, either collapse it or return it
+    if (length(mat_type)){
+      res <- as(x, mat_type)
     } else {
-      res <- as.numeric(x)
+      res <- paste(x, collapse = "/")
     }
   }
   return(res)
 }
 
-#==============================================================================#
-# Fill short genotypes in a character vector with zeroes.
-#
-# Public functions utilizing this function:
-# # none
-#
-# Private functions utilizing this function:
-# # generate_bruvo_mat
-#==============================================================================#
-fill_zero_locus <- function(x, sep = "/", maxploid, mat = FALSE){
+#' Fill short genotypes in a character vector with zeroes
+#'
+#' @param x a character vector of genotypes at a single locus, separated by "/"
+#' @param maxploid the maximum ploidy to pad
+#' @param mat_type if the final output is to be a matrix with one column per
+#'   allele, what type of matrix should it be. Acceptable are: numeric and character.
+#' @noRd
+#' @return a vector of length 1 (default) or of length maxploid.
+#' @seealso uses: [fill_zero_locus()], used by: [create_bruvo_mat()]
+fill_zero_locus <- function(x, sep = "/", maxploid, mat_type = character(0)){
   x <- strsplit(x, sep)
-  if (mat){
-    result <- numeric(maxploid)
+  if (length(mat_type)) {
+    result <- vector(mode = mat_type, length = maxploid)
   } else {
     result <- character(1)
   }
-  return(t(vapply(x, fill_zero, result, maxploid, mat)))
+  return(t(vapply(x, fill_zero, result, maxploid, mat_type)))
 }
 
 #==============================================================================#
@@ -1708,19 +1711,32 @@ fill_zero_locus <- function(x, sep = "/", maxploid, mat = FALSE){
 # sample_10         0         0        41        31         0        17        30        57
 #
 #
-# Public functions utilizing this function:
-# # none
-#
-# Private functions utilizing this function:
-# # none
-#==============================================================================#
-generate_bruvo_mat <- function(x, maxploid, sep = "/", mat = FALSE){
-  if (mat){
-    result <- matrix(numeric(nrow(x)*maxploid), ncol = maxploid, nrow = nrow(x))
+
+#' Fill short genotypes in a data frame with zeroes
+#'
+#' @param x a data frame of character vectors representing genotypes with alleles separated by "/"
+#' @param maxploid the maximum ploidy to pad
+#' @param mat if the final output is to be a matrix with one column per
+#'   allele, what type of matrix should it be. Acceptable are: numeric and character.
+#'   Default is an empty character vector, indicating that alleles should be concatenated.
+#' @noRd
+#' @return a vector of length 1 (default) or of length maxploid.
+#' @seealso uses: [fill_zero_locus()], used by: [genind2genalex()]
+generate_bruvo_mat <- function(x, maxploid, sep = "/", mat_type = character(0)){
+  # --- 2021-01-30 ---
+  # mat has been renamed to mat_type and recast as a character vector. For
+  # details, see https://github.com/grunwaldlab/poppr/issues/108
+  # ------------------
+  # Create a template for vapply to fill in with the result. 
+  if (length(mat_type)) {
+    # Each locus will be a matrix with one allele per column
+    fill  <- vector(mode = mat_type, length = nrow(x) * maxploid)
+    result <- matrix(fill, ncol = maxploid, nrow = nrow(x))
   } else {
+    # Each locus will be a character vector with all the alleles
     result <- character(nrow(x))
   }
-  res <- vapply(x, fill_zero_locus, result, sep, maxploid, mat)
+  res <- vapply(x, fill_zero_locus, result, sep, maxploid, mat_type)
   if (length(dim(res)) > 2){
     redim    <- dim(res)
     dim(res) <- c(redim[1], redim[2]*redim[3])
@@ -1731,7 +1747,7 @@ generate_bruvo_mat <- function(x, maxploid, sep = "/", mat = FALSE){
   } else {
     colnames(res) <- colnames(x)
   }
-  if (!mat){
+  if (length(mat_type) == 0) {
     res[grep("NA", res)] <- NA_character_
   }
   rownames(res) <- rownames(x)
