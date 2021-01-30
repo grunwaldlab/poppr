@@ -44,6 +44,11 @@ jobs:
       - name: Install LaTeX packages
         run: |
           tlmgr install colortbl
+          tlmgr install mathtools
+          tlmgr install longtable
+          tlmgr install inputenc
+          tlmgr install graphicx
+          tlmgr install fullpage
 
       - name: Query dependencies
         run: |
