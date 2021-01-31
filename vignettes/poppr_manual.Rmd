@@ -10,10 +10,6 @@ output:
     fig_height: 5
     toc: true
     toc_depth: 1
-vignette: >
-  %\VignetteIndexEntry{Data Import and Manipulation}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}

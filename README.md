@@ -1,7 +1,7 @@
 # Poppr version 2 <img src="man/figures/small_logo.png" align="right" height="98"/>
 
 <!-- badges: start -->
-[![R build status](https://github.com/grunwaldlab/poppr/workflows/R-CMD-check/badge.svg)](https://github.com/grunwaldlab/poppr/actions)
+[![R-CMD-check](https://github.com/grunwaldlab/poppr/workflows/R-CMD-check/badge.svg)](https://github.com/grunwaldlab/poppr/actions)
 <!-- badges: end -->
 
 ## What is *poppr*?

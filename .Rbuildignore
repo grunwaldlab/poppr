@@ -8,6 +8,8 @@
 ^vignettes/*.bbl$
 ^vignettes/*.log$
 ^vignettes/*.toc$
+vignettes/mlg.Rmd
+vignettes/poppr_manual.Rmd
 ^tools/*$
 ^\.travis\.yml$
 ^vignettes/figure

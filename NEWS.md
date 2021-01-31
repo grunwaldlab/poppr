@@ -20,6 +20,12 @@ GITHUB
 
 * The default branch for the repository is now "main" (@zkamvar, #218)
 
+BUG FIX
+-------
+
+* `genind2genalex()` no longer converts diploid sequence data to zeros on export
+  This fixes #231 (@zkamvar, #233).
+
 poppr 2.8.7
 ===========
 
