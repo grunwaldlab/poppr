@@ -25,6 +25,8 @@ BUG FIX
 
 * `genind2genalex()` no longer converts diploid sequence data to zeros on export
   This fixes #231 (@zkamvar, #233).
+* `bitwise.ia()` will no longer have integer overflows early on Windows
+  (@zkamvar, #235)
 
 poppr 2.8.7
 ===========
