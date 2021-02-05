@@ -176,7 +176,7 @@ test_that("improperly-formatted data causes an error", {
   msg <- "^.+?6 individuals.+?5 rows.+?Please inspect "
   tcmsg  <- paste0(msg, "textConnection\\(bad_genalex\\).+?$")
   expect_error(read.genalex(textConnection(bad_genalex), sep = "\t"), tcmsg)
-  skip_on_windows()
+  skip_on_os("windows")
   f <- tempfile()
   writeLines(bad_genalex, f)
   fmsg <- paste0(msg, f, ".+?$")
@@ -427,7 +427,7 @@ test_that("genalex data can be imported with a region column", {
 
 test_that("genalex can import geographic information", {
 	skip_on_cran()
-  skip_on_windows()
+  skip_on_os("windows")
 	data("Pram", package = "poppr")
 	filepram <- tempfile()
 	sourpram <- tempfile()
