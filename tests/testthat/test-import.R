@@ -176,6 +176,7 @@ test_that("improperly-formatted data causes an error", {
   msg <- "^.+?6 individuals.+?5 rows.+?Please inspect "
   tcmsg  <- paste0(msg, "textConnection\\(bad_genalex\\).+?$")
   expect_error(read.genalex(textConnection(bad_genalex), sep = "\t"), tcmsg)
+  skip_on_windows()
   f <- tempfile()
   writeLines(bad_genalex, f)
   fmsg <- paste0(msg, f, ".+?$")
@@ -217,7 +218,7 @@ context("Data export tests")
 test_that("not specifying a file for genind2genalex will generate a tempfile", {
   skip_on_cran()
   expect_warning(f <- genind2genalex(monpop, quiet = TRUE), "temporary file")
-  expect_match(f, "^/.+?file.+\\.csv$")
+  expect_match(f, "^.+?file.+\\.csv$")
   expect_is(read.genalex(f), "genclone")
 })
 
@@ -426,6 +427,7 @@ test_that("genalex data can be imported with a region column", {
 
 test_that("genalex can import geographic information", {
 	skip_on_cran()
+  skip_on_windows()
 	data("Pram", package = "poppr")
 	filepram <- tempfile()
 	sourpram <- tempfile()
