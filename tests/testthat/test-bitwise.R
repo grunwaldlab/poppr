@@ -27,7 +27,7 @@ test_that("bitwise.dist can do euclidean", {
 })
 
 test_that("bitwise.dist can do euclidean with lots of missing data", {
-  skip_on_cran()
+  # skip_on_cran()
   set.seed(999)
   mat2[sample(length(mat2), 10)] <- NA
   mat2.gl <- new("genlight", mat2, parallel = FALSE)
@@ -36,7 +36,7 @@ test_that("bitwise.dist can do euclidean with lots of missing data", {
 })
 
 test_that("bitwise.dist can actually handle genind objects", {
-  skip_on_cran()
+  # skip_on_cran()
   data("partial_clone", package = "poppr")
   pdist <- diss.dist(partial_clone, percent = TRUE)
   expect_equivalent(pdist, bitwise.dist(partial_clone))
@@ -45,7 +45,7 @@ test_that("bitwise.dist can actually handle genind objects", {
 
 test_that("bitwise.dist produces reasonable results for diploids", {
 
-  skip_on_cran()
+  # skip_on_cran()
   dat <- list(c(2,2,2,2,2,2,2,2,2,0),
               c(1,1,1,0,0,0,0,0,0,2),
               c(2,2,2,2,2,2,2,2,2,2),
@@ -98,7 +98,7 @@ test_that("bitwise.dist produces reasonable results for diploids", {
 })
 
 test_that("bitwise.ia produce reasonable results for haploids", {
-  skip_on_cran()
+  # skip_on_cran()
   dat <- list(c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
               c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
               c(1, 1, NA, NA, NA, NA, NA, NA, NA, NA))
@@ -126,7 +126,7 @@ test_that("bitwise.ia produce reasonable results for haploids", {
 context("bitwise.ia cromulence")
 
 test_that("bitwise.ia can use both missing-match and missing-nomatch ", {
-  skip_on_cran()
+  # skip_on_cran()
   dat <- list(c(2,2,2,2,2,2,2,2,2,0),
               c(1,1,1,0,0,0,0,0,0,2),
               c(2,2,2,2,2,2,2,2,2,2),

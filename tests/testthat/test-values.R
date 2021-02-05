@@ -338,7 +338,7 @@ test_that("pair.ia can do sampling", {
 })
 
 test_that("bitwise.ia can handle large samples", {
-  skip_on_cran()
+  # skip_on_cran()
   set.seed(999)
   x <- glSim(n.ind = 200, n.snp.nonstruc = 2e3, ploidy = 2, parallel = FALSE)
   position(x) <- sort(sample(1e4, 2e3))

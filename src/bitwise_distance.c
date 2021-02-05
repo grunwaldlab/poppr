@@ -35,6 +35,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #include <stdio.h>
+#include <stdint.h>
 #include <Rinternals.h>
 #include <R_ext/Utils.h>
 #include <Rdefines.h>
@@ -832,8 +833,8 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
   double* vars; // Variance at each locus
   double* M;  // Sum of distances at each locus
   double* M2; // Sum of squared distances at each locus
-  long int D;   // Sum of distances between each sample
-  long int D2;  // Sum of squared distances between each sample
+  int64_t D;   // Sum of distances between each sample
+  int64_t D2;  // Sum of squared distances between each sample
   double Vo; // Observed variance
   double Ve; // Expected variance
   double Nc2;  // num_gens choose 2
@@ -1207,8 +1208,8 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   double* vars; // Variance at each locus
   double* M;  // Sum of distances at each locus
   double* M2; // Sum of squared distances at each locus
-  long int D;   // Sum of distances between each sample
-  long int D2;  // Sum of squared distances between each sample
+  int64_t D;   // Sum of distances between each sample
+  int64_t D2;  // Sum of squared distances between each sample
   double Vo; // Observed variance
   double Ve; // Expected variance
   double Nc2;  // num_gens choose 2
