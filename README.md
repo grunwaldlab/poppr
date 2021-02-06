@@ -51,7 +51,7 @@ If you use *poppr* at all, please specify the version and cite:
 
 If you use *poppr* in a presentation please mention it as the *poppr* R package,
 specify the version, and use our logo: 
-[(png)](https://github.com/grunwaldlab/poppr/tree/main/vignettes/jalapeno_logo.png) | [(svg)](https://github.com/grunwaldlab/poppr/tree/main/vignettes/jalapeno_logo.svg).
+[(png)](https://github.com/grunwaldlab/poppr/blob/main/vignettes/jalapeno_logo.png) | [(svg)](https://github.com/grunwaldlab/poppr/blob/main/vignettes/jalapeno_logo.svg).
 
 Additionally, if you use any following functionalities:
 
@@ -170,7 +170,7 @@ https://grunwaldlab.github.io/Population_Genetics_in_R.
 ## Contributing
 
 Please note that this project is released with a [Contributor Code of
-Conduct](https://github.com/grunwaldlab/poppr/tree/main/CODE_OF_CONDUCT.md). By 
+Conduct](https://github.com/grunwaldlab/poppr/blob/main/CODE_OF_CONDUCT.md). By 
 participating in this project you agree to abide by its
 terms. If you wish to contribute code to *poppr*, please fork the repository and
 create a pull request with your added feature.
