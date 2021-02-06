@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.7.99-41</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.9.0</span>
       </span>
     </div>
 
@@ -202,12 +202,12 @@ represented as an <code><a href='MLG-class.html'>MLG</a></code> object.</p></td>
 <span class='co'># Without parallel processing</span>
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'>as.snpclone</span><span class='op'>(</span><span class='fu'>glSim</span><span class='op'>(</span><span class='fl'>1000</span>, <span class='fl'>1e5</span>, ploid<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;    user  system elapsed 
-#&gt; 142.025  14.926 161.469 </div><div class='input'>
+#&gt; 140.598  14.120 160.294 </div><div class='input'>
 <span class='co'># With parallel processing... doesn't really save you much time.</span>
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'>as.snpclone</span><span class='op'>(</span><span class='fu'>glSim</span><span class='op'>(</span><span class='fl'>1000</span>, <span class='fl'>1e5</span>, ploid<span class='op'>=</span><span class='fl'>2</span>, parallel <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>, 
                              parallel <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Loading required package: parallel</span></div><div class='output co'>#&gt;    user  system elapsed 
-#&gt; 139.395  15.837 155.868 </div><div class='input'><span class='co'># }</span>
+#&gt; 137.861  14.775 153.178 </div><div class='input'><span class='co'># }</span>
 
 </div></pre>
   </div>
