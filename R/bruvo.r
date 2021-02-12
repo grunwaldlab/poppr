@@ -297,7 +297,7 @@ bruvo.between <- function(query, ref, replen = 1, add = TRUE, loss = TRUE, by_lo
 #'   desired.
 #'   
 #' @param tree any function that can generate a tree from a distance matrix.
-#'   Default is \code{\link[phangorn]{upgma}}.
+#'   Default is \code{\link{upgma}}.
 #'   
 #' @param showtree \code{logical} if \code{TRUE}, a tree will be plotted with 
 #'   nodelabels.
@@ -331,7 +331,7 @@ bruvo.between <- function(query, ref, replen = 1, add = TRUE, loss = TRUE, by_lo
 #'   replacement, recalculate the tree, and tally up the bootstrap support
 #'   (measured in percent success). While this function can take any tree
 #'   function, it has native support for two algorithms: \code{\link[ape]{nj}}
-#'   and \code{\link[phangorn]{upgma}}. If you want to use any other functions,
+#'   and \code{\link{upgma}}. If you want to use any other functions,
 #'   you must load the package before you use them (see examples).
 #' 
 #' @note \strong{Please refer to the documentation for bruvo.dist for details on
@@ -383,7 +383,6 @@ bruvo.between <- function(query, ref, replen = 1, add = TRUE, loss = TRUE, by_lo
 #' }
 #' 
 #==============================================================================#
-#' @importFrom phangorn upgma midpoint
 #' @importFrom ape nodelabels nj boot.phylo plot.phylo axisPhylo ladderize 
 #' @importFrom ape add.scale.bar nodelabels tiplabels is.ultrametric
 #   /     \

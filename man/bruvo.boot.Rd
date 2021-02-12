@@ -34,7 +34,7 @@ the genome loss model presented in Bruvo et al. 2004.}
 desired.}
 
 \item{tree}{any function that can generate a tree from a distance matrix.
-Default is \code{\link[phangorn]{upgma}}.}
+Default is \code{\link{upgma}}.}
 
 \item{showtree}{\code{logical} if \code{TRUE}, a tree will be plotted with 
 nodelabels.}
@@ -67,7 +67,7 @@ This function will calculate a tree based off of Bruvo's distance
   replacement, recalculate the tree, and tally up the bootstrap support
   (measured in percent success). While this function can take any tree
   function, it has native support for two algorithms: \code{\link[ape]{nj}}
-  and \code{\link[phangorn]{upgma}}. If you want to use any other functions,
+  and \code{\link{upgma}}. If you want to use any other functions,
   you must load the package before you use them (see examples).
 }
 \note{
