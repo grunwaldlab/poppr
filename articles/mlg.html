@@ -95,7 +95,7 @@
       <h1 data-toc-skip>Analysis of Multilocus Genotypes and Lineages in poppr 2.9.0</h1>
                         <h4 class="author">Zhian N. Kamvar and Niklaus J. Grünwald</h4>
             
-            <h4 class="date">2021-02-06</h4>
+            <h4 class="date">2021-02-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/grunwaldlab/poppr/blob/master/vignettes/mlg.Rmd"><code>vignettes/mlg.Rmd</code></a></small>
       <div class="hidden name"><code>mlg.Rmd</code></div>
@@ -332,8 +332,7 @@
 ##   7   6   4   1   2   5   3</code></pre>
 <p>Even though we have reason to believe that the samples “new” and “mut” might actually have the genotype x.5 and y.1 (the MLG of sample C), the algorithm sees them as different. If we calculate the pairwise euclidean distances between samples, we see that “new”, “mut” and, “C” are very similar to each other:</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/KlausVigo/phangorn">"phangorn"</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="http://ape-package.ird.fr/">"ape"</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="http://ape-package.ird.fr/">"ape"</a></span><span class="op">)</span>
 <span class="va">raw_dist</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
   <span class="fu"><a href="https://rdrr.io/r/stats/dist.html">dist</a></span><span class="op">(</span><span class="fu">genind2df</span><span class="op">(</span><span class="va">x</span>, usepop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>
 <span class="op">}</span>
@@ -346,7 +345,7 @@
 ## new 5.656854 5.656854 0.000000 5.656854 5.656854         
 ## mut 4.472136 4.123106 1.000000 4.123106 4.472136 0.000000</code></pre>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/ape/man/plot.phylo.html">plot.phylo</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/phangorn/man/upgma.html">upgma</a></span><span class="op">(</span><span class="va">xdis</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/ape/man/plot.phylo.html">plot.phylo</a></span><span class="op">(</span><span class="fu"><a href="../reference/upgma.html">upgma</a></span><span class="op">(</span><span class="va">xdis</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="mlg_files/figure-html/unnamed-chunk-12-1.png" width="480" style="display: block; margin: auto;"></p>
 <p>Therefore, we might want to consider “new”, “mut” and, “C” to be the same Multilocus Lineage (MLL). In the next section, you will see how to collapse multilocus genotypes by genetic distance.</p>
 </div>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a snpclone object from a genlight object. — as.snpclone • poppr</title>
+<title>UPGMA — upgma • poppr</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="Create a snpclone object from a genlight object. — as.snpclone" />
-<meta property="og:description" content="Wrapper for snpclone initializer." />
+<meta property="og:title" content="UPGMA — upgma" />
+<meta property="og:description" content="UPGMA clustering. Just a wrapper function around hclust." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -134,81 +134,44 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a snpclone object from a genlight object.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/methods.r'><code>R/methods.r</code></a></small>
-    <div class="hidden name"><code>snpclone-coercion-methods.Rd</code></div>
+    <h1>UPGMA</h1>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/upgma.R'><code>R/upgma.R</code></a></small>
+    <div class="hidden name"><code>upgma.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Wrapper for snpclone initializer.</p>
+    <p>UPGMA clustering. Just a wrapper function around <code><a href='https://rdrr.io/r/stats/hclust.html'>hclust</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>as.snpclone</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, parallel <span class='op'>=</span> <span class='cn'>FALSE</span>, n.cores <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>mlg</span>, mlgclass <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>upgma</span><span class='op'>(</span><span class='va'>d</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>a <code>genlight</code> or <code><a href='genclone-class.html'>snpclone</a></code> 
-object</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>arguments to be passed on to the genlight constructor. These are
-not used if x is not missing.</p></td>
-    </tr>
-    <tr>
-      <th>parallel</th>
-      <td><p>should the parallel package be used to construct the object?</p></td>
-    </tr>
-    <tr>
-      <th>n.cores</th>
-      <td><p>how many cores should be utilized? See documentation for
-<code>genlight</code> for details.</p></td>
-    </tr>
-    <tr>
-      <th>mlg</th>
-      <td><p>a vector of multilocus genotypes or an object of class MLG for the
-new snpclone object.</p></td>
-    </tr>
-    <tr>
-      <th>mlgclass</th>
-      <td><p>if <code>TRUE</code> (default), the multilocus genotypes will be
-represented as an <code><a href='MLG-class.html'>MLG</a></code> object.</p></td>
+      <th>d</th>
+      <td><p>A distance matrix.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A phylogenetic tree of class <code>phylo</code>.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='https://rdrr.io/r/stats/hclust.html'>hclust</a></code>, <code><a href='https://rdrr.io/pkg/ape/man/as.phylo.html'>as.phylo</a></code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
-    <p>Zhian N. Kamvar</p>
+    <p>Klaus Schliep <a href='mailto:klaus.schliep@gmail.com'>klaus.schliep@gmail.com</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='op'>(</span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'>as.snpclone</span><span class='op'>(</span><span class='fu'>glSim</span><span class='op'>(</span><span class='fl'>100</span>, <span class='fl'>1e3</span>, ploid<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;  ||| SNPCLONE OBJECT |||||||||
-#&gt; 
-#&gt;  || 100 genotypes,  1,000 binary SNPs, size: 182.6 Kb
-#&gt;  0 (0 %) missing data
-#&gt; 
-#&gt;  || Basic content
-#&gt;    @gen: list of 100 SNPbin
-#&gt;    @mlg: 100 original multilocus genotypes
-#&gt;    @ploidy: ploidy of each individual  (range: 2-2)
-#&gt; 
-#&gt;  || Optional content
-#&gt;    @other: a list containing: ancestral.pops 
-#&gt; 
-#&gt; NULL</div><div class='input'><span class='co'># \dontrun{</span>
-<span class='co'># Without parallel processing</span>
-<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'>as.snpclone</span><span class='op'>(</span><span class='fu'>glSim</span><span class='op'>(</span><span class='fl'>1000</span>, <span class='fl'>1e5</span>, ploid<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt; 141.808  16.014 158.287 </div><div class='input'>
-<span class='co'># With parallel processing... doesn't really save you much time.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'>as.snpclone</span><span class='op'>(</span><span class='fu'>glSim</span><span class='op'>(</span><span class='fl'>1000</span>, <span class='fl'>1e5</span>, ploid<span class='op'>=</span><span class='fl'>2</span>, parallel <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>, 
-                             parallel <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Loading required package: parallel</span></div><div class='output co'>#&gt;    user  system elapsed 
-#&gt; 139.380  14.803 154.720 </div><div class='input'><span class='co'># }</span>
-
+    <pre class="examples"><div class='input'>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://ape-package.ird.fr/'>ape</a></span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>woodmouse</span><span class='op'>)</span>
+<span class='va'>dm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/ape/man/dist.dna.html'>dist.dna</a></span><span class='op'>(</span><span class='va'>woodmouse</span><span class='op'>)</span>
+<span class='va'>tree</span> <span class='op'>&lt;-</span> <span class='fu'>upgma</span><span class='op'>(</span><span class='va'>dm</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>tree</span><span class='op'>)</span>
+</div><div class='img'><img src='upgma-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

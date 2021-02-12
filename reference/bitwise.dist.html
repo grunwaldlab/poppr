@@ -268,7 +268,7 @@ genlight, <code><a href='win.ia.html'>win.ia()</a></code>,  <code><a href='samp.
 #&gt; </div><div class='input'><span class='co'># Assess fraction of different alleles</span>
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='va'>xd</span> <span class='op'>&lt;-</span> <span class='fu'>bitwise.dist</span><span class='op'>(</span><span class='va'>x</span>, threads <span class='op'>=</span> <span class='fl'>1L</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;       0       0       0 </div><div class='input'><span class='va'>xd</span>
+#&gt;   0.001   0.000   0.000 </div><div class='input'><span class='va'>xd</span>
 </div><div class='output co'>#&gt;         1      2      3      4      5      6      7      8      9
 #&gt; 2  0.2230                                                        
 #&gt; 3  0.2260 0.2280                                                 
@@ -321,11 +321,11 @@ genlight, <code><a href='win.ia.html'>win.ia()</a></code>,  <code><a href='samp.
 <span class='co'># Default Euclidean distance </span>
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/dist.html'>dist</a></span><span class='op'>(</span><span class='va'>glite</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   2.215   0.048   2.357 </div><div class='input'>
+#&gt;   2.447   0.063   2.540 </div><div class='input'>
 <span class='co'># Bitwise dist</span>
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='fu'>bitwise.dist</span><span class='op'>(</span><span class='va'>glite</span>, euclidean <span class='op'>=</span> <span class='cn'>TRUE</span>, scale_missing <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.752   0.002   0.797 </div><div class='input'>
+#&gt;   0.752   0.002   0.757 </div><div class='input'>
 <span class='co'># }</span>
 </div></pre>
   </div>
