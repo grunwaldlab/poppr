@@ -1,3 +1,13 @@
+poppr 2.9.1
+===========
+
+DEPENDENCY UPDATE
+----------------
+
+* The {phangorn} package is no longer imported. We only used one line of code
+  from the package (upgma), so we copied over the implementation with the 
+  author's permission (@KlausVigo, https://github.com/grunwaldlab/poppr/pull/237).
+
 poppr 2.9.0
 ===========
 
