@@ -83,7 +83,7 @@ to have a downward bias. See the details for more information." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.9.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.9.1</span>
       </span>
     </div>
 
@@ -296,9 +296,9 @@ interpret the results of this function.</p>
 <span class='co'># This can be done in a parallel fashion (OSX uses "multicore", Windows uses "snow")</span>
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='fu'>diversity_boot</span><span class='op'>(</span><span class='va'>tab</span>, <span class='fl'>10000L</span>, parallel <span class='op'>=</span> <span class='st'>"multicore"</span>, ncpus <span class='op'>=</span> <span class='fl'>4L</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   5.996   2.586   3.976 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='fu'>diversity_boot</span><span class='op'>(</span><span class='va'>tab</span>, <span class='fl'>10000L</span><span class='op'>)</span><span class='op'>)</span>
+#&gt;   6.055   2.020   4.022 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='fu'>diversity_boot</span><span class='op'>(</span><span class='va'>tab</span>, <span class='fl'>10000L</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   4.111   0.056   4.181 </div><div class='input'><span class='co'># }</span>
+#&gt;   4.295   0.101   4.468 </div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
