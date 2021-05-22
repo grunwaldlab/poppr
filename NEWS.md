@@ -1,3 +1,12 @@
+poppr 2.9.2
+===========
+
+CRAN MAINTENANCE
+----------------
+
+* A test for `bruvo.between()` was fixed in a superficial way to avoid an error
+  on CRAN R-devel (@zkamvar, https://github.com/grunwaldlab/poppr/pull/242).
+
 poppr 2.9.1
 ===========
 
