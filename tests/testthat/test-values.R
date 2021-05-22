@@ -61,11 +61,20 @@ test_that("Bruvo between creates a subset of bruvo's distance", {
   ADDloss <- bruvo.between(querygid, refgid, add = TRUE, loss = FALSE)
   addLOSS <- bruvo.between(querygid, refgid, add = FALSE, loss = TRUE)
   ADDLOSS <- bruvo.between(querygid, refgid, add = TRUE, loss = TRUE)
+  # Create expected distance matrix from bruvo.between()
+  make_AL_expect <- function(n) {
+    as.dist(matrix(
+      c(0,   0,   n, 
+        0,   0, NaN,
+        n, NaN,   0), 
+    nrow = 3, ncol = 3))
+  }
   # Values from Bruvo et. al. (2004)
-  expected_addloss <- as.dist(matrix(c(0, 0, 0.46875000000000, NaN, NaN, NaN), ncol=3, nrow=3))
-  expected_ADDloss <- as.dist(matrix(c(0, 0, 0.458333164453506, NaN, NaN, NaN), ncol=3, nrow=3))
-  expected_addLOSS <- as.dist(matrix(c(0, 0, 0.34374987334013, NaN, NaN, NaN), ncol=3, nrow=3))
-  expected_ADDLOSS <- as.dist(matrix(c(0, 0, 0.401041518896818, NaN, NaN, NaN), ncol=3, nrow=3))
+  expected_addloss <- make_AL_expect(0.46875000000000)
+  expected_addLOSS <- make_AL_expect(0.34374987334013)
+  expected_ADDloss <- make_AL_expect(0.458333164453506)
+  expected_ADDLOSS <- make_AL_expect(0.401041518896818)
+
   expect_equal(addloss[1:2], expected_addloss[1:2])
   expect_equal(is.nan(addloss[3]), TRUE)
   expect_equal(ADDloss[1:2], expected_ADDloss[1:2])
