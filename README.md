@@ -87,12 +87,33 @@ To install, make sure R is at least version 2.15.1 (the authors recommend &ge;
 install.packages("poppr")
 ```
 
-If you want the absolute latest version of *poppr*, see about installing from
-github below.
+If you want the absolute latest version of *poppr*, see about installing 
+unreleased versions below.
 
 ***
 
-### Stable and Development versions
+### Stable version
+
+New features are occasionally added to {poppr}, but it can take time for it to
+get to CRAN. If you know that you want the latest version of {poppr}, (which
+will contain bug fixes and new features to be included in future releases), then
+you can use the custom R-Universe repository, which is updated hourly: 
+<https://zkamvar.r-universe.dev/ui#builds>
+
+To install poppr from the R-Universe, you can use the following code:
+
+```R
+universe <- c("https://zkamvar.r-universe.dev", "https://cloud.r-project.org")
+install.packages("poppr", repos = universe)
+```
+
+The universe repository also contain up-to-date versions of {adegenet} and 
+{hierfstat}, which are commonly used in conjunction with {poppr} and are 
+notoriously out of date on CRAN. 
+
+### Unstable/Development versions
+
+All Development versions of {poppr} will be on GitHub, but need to be compiled.
 
 To install this package from github, make sure you have the following:
 
@@ -100,35 +121,19 @@ To install this package from github, make sure you have the following:
     OR [Rtools](https://cran.r-project.org/bin/windows/Rtools/) (Windows)
 - [{remotes}](https://github.com/r-lib/remotes) (to install, use: `install.packages("remotes")`)
 
-For Linux users, make sure that the function `getOption("unzip")` returns
-`"unzip"` or `"internal"`. If it doesn't, then run `options(unzip =
-"internal")`.
+> For Linux users, make sure that the function `getOption("unzip")` returns
+> `"unzip"` or `"internal"`. If it does not, then run `options(unzip =
+> "internal")`.
 
 Once you have {remotes} and a C compiler installed, you can use the 
 `install_github()` function to install the current version from github.
-
-#### Stable version
-
-This release will contain bug fixes and new, documented, and stable features 
-that will be included in future releases. Note: if you don't have LaTeX
-installed, you should set `build_vignettes = FALSE`.
-
-> Note: As of 2020-06-12 the default branch is the "main" branch to avoid the
-> "master/slave" terminology. For reference, see the 
-> [IETF draft memo](https://tools.ietf.org/id/draft-knodel-terminology-00.html#rfc.section.1.1.1).
-
-```R
-remotes::install_github(repo = "grunwaldlab/poppr@main", build_vignettes = TRUE)
-library("poppr")
-```
-
-#### Unstable/Development versions
 
 All new features in testing will be released on different branches. These 
 features will be in various stages of development and may or may not be 
 documented. Install with caution. The below command would install features on 
 the branch called "devel". Note that these branches might be out of date
-from the main branch.
+from the main branch. Note: if you don't have LaTeX installed, you should set
+`build_vignettes = FALSE`.
 
 ```R
 remotes::install_github(repo = "grunwaldlab/poppr@devel", build_vignettes = TRUE)
