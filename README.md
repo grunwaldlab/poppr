@@ -87,19 +87,20 @@ To install, make sure R is at least version 2.15.1 (the authors recommend &ge;
 install.packages("poppr")
 ```
 
-If you want the absolute latest version of *poppr*, see about installing from
-github below.
+If you want the absolute latest version of *poppr*, see about installing 
+unreleased versions below.
 
 ***
 
-### Stable and Development versions
+### Stable version
 
+New features are occasionally added to {poppr}, but it can take time for it to
+get to CRAN. If you know that you want the latest version of {poppr}, (which
+will contain bug fixes and new features to be included in future releases), then
+you can use the custom R-Universe repository, which is updated hourly: 
+<https://zkamvar.r-universe.dev/ui#builds>
 
-#### Stable version
-
-This release will contain bug fixes and new, documented, and stable features 
-that will be included in future releases. These stable versions are built hourly
-at <https://zkamvar.r-universe.dev/ui#builds> and you can install it with:
+To install poppr from the R-Universe, you can use the following code:
 
 ```R
 universe <- c("https://zkamvar.r-universe.dev", "https://cloud.r-project.org")
@@ -110,7 +111,7 @@ The universe repository also contain up-to-date versions of {adegenet} and
 {hierfstat}, which are commonly used in conjunction with {poppr} and are 
 notoriously out of date on CRAN. 
 
-#### Unstable/Development versions
+### Unstable/Development versions
 
 All Development versions of {poppr} will be on GitHub, but need to be compiled.
 
