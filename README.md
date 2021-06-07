@@ -102,7 +102,7 @@ that will be included in future releases. These stable versions are built hourly
 at <https://zkamvar.r-universe.dev/ui#builds> and you can install it with:
 
 ```R
-universe <- c("https://zkamvar.r-universe.dev", "https://cloud.rproject.org")
+universe <- c("https://zkamvar.r-universe.dev", "https://cloud.r-project.org")
 install.packages("poppr", repos = universe)
 ```
 
