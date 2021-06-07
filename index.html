@@ -174,12 +174,23 @@
 <p>To install, make sure R is at least version 2.15.1 (the authors recommend ≥ 3.0), and in your console, type:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"poppr"</span><span class="op">)</span></code></pre></div>
-<p>If you want the absolute latest version of <em>poppr</em>, see about installing from github below.</p>
+<p>If you want the absolute latest version of <em>poppr</em>, see about installing unreleased versions below.</p>
 <hr>
 </div>
-<div id="stable-and-development-versions" class="section level3">
+<div id="stable-version" class="section level3">
 <h3 class="hasAnchor">
-<a href="#stable-and-development-versions" class="anchor"></a>Stable and Development versions</h3>
+<a href="#stable-version" class="anchor"></a>Stable version</h3>
+<p>New features are occasionally added to {poppr}, but it can take time for it to get to CRAN. If you know that you want the latest version of {poppr}, (which will contain bug fixes and new features to be included in future releases), then you can use the custom R-Universe repository, which is updated hourly: <a href="https://zkamvar.r-universe.dev/ui#builds" class="uri">https://zkamvar.r-universe.dev/ui#builds</a></p>
+<p>To install poppr from the R-Universe, you can use the following code:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">universe</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"https://zkamvar.r-universe.dev"</span>, <span class="st">"https://cloud.r-project.org"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"poppr"</span>, repos <span class="op">=</span> <span class="va">universe</span><span class="op">)</span></code></pre></div>
+<p>The universe repository also contain up-to-date versions of {adegenet} and {hierfstat}, which are commonly used in conjunction with {poppr} and are notoriously out of date on CRAN.</p>
+</div>
+<div id="unstabledevelopment-versions" class="section level3">
+<h3 class="hasAnchor">
+<a href="#unstabledevelopment-versions" class="anchor"></a>Unstable/Development versions</h3>
+<p>All Development versions of {poppr} will be on GitHub, but need to be compiled.</p>
 <p>To install this package from github, make sure you have the following:</p>
 <ul>
 <li>
@@ -187,27 +198,14 @@
 <li>
 <a href="https://github.com/r-lib/remotes">{remotes}</a> (to install, use: <code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages("remotes")</a></code>)</li>
 </ul>
-<p>For Linux users, make sure that the function <code><a href="https://rdrr.io/r/base/options.html">getOption("unzip")</a></code> returns <code>"unzip"</code> or <code>"internal"</code>. If it doesn’t, then run <code><a href="https://rdrr.io/r/base/options.html">options(unzip = "internal")</a></code>.</p>
-<p>Once you have {remotes} and a C compiler installed, you can use the <code>install_github()</code> function to install the current version from github.</p>
-<div id="stable-version" class="section level4">
-<h4 class="hasAnchor">
-<a href="#stable-version" class="anchor"></a>Stable version</h4>
-<p>This release will contain bug fixes and new, documented, and stable features that will be included in future releases. Note: if you don’t have LaTeX installed, you should set <code>build_vignettes = FALSE</code>.</p>
 <blockquote>
-<p>Note: As of 2020-06-12 the default branch is the “main” branch to avoid the “master/slave” terminology. For reference, see the <a href="https://tools.ietf.org/id/draft-knodel-terminology-00.html#rfc.section.1.1.1">IETF draft memo</a>.</p>
+<p>For Linux users, make sure that the function <code><a href="https://rdrr.io/r/base/options.html">getOption("unzip")</a></code> returns <code>"unzip"</code> or <code>"internal"</code>. If it does not, then run <code><a href="https://rdrr.io/r/base/options.html">options(unzip = "internal")</a></code>.</p>
 </blockquote>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span>repo <span class="op">=</span> <span class="st">"grunwaldlab/poppr@main"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://grunwaldlab.github.io/poppr/">"poppr"</a></span><span class="op">)</span></code></pre></div>
-</div>
-<div id="unstabledevelopment-versions" class="section level4">
-<h4 class="hasAnchor">
-<a href="#unstabledevelopment-versions" class="anchor"></a>Unstable/Development versions</h4>
-<p>All new features in testing will be released on different branches. These features will be in various stages of development and may or may not be documented. Install with caution. The below command would install features on the branch called “devel”. Note that these branches might be out of date from the main branch.</p>
+<p>Once you have {remotes} and a C compiler installed, you can use the <code>install_github()</code> function to install the current version from github.</p>
+<p>All new features in testing will be released on different branches. These features will be in various stages of development and may or may not be documented. Install with caution. The below command would install features on the branch called “devel”. Note that these branches might be out of date from the main branch. Note: if you don’t have LaTeX installed, you should set <code>build_vignettes = FALSE</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span>repo <span class="op">=</span> <span class="st">"grunwaldlab/poppr@devel"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://grunwaldlab.github.io/poppr/">"poppr"</a></span><span class="op">)</span></code></pre></div>
-</div>
 </div>
 </div>
 <div id="help--documentation" class="section level2">

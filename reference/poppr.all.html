@@ -176,10 +176,21 @@ output into one data frame.</p>
     <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
 <span class='co'># Obtain a list of fstat files from a directory.</span>
 <span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getfile.html'>getfile</a></span><span class='op'>(</span>multi<span class='op'>=</span><span class='cn'>TRUE</span>, pattern<span class='op'>=</span><span class='st'>"^.+?dat$"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in file.path(file.choose()): unable to translate '8&lt;d4&gt;' to UTF-8</span></div><div class='input'>
+
 <span class='co'># run the analysis on each file.</span>
 <span class='fu'>poppr.all</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>$</span><span class='va'>path</span>, <span class='va'>x</span><span class='op'>$</span><span class='va'>files</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in file.path(x$path, x$files): object 'x' not found</span></div><div class='input'><span class='co'># }</span>
+</div><div class='output co'>#&gt;  \    
+#&gt;   | File: . 
+#&gt;  /    
+#&gt; 
+#&gt;  File format ( / ) not supported.
+#&gt; 
+#&gt; Supported formats are:
+#&gt; GENETIX (.gtx) 
+#&gt; FSTAT (.dat) 
+#&gt; Genepop (.gen)
+#&gt;  
+#&gt; STRUCTURE (.str)</div><div class='output co'>#&gt; <span class='error'>Error in process_file(dat, missing = missing, cutoff = cutoff, clonecorrect = clonecorrect,     strata = strata, keep = keep, quiet = TRUE): is.genind(input) is not TRUE</span></div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

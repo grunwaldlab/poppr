@@ -296,9 +296,9 @@ interpret the results of this function.</p>
 <span class='co'># This can be done in a parallel fashion (OSX uses "multicore", Windows uses "snow")</span>
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='fu'>diversity_boot</span><span class='op'>(</span><span class='va'>tab</span>, <span class='fl'>10000L</span>, parallel <span class='op'>=</span> <span class='st'>"multicore"</span>, ncpus <span class='op'>=</span> <span class='fl'>4L</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   6.101   1.963   5.965 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='fu'>diversity_boot</span><span class='op'>(</span><span class='va'>tab</span>, <span class='fl'>10000L</span><span class='op'>)</span><span class='op'>)</span>
+#&gt;   4.471   1.404   2.484 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='fu'>diversity_boot</span><span class='op'>(</span><span class='va'>tab</span>, <span class='fl'>10000L</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   4.188   0.104   4.294 </div><div class='input'><span class='co'># }</span>
+#&gt;   3.272   0.126   3.573 </div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

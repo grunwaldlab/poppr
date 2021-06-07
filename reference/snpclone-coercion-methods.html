@@ -202,12 +202,12 @@ represented as an <code><a href='MLG-class.html'>MLG</a></code> object.</p></td>
 <span class='co'># Without parallel processing</span>
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'>as.snpclone</span><span class='op'>(</span><span class='fu'>glSim</span><span class='op'>(</span><span class='fl'>1000</span>, <span class='fl'>1e5</span>, ploid<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;    user  system elapsed 
-#&gt; 155.563  15.308 170.962 </div><div class='input'>
+#&gt; 146.491  15.803 169.020 </div><div class='input'>
 <span class='co'># With parallel processing... doesn't really save you much time.</span>
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'>as.snpclone</span><span class='op'>(</span><span class='fu'>glSim</span><span class='op'>(</span><span class='fl'>1000</span>, <span class='fl'>1e5</span>, ploid<span class='op'>=</span><span class='fl'>2</span>, parallel <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>, 
                              parallel <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Loading required package: parallel</span></div><div class='output co'>#&gt;    user  system elapsed 
-#&gt; 154.341  15.839 170.320 </div><div class='input'><span class='co'># }</span>
+#&gt; 144.438  16.146 166.617 </div><div class='input'><span class='co'># }</span>
 
 </div></pre>
   </div>
