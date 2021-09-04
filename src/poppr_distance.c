@@ -34,14 +34,14 @@
 #
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 #include <stdio.h>
-#include <Rinternals.h>
-#include <Rdefines.h>
-#include <R.h>
-#include <R_ext/Utils.h>
 #include <math.h>
 #include <time.h>
 #include <string.h>
 #include <stdlib.h>
+#include <Rinternals.h>
+#include <Rdefines.h>
+#include <R.h>
+#include <R_ext/Utils.h>
 int perm_count;
 
 SEXP pairwise_covar(SEXP pair_vec);

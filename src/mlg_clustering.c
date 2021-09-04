@@ -35,14 +35,14 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #include <stdio.h>
-#include <Rinternals.h>
-#include <R_ext/Utils.h>
-#include <Rdefines.h>
-#include <R.h>
 #include <math.h>
 #include <time.h>
 #include <string.h>
 #include <stdlib.h>
+#include <Rinternals.h>
+#include <R_ext/Utils.h>
+#include <Rdefines.h>
+#include <R.h>
 
 // Thu Apr 13 08:42:12 2017 ------------------------------
 // This code produces bugs when run on Fedora with multiple threads. Because of
