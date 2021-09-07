@@ -35,10 +35,6 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #include <stdio.h>
-#include <Rinternals.h>
-#include <R_ext/Utils.h>
-#include <Rdefines.h>
-#include <R.h>
 #include <math.h>
 #include <time.h>
 #include <string.h>
@@ -47,6 +43,10 @@
 #ifdef _OPENMP
 #include <omp.h>
 #endif
+#include <Rinternals.h>
+#include <R_ext/Utils.h>
+#include <Rdefines.h>
+#include <R.h>
 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

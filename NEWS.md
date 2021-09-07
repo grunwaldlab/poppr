@@ -1,3 +1,12 @@
+poppr 2.9.3
+===========
+
+CRAN MAINTENANCE
+----------------
+
+* C headers were re-arranged to place R-specific headers _after_ OMP headers to
+  avoid problems in clang 13 (@zkamvar, https://github.com/grunwaldlab/poppr/pull/246).
+
 poppr 2.9.2
 ===========
 

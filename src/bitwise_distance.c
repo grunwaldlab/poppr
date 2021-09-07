@@ -36,19 +36,19 @@
 
 #include <stdio.h>
 #include <stdint.h>
-#include <Rinternals.h>
-#include <R_ext/Utils.h>
-#include <Rdefines.h>
-#include <R.h>
 #include <math.h>
 #include <time.h>
 #include <string.h>
 #include <stdlib.h>
-
 // Include openMP if the compiler supports it
 #ifdef _OPENMP
 #include <omp.h>
 #endif
+#include <Rinternals.h>
+#include <R_ext/Utils.h>
+#include <Rdefines.h>
+#include <R.h>
+
 
 // Assumptions:
 //  All genotypes have the same number of SNPs available.
