@@ -83,7 +83,7 @@ the user to choose a specified file regardless of path." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.9.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.9.3</span>
       </span>
     </div>
 
@@ -91,7 +91,7 @@ the user to choose a specified file regardless of path." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -120,7 +120,7 @@ the user to choose a specified file regardless of path." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/grunwaldlab/poppr">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -190,10 +190,10 @@ name or names.</p></dd>
     <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
 
 <span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'>getfile</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in file.path(file.choose()): unable to translate '@&lt;a6&gt;&lt;e9&gt;&lt;fe&gt;' to UTF-8</span></div><div class='input'><span class='fu'><a href='poppr.html'>poppr</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>$</span><span class='va'>files</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in file.path(file.choose()): unable to translate '@.&lt;f2&gt;&lt;e9&gt;&lt;fe&gt;' to UTF-8</span></div><div class='input'><span class='fu'><a href='poppr.html'>poppr</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>$</span><span class='va'>files</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='error'>Error in poppr(x$files): object 'x' not found</span></div><div class='input'>
 <span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fu'>getfile</span><span class='op'>(</span>multi<span class='op'>=</span><span class='cn'>TRUE</span>, pattern<span class='op'>=</span><span class='st'>"^.+?dat$"</span><span class='op'>)</span> 
-</div><div class='output co'>#&gt; <span class='error'>Error in file.path(file.choose()): unable to translate '@&lt;a6&gt;&lt;e9&gt;&lt;fe&gt;' to UTF-8</span></div><div class='input'><span class='co'>#useful for reading in multiple FSTAT formatted files.</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in file.path(file.choose()): unable to translate '@.&lt;f2&gt;&lt;e9&gt;&lt;fe&gt;' to UTF-8</span></div><div class='input'><span class='co'>#useful for reading in multiple FSTAT formatted files.</span>
 
 <span class='va'>yfiles</span> <span class='op'>&lt;-</span> <span class='fu'><a href='poppr.all.html'>poppr.all</a></span><span class='op'>(</span><span class='va'>y</span><span class='op'>$</span><span class='va'>files</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='error'>Error in seq(length(filelist)): object 'y' not found</span></div><div class='input'>

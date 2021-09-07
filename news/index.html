@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.9.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.9.3</span>
       </span>
     </div>
 
@@ -87,7 +87,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -116,7 +116,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/grunwaldlab/poppr">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -137,13 +137,25 @@
       <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="poppr-292" class="section level1">
-<h1 class="page-header" data-toc-text="2.9.2">
-<a href="#poppr-292" class="anchor"></a>poppr 2.9.2<small> 2021-05-22 </small>
+    <div id="poppr-293" class="section level1">
+<h1 class="page-header" data-toc-text="2.9.3">
+<a href="#poppr-293" class="anchor"></a>poppr 2.9.3<small> 2021-09-07 </small>
 </h1>
 <div id="cran-maintenance" class="section level2">
 <h2 class="hasAnchor">
 <a href="#cran-maintenance" class="anchor"></a>CRAN MAINTENANCE</h2>
+<ul>
+<li>C headers were re-arranged to place R-specific headers <em>after</em> OMP headers to avoid problems in clang 13 (<a href='https://github.com/zkamvar'>@zkamvar</a>, <a href="https://github.com/grunwaldlab/poppr/pull/246" class="uri">https://github.com/grunwaldlab/poppr/pull/246</a>).</li>
+</ul>
+</div>
+</div>
+    <div id="poppr-292" class="section level1">
+<h1 class="page-header" data-toc-text="2.9.2">
+<a href="#poppr-292" class="anchor"></a>poppr 2.9.2<small> 2021-05-22 </small>
+</h1>
+<div id="cran-maintenance-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#cran-maintenance-1" class="anchor"></a>CRAN MAINTENANCE</h2>
 <ul>
 <li>A test for <code><a href="../reference/bruvo.dist.html">bruvo.between()</a></code> was fixed in a superficial way to avoid an error on CRAN R-devel (<a href='https://github.com/zkamvar'>@zkamvar</a>, <a href="https://github.com/grunwaldlab/poppr/pull/242" class="uri">https://github.com/grunwaldlab/poppr/pull/242</a>).</li>
 </ul>
@@ -202,9 +214,9 @@
 <h1 class="page-header" data-toc-text="2.8.7">
 <a href="#poppr-287" class="anchor"></a>poppr 2.8.7<small> 2021-01-06 </small>
 </h1>
-<div id="cran-maintenance-1" class="section level2">
+<div id="cran-maintenance-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#cran-maintenance-1" class="anchor"></a>CRAN MAINTENANCE</h2>
+<a href="#cran-maintenance-2" class="anchor"></a>CRAN MAINTENANCE</h2>
 <ul>
 <li>Links to other packages are now formatted correctly.</li>
 </ul>
@@ -226,7 +238,7 @@
 <h2 class="hasAnchor">
 <a href="#new-imports" class="anchor"></a>NEW IMPORTS</h2>
 <ul>
-<li>Progress bars are now implemented via the <a href="https://github.com/HenrikBengtsson/progressr">progressr</a> package, which gives the user control over what should be displayed (or not). For example, to get auditory updates instead of a progress bar, you can use the “beepr” package and set <code><a href="https://rdrr.io/pkg/progressr/man/handlers.html">progressr::handlers("beepr")</a></code>. This will play an alert for each step (~50) and a final sound. To suppress all progress bars entirely, you can use <code><a href="https://rdrr.io/pkg/progressr/man/handlers.html">progressr::handlers("void")</a></code>. These progress bars have replaced the <code><a href="https://rdrr.io/r/utils/txtProgressBar.html">utils::txtProgressBar()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/progress_estimated.html">dplyr::progress_estimated()</a></code> bars.</li>
+<li>Progress bars are now implemented via the <a href="https://progressr.futureverse.org">progressr</a> package, which gives the user control over what should be displayed (or not). For example, to get auditory updates instead of a progress bar, you can use the “beepr” package and set <code><a href="https://progressr.futureverse.org/reference/handlers.html">progressr::handlers("beepr")</a></code>. This will play an alert for each step (~50) and a final sound. To suppress all progress bars entirely, you can use <code><a href="https://progressr.futureverse.org/reference/handlers.html">progressr::handlers("void")</a></code>. These progress bars have replaced the <code><a href="https://rdrr.io/r/utils/txtProgressBar.html">utils::txtProgressBar()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/progress_estimated.html">dplyr::progress_estimated()</a></code> bars.</li>
 </ul>
 </div>
 </div>
@@ -234,9 +246,9 @@
 <h1 class="page-header" data-toc-text="2.8.5">
 <a href="#poppr-285" class="anchor"></a>poppr 2.8.5<small> 2020-02-25 </small>
 </h1>
-<div id="cran-maintenance-2" class="section level2">
+<div id="cran-maintenance-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#cran-maintenance-2" class="anchor"></a>CRAN MAINTENANCE</h2>
+<a href="#cran-maintenance-3" class="anchor"></a>CRAN MAINTENANCE</h2>
 <ul>
 <li>The output from the <code><a href="../reference/poppr.html">poppr()</a></code> function will no longer contain factor columns for the population names or the file names. This is due to R 4.0.0 changing behavior with the <code>stringsAsFactors</code> default in <code><a href="https://rdrr.io/r/base/data.frame.html">data.frame()</a></code>. (See <a href="https://github.com/grunwaldlab/poppr/issue/212" class="uri">https://github.com/grunwaldlab/poppr/issue/212</a> for details).</li>
 </ul>
@@ -246,9 +258,9 @@
 <h1 class="page-header" data-toc-text="2.8.4">
 <a href="#poppr-284" class="anchor"></a>poppr 2.8.4<small> 2020-02-12 </small>
 </h1>
-<div id="cran-maintenance-3" class="section level2">
+<div id="cran-maintenance-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#cran-maintenance-3" class="anchor"></a>CRAN MAINTENANCE</h2>
+<a href="#cran-maintenance-4" class="anchor"></a>CRAN MAINTENANCE</h2>
 <ul>
 <li>Update documentation for S4 method</li>
 </ul>
