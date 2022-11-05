@@ -2,6 +2,7 @@
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/grunwaldlab/poppr/workflows/R-CMD-check/badge.svg)](https://github.com/grunwaldlab/poppr/actions)
+[![R-CMD-check](https://github.com/grunwaldlab/poppr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/grunwaldlab/poppr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 ## What is *poppr*?
