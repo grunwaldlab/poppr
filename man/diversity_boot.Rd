@@ -59,14 +59,16 @@ Bootstrapping is performed in three ways:
 \itemize{
 \item if \code{n.rare} is a number greater than zero, then bootstrapping
 is performed by randomly sampling without replacement \emph{n.rare}
-samples from the data.\preformatted{\\item if `n.boot` is greater than 1, bootstrapping is performed by
+samples from the data.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{\\item if `n.boot` is greater than 1, bootstrapping is performed by
 sampling n.boot samples from a multinomial distribution weighted by the
 proportion of each MLG in the data.
 
 \\item if `n.boot` is less than 2, bootstrapping is performed by 
 sampling N samples from a multinomial distribution weighted by the
 proportion of each MLG in the data.
-}
+}\if{html}{\out{</div>}}
 
 }
 

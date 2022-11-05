@@ -102,11 +102,11 @@ Bruvo's distance between two alleles is calculated as
 }
 \section{Functions}{
 \itemize{
-\item \code{bruvo.between}: Bruvo's distance between a query and a reference
+\item \code{bruvo.between()}: Bruvo's distance between a query and a reference
 Only diferences between query individuals and reference individuals will be reported
 All other values are NaN
-}}
 
+}}
 \note{
 Do not use missingno with this function.
   \subsection{Missing alleles and Bruvo's distance in \pkg{poppr} versions < 2.5}{
