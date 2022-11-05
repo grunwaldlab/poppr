@@ -68,3 +68,4 @@ Suggests:
 License: GPL-2 | GPL-3
 VignetteBuilder: knitr
 RoxygenNote: 7.2.1
+Remotes: dbailleul/RClone
