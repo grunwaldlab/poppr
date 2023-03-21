@@ -197,9 +197,9 @@ sub_index <- function(pop, sublist="ALL", exclude=NULL){
   # Treating anything present in exclude.
   if (!is.null(exclude)){
     # If both the sublist and exclude are numeric or character.
-    if (is.numeric(sublist) & is.numeric(exclude) | class(sublist) == class(exclude)){
+    if (is.numeric(sublist) && is.numeric(exclude) || identical(class(sublist), class(exclude))) {
       sublist <- sublist[!sublist %in% exclude]
-    } else if (is.numeric(sublist) & class(exclude) == "character"){
+    } else if (is.numeric(sublist) && inherits(exclude, "character")){
     # if the sublist is numeric and exclude is a character. eg s=1:10, b="USA"
       sublist <- sublist[sublist %in% which(!popNames(pop) %in% exclude)]
     } else {
