@@ -46,12 +46,12 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
       - uses: r-lib/actions/setup-tinytex@v2
-      - name: Install LaTeX packages
-        run: |
-          tlmgr install colortbl
-          tlmgr install mathtools
-          tlmgr install preprint
-          tlmgr install natbib
+      # - name: Install LaTeX packages
+      #   run: |
+      #     tlmgr install colortbl
+      #     tlmgr install mathtools
+      #     tlmgr install preprint
+      #     tlmgr install natbib
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
