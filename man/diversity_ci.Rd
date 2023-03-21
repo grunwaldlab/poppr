@@ -135,7 +135,7 @@ different statistics have different properties, there will not always be
 one clear method for calculating confidence intervals. A suggestion for
 correction in Shannon's index is to center the CI around the observed
 statistic (Marcon, 2012), but there are theoretical limitations to this.
-For details, see \url{http://stats.stackexchange.com/q/156235/49413}.
+For details, see \url{https://stats.stackexchange.com/q/156235/49413}.
 }
 
 \subsection{User-defined functions}{

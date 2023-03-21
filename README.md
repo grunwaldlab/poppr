@@ -1,7 +1,6 @@
 # Poppr version 2 <img src="man/figures/small_logo.png" align="right" height="98"/>
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/grunwaldlab/poppr/workflows/R-CMD-check/badge.svg)](https://github.com/grunwaldlab/poppr/actions)
 [![R-CMD-check](https://github.com/grunwaldlab/poppr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/grunwaldlab/poppr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
@@ -99,7 +98,7 @@ New features are occasionally added to {poppr}, but it can take time for it to
 get to CRAN. If you know that you want the latest version of {poppr}, (which
 will contain bug fixes and new features to be included in future releases), then
 you can use the custom R-Universe repository, which is updated hourly: 
-<https://zkamvar.r-universe.dev/ui#builds>
+<https://zkamvar.r-universe.dev/builds>
 
 To install poppr from the R-Universe, you can use the following code:
 
