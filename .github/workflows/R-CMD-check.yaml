@@ -47,6 +47,7 @@ jobs:
       - uses: r-lib/actions/setup-tinytex@v2
       - name: Install LaTeX packages
         run: |
+          update-tlmgr-lates.sh --update
           tlmgr install colortbl
           tlmgr install mathtools
           tlmgr install preprint
