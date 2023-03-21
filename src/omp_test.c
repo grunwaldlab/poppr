@@ -2,6 +2,8 @@
 #include <Rdefines.h>
 #include <R.h>
 
+SEXP omp_test();
+
 // Simple function to check for openMP support
 // Returns 1 if openMP is supported, 0 if it is not.
 SEXP omp_test()
