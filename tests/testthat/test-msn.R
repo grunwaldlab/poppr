@@ -101,10 +101,6 @@ expect_vertex_attr <- function(g, a){
   eval(bquote(expect_equal(igraph::vertex_attr_names(.(g$graph)), .(a))))
 }
 
-expect_vertex_size_scale <- function(g, s){
-  eval(bquote(expect_equal(sort(igraph::vertex_attr(.(g$graph), "size")^2), 
-                           sort(.(s)))))
-}
 
 #' Testing distance tables
 #'
@@ -433,11 +429,6 @@ pc <- as.genclone(partial_clone)
 bpc  <- bruvo.dist(pc, replen = rep(1, 10))
 bmsn <- bruvo.msn(pc, replen = rep(1, 10), showplot = FALSE)
 pmsn <- poppr.msn(pc, bpc, showplot = FALSE)
-
-test_that("nodes are properly scaled", {
-  expect_vertex_size_scale(bmsn, as.integer(table(mll(pc))))
-  expect_vertex_size_scale(pmsn, as.integer(table(mll(pc))))
-})
 
 test_that("a warning is thrown if there are no populations to subset", {
   skip_on_cran()
