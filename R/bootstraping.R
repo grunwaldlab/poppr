@@ -604,6 +604,7 @@ diversity_boot <- function(tab, n, n.boot = 1L, n.rare = NULL, H = TRUE,
 #'   vegan::rarefy(t(as.matrix(x)), 10)`).
 #'   }
 #' @export
+#' @md
 #' @seealso [diversity_boot()] [diversity_stats()]
 #'   [poppr()] [boot::boot()] [boot::norm.ci()]
 #'   [boot::boot.ci()]
