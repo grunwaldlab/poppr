@@ -7,8 +7,8 @@ on:
     branches: [main, master]
   release:
     types: [published]
-  cron:
-    schedule: '0 4 * * 2'
+  schedule:
+    cron: '0 4 * * 2'
 
 name: R-CMD-check
 
