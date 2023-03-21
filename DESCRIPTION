@@ -1,7 +1,7 @@
 Package: poppr
 Type: Package
 Title: Genetic Analysis of Populations with Mixed Reproduction
-Version: 2.9.3
+Version: 2.9.4
 Authors@R: c(person(c("Zhian", "N."), "Kamvar", role = c("cre", "aut"),
     email = "zkamvar@gmail.com", comment = c(ORCID = "0000-0003-1458-7108")),
     person(c("Javier", "F."), "Tabima", role = "aut",
@@ -65,6 +65,7 @@ Suggests:
     poweRlaw,
     cowplot,
     RClone
+Config/Needs/check: dbailleul/RClone
 License: GPL-2 | GPL-3
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
