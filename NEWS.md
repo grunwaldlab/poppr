@@ -1,3 +1,13 @@
+poppr 2.9.4
+===========
+
+CRAN MAINTENANCE
+----------------
+
+* a function declaration was added for `SEXP omp_test()`
+* failing tests were fixed.
+* code where object classes were compared with `==` was fixed to use `inherits()`
+
 poppr 2.9.3
 ===========
 
