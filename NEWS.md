@@ -8,6 +8,12 @@ CRAN MAINTENANCE
 * failing tests were fixed.
 * code where object classes were compared with `==` was fixed to use `inherits()`
 
+DEPENDENCIES
+------------
+
+* {RClone} has been removed as a suggested package as it was archived on CRAN
+  some time ago.
+
 poppr 2.9.3
 ===========
 
