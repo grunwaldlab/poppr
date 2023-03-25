@@ -103,7 +103,7 @@ Molecular markers, natural history and evolution. Chapman & Hall, London.
 Prevosti A. (1974) La distancia genetica entre poblaciones. Miscellanea
 Alcobe, 68, 109-118. 
 
-Prevosti A., Oca\~na J. and Alonso G. (1975) Distances
+Prevosti A., Ocana J. and Alonso G. (1975) Distances
 between populations of Drosophila subobscura, based on chromosome
 arrangements frequencies. Theoretical and Applied Genetics, 45, 231-241. 
 

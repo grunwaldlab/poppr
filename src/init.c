@@ -21,7 +21,7 @@ extern SEXP get_pgen_matrix_genind(SEXP, SEXP, SEXP, SEXP);
 extern SEXP mlg_round_robin(SEXP);
 extern SEXP msn_tied_edges(SEXP, SEXP, SEXP);
 extern SEXP neighbor_clustering(SEXP, SEXP, SEXP, SEXP, SEXP);
-extern SEXP omp_test();
+extern SEXP omp_test(void);
 extern SEXP pairdiffs(SEXP);
 extern SEXP pairwise_covar(SEXP);
 extern SEXP permute_shuff(SEXP, SEXP, SEXP);

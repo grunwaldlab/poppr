@@ -1,23 +1,5 @@
-# Poppr version 2.9.3
+# Poppr version 2.9.4
 
-This update rearranges the C files to declare all non-R headers before R headers to address the openmp failures in clang13 as pointed out by Prof. Ripley. 
-
-## Test environments
-
-* local macOS install, R 4.1.1
-* local ubuntu 20.04 install, R 4.1.1, R devel
-* windows R Under development (unstable) 
-
-## R CMD check results
-
-Ubuntu Linux: OK
-macOS:        OK
-Windows:      OK
-
-
-## Downstream dependencies
-
-- popprxl:  OK
-- vcfR:     OK
-- adegenet: OK
+This fixes broken tests, provides a declaration for an exported C function, and fixes object class comparison to use identical()
+This also removes RClone from Suggests. There is no user-facing code that contains RClone and it is an archived package on CRAN.
 

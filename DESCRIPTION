@@ -1,7 +1,7 @@
 Package: poppr
 Type: Package
 Title: Genetic Analysis of Populations with Mixed Reproduction
-Version: 2.9.3
+Version: 2.9.4
 Authors@R: c(person(c("Zhian", "N."), "Kamvar", role = c("cre", "aut"),
     email = "zkamvar@gmail.com", comment = c(ORCID = "0000-0003-1458-7108")),
     person(c("Javier", "F."), "Tabima", role = "aut",
@@ -33,7 +33,7 @@ Description: Population genetic analyses for hierarchical analysis of partially
     clonal populations built upon the architecture of the 'adegenet' package. 
     Originally described in Kamvar, Tabima, and Grünwald (2014) 
     <doi:10.7717/peerj.281> with version 2.0 described in Kamvar, Brooks, and 
-    Grünwald (2015) <doi:10.3389/fgene.2015.00208>.
+    Grünwald (2015) <doi:10.3389/fgene.2015.00208>. 
 MailingList: https://groups.google.com/d/forum/poppr
 BugReports: https://github.com/grunwaldlab/poppr/issues/
 Depends:
@@ -63,8 +63,8 @@ Suggests:
     knitr,
     rmarkdown,
     poweRlaw,
-    cowplot,
-    RClone
+    cowplot
+Config/Needs/check: dbailleul/RClone
 License: GPL-2 | GPL-3
 VignetteBuilder: knitr
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.3

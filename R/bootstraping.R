@@ -588,7 +588,7 @@ diversity_boot <- function(tab, n, n.boot = 1L, n.rare = NULL, H = TRUE,
 #'   one clear method for calculating confidence intervals. A suggestion for
 #'   correction in Shannon's index is to center the CI around the observed
 #'   statistic (Marcon, 2012), but there are theoretical limitations to this.
-#'   For details, see <http://stats.stackexchange.com/q/156235/49413>.
+#'   For details, see <https://stats.stackexchange.com/q/156235/49413>.
 #'   }
 #' 
 #'   \subsection{User-defined functions}{ 
@@ -604,6 +604,7 @@ diversity_boot <- function(tab, n, n.boot = 1L, n.rare = NULL, H = TRUE,
 #'   vegan::rarefy(t(as.matrix(x)), 10)`).
 #'   }
 #' @export
+#' @md
 #' @seealso [diversity_boot()] [diversity_stats()]
 #'   [poppr()] [boot::boot()] [boot::norm.ci()]
 #'   [boot::boot.ci()]

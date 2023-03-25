@@ -2,9 +2,11 @@
 #include <Rdefines.h>
 #include <R.h>
 
+SEXP omp_test(void);
+
 // Simple function to check for openMP support
 // Returns 1 if openMP is supported, 0 if it is not.
-SEXP omp_test()
+SEXP omp_test(void)
 {
   SEXP Rout;
   PROTECT(Rout = allocVector(INTSXP,1));

@@ -41,7 +41,5 @@ Default methods for subsetting snpclone objects.
 }
 \author{
 Zhian N. Kamvar
-
-Zhian N. Kamvar
 }
 \keyword{internal}
