@@ -61,7 +61,7 @@ for mlg.filter utilizing all of the algorithms.
 }
 \note{
 This function originally appeared in 
-  \doi{10.5281/zenodo.17424}{DOI: 10.5281/zenodo.17424}
+  \doi{10.5281/zenodo.17424}
 }
 \examples{
 

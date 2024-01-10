@@ -124,7 +124,7 @@
 #' **All of the functions documented here will work on any of the MLG types
 #' defined in \pkg{poppr}**
 #' 
-#' @seealso `\link[vegan]{diversity`} 
+#' @seealso [vegan::diversity()]
 #'  [diversity_stats]
 #'  [popsub]
 #'  [mll]

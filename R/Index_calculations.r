@@ -47,84 +47,65 @@
 #' @md
 #' @description
 #' 
-#' For the \pkg{poppr} package description, please see
-#' [package?poppr]
+#' For the \pkg{poppr} package description, please see `package?poppr`
 #' 
-#' This function allows the user to quickly view indices of heterozygosity, 
-#' evenness, and linkage to aid in the decision of a path to further analyze 
-#' a specified dataset. It natively takes [adegenet::genind] and [genclone][genclone-class]
-#' objects, but can convert any raw data formats that adegenet can take (fstat,
-#' structure, genetix, and genpop) as well as genalex files exported into a csv
-#' format (see [read.genalex()] for details).
+#' This function allows the user to quickly view indices of heterozygosity,
+#' evenness, and linkage to aid in the decision of a path to further analyze a
+#' specified dataset. It natively takes [adegenet::genind] and
+#' [genclone][genclone-class] objects, but can convert any raw data formats
+#' that adegenet can take (fstat, structure, genetix, and genpop) as well as
+#' genalex files exported into a csv format (see [read.genalex()] for details).
 #' 
 #' 
-#' @param dat a [adegenet::genind] object OR a [genclone][genclone-class] object OR any fstat, structure,
-#'   genetix, genpop, or genalex formatted file.
-#'
+#' @param dat a [adegenet::genind] object OR a [genclone][genclone-class]
+#'   object OR any fstat, structure, genetix, genpop, or genalex formatted
+#'   file.
 #' @param total When `TRUE` (default), indices will be calculated for the 
 #'   pooled populations.
-#'
 #' @param sublist a list of character strings or integers to indicate specific 
 #'   population names (accessed via [adegenet::popNames()]). 
 #'   Defaults to "ALL".
-#'
 #' @param exclude a `vector` of population names or indexes that the user
 #' wishes to discard. Default to `NULL`.
-#'
 #' @param blacklist DEPRECATED, use exclude.
-#'
 #' @param sample an integer indicating the number of permutations desired to 
-#'   obtain p-values. Sampling will shuffle genotypes at each locus to simulate 
-#'   a panmictic population using the observed genotypes. Calculating the 
-#'   p-value includes the observed statistics, so set your sample number to one 
-#'   off for a round p-value (eg. `sample = 999` will give you p = 0.001 
-#'   and `sample = 1000` will give you p = 0.000999001).
-#'
+#'   obtain p-values. Sampling will shuffle genotypes at each locus to simulate
+#'   a panmictic population using the observed genotypes. Calculating the
+#'   p-value includes the observed statistics, so set your sample number to one
+#'   off for a round p-value (eg. `sample = 999` will give you p = 0.001 and
+#'   `sample = 1000` will give you p = 0.000999001).
 #' @param method an integer from 1 to 4 indicating the method of sampling 
 #'   desired. see [shufflepop()] for details.
-#'
 #' @param missing how should missing data be treated? `"zero"` and 
 #'   `"mean"` will set the missing values to those documented in 
 #'   [tab()]. `"loci"` and `"geno"` will remove any loci or
 #'   genotypes with missing data, respectively (see [missingno()] for
 #'   more information.
-#'
 #' @param cutoff `numeric` a number from 0 to 1 indicating the percent 
 #'   missing data allowed for analysis. This is to be used in conjunction with 
 #'   the flag `missing` (see [missingno()] for details)
-#'
 #' @param quiet `FALSE` (default) will display a progress bar for each 
 #'   population analyzed.
-#'
 #' @param clonecorrect default `FALSE`. must be used with the `strata`
 #'   parameter, or the user will potentially get undesired results. see
 #'   [clonecorrect()] for details.
-#'
 #' @param strata a `formula` indicating the hierarchical levels to be used.
 #'   The hierarchies should be present in the `strata` slot. See
 #'   [strata()] for details.
-#'
 #' @param keep an `integer`. This indicates which strata you wish to keep 
 #'   after clone correcting your data sets. To combine strata, just set keep 
 #'   from 1 to the number of straifications set in strata. see 
 #'   [clonecorrect()] for details.
-#'
 #' @param plot `logical` if `TRUE` (default) and `sampling > 0`, 
 #'   a histogram will be produced for each population.
-#'
 #' @param hist `logical` Deprecated. Use plot.
-#'
 #' @param index `character` Either "Ia" or "rbarD". If `hist = TRUE`, 
 #'   this will determine the index used for the visualization.
-#'
 #' @param minsamp an `integer` indicating the minimum number of individuals
-#'   to resample for rarefaction analysis. See `\link[vegan]{rarefy`} for 
+#'   to resample for rarefaction analysis. See [vegan::rarefy()] for 
 #'   details.
-#'
-#' @param legend `logical`. When this is set to `TRUE`, a legend 
-#'   describing the resulting table columns will be printed. Defaults to 
-#'   `FALSE`
-#'
+#' @param legend `logical`. When this is set to `TRUE`, a legend describing the
+#'   resulting table columns will be printed. Defaults to `FALSE`
 #' @param ... arguments to be passed on to [diversity_stats()]
 #'
 #' @return A data frame with populations in rows and the following columns:
@@ -549,17 +530,17 @@ poppr.all <- function(filelist, ...){
 #'   `TRUE` prints nothing.
 #'   `FALSE` (default) will print the population name and progress bar.
 #' @param missing a character string. see [missingno()] for details.
-#' @param plot When [TRUE] (default), a heatmap of the values per locus pair 
-#'   will be plotted (for [pair.ia()]). When [sampling > 0], different things
+#' @param plot When `TRUE` (default), a heatmap of the values per locus pair 
+#'   will be plotted (for [pair.ia()]). When `sampling > 0`, different things
 #'   happen with [ia()] and [pair.ia()]. For [ia()], a histogram for the data
 #'   set is plotted. For [pair.ia()], p-values are added as text on the
 #'   heatmap. 
-#' @param hist [logical] Deprecated. Use plot.
-#' @param index [character] either "Ia" or "rbarD". If [hist = TRUE], 
+#' @param hist `logical` Deprecated. Use plot.
+#' @param index `character` either "Ia" or "rbarD". If `hist = TRUE`, 
 #'   this indicates which index you want represented in the plot (default:
 #'   "rbarD").
-#' @param valuereturn [logical] if [TRUE], the index values from the 
-#'   reshuffled data is returned. If [FALSE] (default), the index is 
+#' @param valuereturn `logical` if `TRUE`, the index values from the 
+#'   reshuffled data is returned. If `FALSE` (default), the index is 
 #'   returned with associated p-values in a 4 element numeric vector.
 #' @return 
 #' ## for [pair.ia()]

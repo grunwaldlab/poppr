@@ -236,7 +236,7 @@ new.H <- H3N2[H.vec \%in\% inds, ]
 }
 }
 \seealso{
-\verb{\link[vegan]\{diversity}}
+\code{\link[vegan:diversity]{vegan::diversity()}}
 \link{diversity_stats}
 \link{popsub}
 \link{mll}

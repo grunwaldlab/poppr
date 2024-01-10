@@ -75,7 +75,7 @@
 #' @seealso \code{\link{mlg.filter}} \code{\link{cutoff_predictor}} 
 #'   \code{\link{bitwise.dist}} \code{\link{diss.dist}}
 #' @note This function originally appeared in 
-#'   \doi{10.5281/zenodo.17424}{DOI: 10.5281/zenodo.17424}
+#'   \doi{10.5281/zenodo.17424}
 #' @references ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary 
 #'   Material for Frontiers Plant Genetics and Genomics 'Novel R tools for 
 #'   analysis of genome-wide population genetic data with emphasis on

@@ -51,20 +51,20 @@ performing calculations?
 
 \item{missing}{a character string. see \code{\link[=missingno]{missingno()}} for details.}
 
-\item{plot}{When \link{TRUE} (default), a heatmap of the values per locus pair
-will be plotted (for \code{\link[=pair.ia]{pair.ia()}}). When \link{sampling > 0}, different things
+\item{plot}{When \code{TRUE} (default), a heatmap of the values per locus pair
+will be plotted (for \code{\link[=pair.ia]{pair.ia()}}). When \code{sampling > 0}, different things
 happen with \code{\link[=ia]{ia()}} and \code{\link[=pair.ia]{pair.ia()}}. For \code{\link[=ia]{ia()}}, a histogram for the data
 set is plotted. For \code{\link[=pair.ia]{pair.ia()}}, p-values are added as text on the
 heatmap.}
 
-\item{hist}{\link{logical} Deprecated. Use plot.}
+\item{hist}{\code{logical} Deprecated. Use plot.}
 
-\item{index}{\link{character} either "Ia" or "rbarD". If \link{hist = TRUE},
+\item{index}{\code{character} either "Ia" or "rbarD". If \code{hist = TRUE},
 this indicates which index you want represented in the plot (default:
 "rbarD").}
 
-\item{valuereturn}{\link{logical} if \link{TRUE}, the index values from the
-reshuffled data is returned. If \link{FALSE} (default), the index is
+\item{valuereturn}{\code{logical} if \code{TRUE}, the index values from the
+reshuffled data is returned. If \code{FALSE} (default), the index is
 returned with associated p-values in a 4 element numeric vector.}
 
 \item{low}{(for pair.ia) a color to use for low values when `plot =

@@ -27,8 +27,9 @@ poppr(
 )
 }
 \arguments{
-\item{dat}{a \link[adegenet:new.genind]{adegenet::genind} object OR a \link[=genclone-class]{genclone} object OR any fstat, structure,
-genetix, genpop, or genalex formatted file.}
+\item{dat}{a \link[adegenet:new.genind]{adegenet::genind} object OR a \link[=genclone-class]{genclone}
+object OR any fstat, structure, genetix, genpop, or genalex formatted
+file.}
 
 \item{total}{When \code{TRUE} (default), indices will be calculated for the
 pooled populations.}
@@ -46,8 +47,8 @@ wishes to discard. Default to \code{NULL}.}
 obtain p-values. Sampling will shuffle genotypes at each locus to simulate
 a panmictic population using the observed genotypes. Calculating the
 p-value includes the observed statistics, so set your sample number to one
-off for a round p-value (eg. \code{sample = 999} will give you p = 0.001
-and \code{sample = 1000} will give you p = 0.000999001).}
+off for a round p-value (eg. \code{sample = 999} will give you p = 0.001 and
+\code{sample = 1000} will give you p = 0.000999001).}
 
 \item{method}{an integer from 1 to 4 indicating the method of sampling
 desired. see \code{\link[=shufflepop]{shufflepop()}} for details.}
@@ -87,12 +88,11 @@ a histogram will be produced for each population.}
 this will determine the index used for the visualization.}
 
 \item{minsamp}{an \code{integer} indicating the minimum number of individuals
-to resample for rarefaction analysis. See \verb{\link[vegan]\{rarefy}} for
+to resample for rarefaction analysis. See \code{\link[vegan:rarefy]{vegan::rarefy()}} for
 details.}
 
-\item{legend}{\code{logical}. When this is set to \code{TRUE}, a legend
-describing the resulting table columns will be printed. Defaults to
-\code{FALSE}}
+\item{legend}{\code{logical}. When this is set to \code{TRUE}, a legend describing the
+resulting table columns will be printed. Defaults to \code{FALSE}}
 
 \item{...}{arguments to be passed on to \code{\link[=diversity_stats]{diversity_stats()}}}
 }
@@ -126,15 +126,14 @@ the number of observed values.
 }
 }
 \description{
-For the \pkg{poppr} package description, please see
-\link{package?poppr}
+For the \pkg{poppr} package description, please see \code{package?poppr}
 
 This function allows the user to quickly view indices of heterozygosity,
-evenness, and linkage to aid in the decision of a path to further analyze
-a specified dataset. It natively takes \link[adegenet:new.genind]{adegenet::genind} and \link[=genclone-class]{genclone}
-objects, but can convert any raw data formats that adegenet can take (fstat,
-structure, genetix, and genpop) as well as genalex files exported into a csv
-format (see \code{\link[=read.genalex]{read.genalex()}} for details).
+evenness, and linkage to aid in the decision of a path to further analyze a
+specified dataset. It natively takes \link[adegenet:new.genind]{adegenet::genind} and
+\link[=genclone-class]{genclone} objects, but can convert any raw data formats
+that adegenet can take (fstat, structure, genetix, and genpop) as well as
+genalex files exported into a csv format (see \code{\link[=read.genalex]{read.genalex()}} for details).
 }
 \details{
 This table is intended to be a first look into the dynamics of mutlilocus
