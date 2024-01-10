@@ -41,36 +41,35 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
-#==============================================================================#
+
 #' Produce a basic summary table for population genetic analyses.
 #' 
+#' @md
 #' @description
 #' 
 #' For the \pkg{poppr} package description, please see
-#' \code{\link[=poppr-package]{package?poppr}}
+#' [package?poppr]
 #' 
 #' This function allows the user to quickly view indices of heterozygosity, 
 #' evenness, and linkage to aid in the decision of a path to further analyze 
-#' a specified dataset. It natively takes \code{\linkS4class{genind}} and 
-#' \code{\linkS4class{genclone}} objects, but can convert any raw data formats 
-#' that adegenet can take (fstat, structure, genetix, and genpop) as well as 
-#' genalex files exported into a csv format (see \code{\link{read.genalex}} for 
-#' details).
+#' a specified dataset. It natively takes [adegenet::genind] and [genclone][genclone-class]
+#' objects, but can convert any raw data formats that adegenet can take (fstat,
+#' structure, genetix, and genpop) as well as genalex files exported into a csv
+#' format (see [read.genalex()] for details).
 #' 
 #' 
-#' @param dat a \code{\linkS4class{genind}} object OR a 
-#'   \code{\linkS4class{genclone}} object OR any fstat, structure, genetix, 
-#'   genpop, or genalex formatted file.
-#'   
-#' @param total When \code{TRUE} (default), indices will be calculated for the 
+#' @param dat a [adegenet::genind] object OR a [genclone][genclone-class] object OR any fstat, structure,
+#'   genetix, genpop, or genalex formatted file.
+#'
+#' @param total When `TRUE` (default), indices will be calculated for the 
 #'   pooled populations.
-#'   
+#'
 #' @param sublist a list of character strings or integers to indicate specific 
-#'   population names (accessed via \code{popNames()}). 
+#'   population names (accessed via [adegenet::popNames()]). 
 #'   Defaults to "ALL".
-#'   
-#' @param exclude a \code{vector} of population names or indexes that the user
-#' wishes to discard. Default to \code{NULL}.
+#'
+#' @param exclude a `vector` of population names or indexes that the user
+#' wishes to discard. Default to `NULL`.
 #'
 #' @param blacklist DEPRECATED, use exclude.
 #'
@@ -78,107 +77,116 @@
 #'   obtain p-values. Sampling will shuffle genotypes at each locus to simulate 
 #'   a panmictic population using the observed genotypes. Calculating the 
 #'   p-value includes the observed statistics, so set your sample number to one 
-#'   off for a round p-value (eg. \code{sample = 999} will give you p = 0.001 
-#'   and \code{sample = 1000} will give you p = 0.000999001).
-#'   
+#'   off for a round p-value (eg. `sample = 999` will give you p = 0.001 
+#'   and `sample = 1000` will give you p = 0.000999001).
+#'
 #' @param method an integer from 1 to 4 indicating the method of sampling 
-#'   desired. see \code{\link{shufflepop}} for details.
-#'   
-#' @param missing how should missing data be treated? \code{"zero"} and 
-#'   \code{"mean"} will set the missing values to those documented in 
-#'   \code{\link{tab}}. \code{"loci"} and \code{"geno"} will remove any loci or
-#'   genotypes with missing data, respectively (see \code{\link{missingno}} for
+#'   desired. see [shufflepop()] for details.
+#'
+#' @param missing how should missing data be treated? `"zero"` and 
+#'   `"mean"` will set the missing values to those documented in 
+#'   [tab()]. `"loci"` and `"geno"` will remove any loci or
+#'   genotypes with missing data, respectively (see [missingno()] for
 #'   more information.
-#'   
-#' @param cutoff \code{numeric} a number from 0 to 1 indicating the percent 
+#'
+#' @param cutoff `numeric` a number from 0 to 1 indicating the percent 
 #'   missing data allowed for analysis. This is to be used in conjunction with 
-#'   the flag \code{missing} (see \code{\link{missingno}} for details)
-#'   
-#' @param quiet \code{FALSE} (default) will display a progress bar for each 
+#'   the flag `missing` (see [missingno()] for details)
+#'
+#' @param quiet `FALSE` (default) will display a progress bar for each 
 #'   population analyzed.
-#'   
-#' @param clonecorrect default \code{FALSE}. must be used with the \code{strata}
+#'
+#' @param clonecorrect default `FALSE`. must be used with the `strata`
 #'   parameter, or the user will potentially get undesired results. see
-#'   \code{\link{clonecorrect}} for details.
-#'   
-#' @param strata a \code{formula} indicating the hierarchical levels to be used.
-#'   The hierarchies should be present in the \code{strata} slot. See
-#'   \code{\link{strata}} for details.
-#'   
-#' @param keep an \code{integer}. This indicates which strata you wish to keep 
+#'   [clonecorrect()] for details.
+#'
+#' @param strata a `formula` indicating the hierarchical levels to be used.
+#'   The hierarchies should be present in the `strata` slot. See
+#'   [strata()] for details.
+#'
+#' @param keep an `integer`. This indicates which strata you wish to keep 
 #'   after clone correcting your data sets. To combine strata, just set keep 
 #'   from 1 to the number of straifications set in strata. see 
-#'   \code{\link{clonecorrect}} for details.
-#'   
-#' @param plot \code{logical} if \code{TRUE} (default) and \code{sampling > 0}, 
+#'   [clonecorrect()] for details.
+#'
+#' @param plot `logical` if `TRUE` (default) and `sampling > 0`, 
 #'   a histogram will be produced for each population.
-#'   
-#' @param hist \code{logical} Deprecated. Use plot.
-#'   
-#' @param index \code{character} Either "Ia" or "rbarD". If \code{hist = TRUE}, 
+#'
+#' @param hist `logical` Deprecated. Use plot.
+#'
+#' @param index `character` Either "Ia" or "rbarD". If `hist = TRUE`, 
 #'   this will determine the index used for the visualization.
-#'   
-#' @param minsamp an \code{integer} indicating the minimum number of individuals
-#'   to resample for rarefaction analysis. See \code{\link[vegan]{rarefy}} for 
+#'
+#' @param minsamp an `integer` indicating the minimum number of individuals
+#'   to resample for rarefaction analysis. See `\link[vegan]{rarefy`} for 
 #'   details.
-#'   
-#' @param legend \code{logical}. When this is set to \code{TRUE}, a legend 
+#'
+#' @param legend `logical`. When this is set to `TRUE`, a legend 
 #'   describing the resulting table columns will be printed. Defaults to 
-#'   \code{FALSE}
-#'   
-#' @param ... arguments to be passed on to \code{\link{diversity_stats}}
-#'   
+#'   `FALSE`
+#'
+#' @param ... arguments to be passed on to [diversity_stats()]
+#'
 #' @return A data frame with populations in rows and the following columns:
-#'   \item{Pop}{A vector indicating the population factor} 
-#'   \item{N}{An integer vector indicating the number of individuals/isolates in
-#'   the specified population.}
-#'   \item{MLG}{An integer vector indicating the number of multilocus genotypes 
-#'   found in the specified population, (see: \code{\link{mlg}})}
-#'   \item{eMLG}{The expected number of MLG at the lowest common sample size
-#'   (set by the parameter \code{minsamp}).}
-#'   \item{SE}{The standard error for the rarefaction analysis}
-#'   \item{H}{Shannon-Weiner Diversity index}
-#'   \item{G}{Stoddard and Taylor's Index} 
-#'   \item{lambda}{Simpson's index} 
-#'   \item{E.5}{Evenness} 
-#'   \item{Hexp}{Nei's gene diversity (expected heterozygosity)}
-#'   \item{Ia}{A numeric vector giving the value of the Index of Association for
-#'   each population factor, (see \code{\link{ia}}).}
-#'   \item{p.Ia}{A numeric vector indicating the p-value for Ia from the number
-#'   of reshufflings indicated in \code{sample}. Lowest value is 1/n where n is
-#'   the number of observed values.}
-#'   \item{rbarD}{A numeric vector giving the value of the Standardized Index of
-#'   Association for each population factor, (see \code{\link{ia}}).}
-#'   \item{p.rD}{A numeric vector indicating the p-value for rbarD from the
-#'   number of reshuffles indicated in \code{sample}. Lowest value is 1/n where
-#'   n is the number of observed values.}
-#'   \item{File}{A vector indicating the name of the original data file.}
-#'   
-#' @details This table is intended to be a first look into the dynamics of 
-#'   mutlilocus genotype diversity. Many of the statistics (except for the the 
-#'   index of association) are simply based on counts of multilocus genotypes 
-#'   and do not take into account the actual allelic states.
-#'   \strong{Descriptions of the statistics can be found in the Algorithms and
-#'   Equations vignette}: \code{vignette("algo", package = "poppr")}.
-#'   \subsection{sampling}{The sampling procedure is explicitly for testing the
-#'   index of association. None of the other diversity statistics (H, G, lambda,
-#'   E.5) are tested with this sampling due to the differing data types. To
-#'   obtain confidence intervals for these statistics, please see 
-#'   \code{\link{diversity_ci}}.}
-#'   \subsection{rarefaction}{Rarefaction analysis is performed on the number of
-#'   multilocus genotypes because it is relatively easy to estimate (Grünwald et
-#'   al., 2003). To obtain rarefied estimates of diversity, it is possible to
-#'   use \code{\link{diversity_ci}} with the argument \code{rarefy = TRUE}}
-#'   \subsection{graphic}{This function outputs a \pkg{ggplot2} graphic of
-#'   histograms. These can be manipulated to be visualized in another manner by
-#'   retrieving the plot with the \code{\link{last_plot}} command from
-#'   \pkg{ggplot2}. A useful manipulation would be to arrange the graphs into a
-#'   single column so that the values of the statistic line up: \cr \code{p <-
-#'   last_plot(); p + facet_wrap(~population, ncol = 1, scales = "free_y")}\cr
-#'   The name for the groupings is "population" and the name for the x axis is
-#'   "value".}
-#'   
-#' @note The calculation of \code{Hexp} has changed from \pkg{poppr} 1.x. It was
+#' - **Pop**: A vector indicating the population factor 
+#' - **N**: An integer vector indicating the number of individuals/isolates in
+#'   the specified population.
+#' - **MLG**: An integer vector indicating the number of multilocus genotypes
+#'   found in the specified population, (see: [mlg()])
+#' - **eMLG**: The expected number of MLG at the lowest common sample size (set
+#'   by the parameter `minsamp`).
+#' - **SE**: The standard error for the rarefaction analysis
+#' - **H**: Shannon-Weiner Diversity index
+#' - **G**: Stoddard and Taylor's Index 
+#' - **lambda**: Simpson's index 
+#' - **E.5**: Evenness 
+#' - **Hexp**: Nei's gene diversity (expected heterozygosity)
+#' - **Ia**: A numeric vector giving the value of the Index of Association for
+#'   each population factor, (see [ia()]).
+#' - **p.Ia**: A numeric vector indicating the p-value for Ia from the number
+#'   of reshufflings indicated in `sample`. Lowest value is 1/n where n is the
+#'   number of observed values.
+#' - **rbarD**: A numeric vector giving the value of the Standardized Index of
+#'   Association for each population factor, (see [ia()]).
+#' - **p.rD**: A numeric vector indicating the p-value for rbarD from the
+#'   number of reshuffles indicated in `sample`. Lowest value is 1/n where n is
+#'   the number of observed values.
+#' - **File**: A vector indicating the name of the original data file.
+#'
+#' @details 
+#'
+#' This table is intended to be a first look into the dynamics of mutlilocus
+#' genotype diversity. Many of the statistics (except for the the index of
+#' association) are simply based on counts of multilocus genotypes and do not
+#' take into account the actual allelic states. **Descriptions of the
+#' statistics can be found in the Algorithms and Equations vignette**:
+#' `vignette("algo", package = "poppr")`.
+#'
+#' ## sampling
+#'
+#' The sampling procedure is explicitly for testing the index of association.
+#' None of the other diversity statistics (H, G, lambda, E.5) are tested with
+#' this sampling due to the differing data types. To obtain confidence
+#' intervals for these statistics, please see [diversity_ci()].
+#'
+#' ## rarefaction
+#'
+#' Rarefaction analysis is performed on the number of multilocus genotypes
+#' because it is relatively easy to estimate (Grünwald et al., 2003). To
+#' obtain rarefied estimates of diversity, it is possible to use
+#' [diversity_ci()] with the argument `rarefy = TRUE`
+#'
+#' ## graphic
+#'
+#' This function outputs a \pkg{ggplot2} graphic of histograms. These can be
+#' manipulated to be visualized in another manner by retrieving the plot with
+#' the [last_plot()] command from \pkg{ggplot2}. A useful manipulation would
+#' be to arrange the graphs into a single column so that the values of the
+#' statistic line up: `p <- last_plot(); p + facet_wrap(~population,
+#' ncol = 1, scales = "free_y")` The name for the groupings is
+#' "population" and the name for the x axis is "value".
+#'
+#' @note The calculation of `Hexp` has changed from \pkg{poppr} 1.x. It was
 #'   previously calculated based on the diversity of multilocus genotypes, 
 #'   resulting in a value of 1 for sexual populations. This was obviously not 
 #'   Nei's 1978 expected heterozygosity. We have thus changed the statistic to 
@@ -190,71 +198,71 @@
 #'   ambiguous ploidy. The lack of allelic dosage information will cause rare 
 #'   alleles to be over-represented and artificially inflate the index. This is 
 #'   especially true with small sample sizes.
-#'   
-#' @seealso \code{\link{clonecorrect}}, 
-#'   \code{\link{poppr.all}}, 
-#'   \code{\link{ia}}, 
-#'   \code{\link{missingno}}, 
-#'   \code{\link{mlg}}, 
-#'   \code{\link{diversity_stats}},
-#'   \code{\link{diversity_ci}}
-#'   
+#'
+#' @seealso [clonecorrect()], 
+#'   [poppr.all()], 
+#'   [ia()], 
+#'   [missingno()], 
+#'   [mlg()], 
+#'   [diversity_stats()],
+#'   [diversity_ci()]
+#'
 #' @export
 #' @author Zhian N. Kamvar
 #' @references  Paul-Michael Agapow and Austin Burt. Indices of multilocus 
-#'   linkage disequilibrium. \emph{Molecular Ecology Notes}, 1(1-2):101-102, 
+#'   linkage disequilibrium. _Molecular Ecology Notes_, 1(1-2):101-102, 
 #'   2001
-#'   
+#'
 #'   A.H.D. Brown, M.W. Feldman, and E. Nevo. Multilocus structure of natural 
-#'   populations of \emph{Hordeum spontaneum}. \emph{Genetics}, 96(2):523-536,
+#'   populations of _Hordeum spontaneum_. _Genetics_, 96(2):523-536,
 #'   1980.
-#'   
+#'
 #'   Niklaus J. Gr\"unwald, Stephen B. Goodwin, Michael G. Milgroom, and William
 #'   E. Fry. Analysis of genotypic diversity data for populations of 
 #'   microorganisms. Phytopathology, 93(6):738-46, 2003
-#'   
+#'
 #'   Bernhard Haubold and Richard R. Hudson. Lian 3.0: detecting linkage 
 #'   disequilibrium in multilocus data. Bioinformatics, 16(9):847-849, 2000.
-#'   
+#'
 #'   Kenneth L.Jr. Heck, Gerald van Belle, and Daniel Simberloff. Explicit 
 #'   calculation of the rarefaction diversity measurement and the determination 
 #'   of sufficient sample size. Ecology, 56(6):pp. 1459-1461, 1975
-#'   
+#'
 #'   Masatoshi Nei. Estimation of average heterozygosity and genetic distance 
 #'   from a small number of individuals. Genetics, 89(3):583-590, 1978.
-#'   
+#'
 #'   S H Hurlbert. The nonconcept of species diversity: a critique and 
 #'   alternative parameters. Ecology, 52(4):577-586, 1971.
-#'   
+#'
 #'   J.A. Ludwig and J.F. Reynolds. Statistical Ecology. A Primer on Methods and
 #'   Computing. New York USA: John Wiley and Sons, 1988.
-#'   
+#'
 #'   Simpson, E. H. Measurement of diversity. Nature 163: 688, 1949 
 #'   doi:10.1038/163688a0
-#'   
+#'
 #'   Good, I. J. (1953). On the Population Frequency of Species and the 
-#'   Estimation of Population Parameters. \emph{Biometrika} 40(3/4): 237-264.
-#'   
+#'   Estimation of Population Parameters. _Biometrika_ 40(3/4): 237-264.
+#'
 #'   Lande, R. (1996). Statistics and partitioning of species diversity, and 
-#'   similarity among multiple communities. \emph{Oikos} 76: 5-13.
-#'   
+#'   similarity among multiple communities. _Oikos_ 76: 5-13.
+#'
 #'   Jari Oksanen, F. Guillaume Blanchet, Roeland Kindt, Pierre Legendre, Peter 
 #'   R. Minchin, R. B. O'Hara, Gavin L. Simpson, Peter Solymos, M. Henry H. 
 #'   Stevens, and Helene Wagner. vegan: Community Ecology Package, 2012. R 
 #'   package version 2.0-5.
-#'   
+#'
 #'   E.C. Pielou. Ecological Diversity. Wiley, 1975.
-#'   
+#'
 #'   Claude Elwood Shannon. A mathematical theory of communication. Bell Systems
 #'   Technical Journal, 27:379-423,623-656, 1948
-#'   
+#'
 #'   J M Smith, N H Smith, M O'Rourke, and B G Spratt. How clonal are bacteria? 
 #'   Proceedings of the National Academy of Sciences, 90(10):4384-4388, 1993.
-#'   
+#'
 #'   J.A. Stoddart and J.F. Taylor. Genotypic diversity: estimation and 
 #'   prediction in samples. Genetics, 118(4):705-11, 1988.
-#'   
-#'   
+#'
+#'
 #' @examples
 #' data(nancycats)
 #' poppr(nancycats)
@@ -299,9 +307,8 @@
 #' strata(H3N2) <- data.frame(other(H3N2)$x)
 #' setPop(H3N2) <- ~country
 #' poppr(H3N2, total = FALSE, sublist=c("Austria", "China", "USA"), 
-#' 				clonecorrect = TRUE, strata = ~country/year)
+#'   clonecorrect = TRUE, strata = ~country/year)
 #' }
-#==============================================================================#
 #' @import adegenet ggplot2 vegan
 poppr <- function(dat, total = TRUE, sublist = "ALL", exclude = NULL, blacklist = NULL, 
                   sample = 0, method = 1, missing = "ignore", cutoff = 0.05, 
@@ -323,7 +330,7 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", exclude = NULL, blacklist 
   # names so that they can easily be ported around.
   namelist <- NULL
   hist <- plot
-  callpop  <- match.call()
+  callpop <- match.call()
   if (!is.null(blacklist)) {
     warning(
       option_deprecated(
@@ -474,20 +481,19 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", exclude = NULL, blacklist 
   return(Iout) 
 }
 
-#==============================================================================#
 #' Process a list of files with poppr
 #'
 #' poppr.all is a wrapper function that will loop through a list of files from
-#' the working directory, execute \code{\link{poppr}}, and concatenate the
+#' the working directory, execute [poppr()], and concatenate the
 #' output into one data frame.
 #'
 #' @param filelist a list of files in the current working directory
 #'
 #' @param ... arguments passed on to poppr
 #'
-#' @return see \code{\link{poppr}}
+#' @return see [poppr()]
 #'
-#' @seealso \code{\link{poppr}}, \code{\link{getfile}}
+#' @seealso [poppr()], [getfile()]
 #' @export
 #' @author Zhian N. Kamvar
 #' @examples
@@ -498,7 +504,6 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", exclude = NULL, blacklist 
 #' # run the analysis on each file.
 #' poppr.all(file.path(x$path, x$files))
 #' }
-#==============================================================================# 
 poppr.all <- function(filelist, ...){
   result <- NULL
   for(a in seq(length(filelist))){
@@ -521,172 +526,166 @@ poppr.all <- function(filelist, ...){
   }
   return(result)
 }
-#==============================================================================#
+
 #' Index of Association
 #' 
 #' Calculate the Index of Association and Standardized Index of Association.
-#' \itemize{
-#'   \item \code{ia()} calculates the index of association over all loci in
-#'   the data set.
-#'   \item \code{pair.ia()} calculates the index of association in a pairwise
-#'   manner among all loci.
-#'   \item  \code{resample.ia()} calculates the index of association on a
-#'   reduced data set multiple times to create a distribution, showing the
-#'   variation of values observed at a given sample size (previously 
-#'   \code{jack.ia}).
-#' }
 #' 
-#' @param gid a \code{\link{genind}} or \code{\link{genclone}} object.
-#'   
-#' @param sample an integer indicating the number of permutations desired (eg 
-#'   999).
-#'   
-#' @param method an integer from 1 to 4 indicating the sampling method desired. 
-#'   see \code{\link{shufflepop}} for details.
-#'   
+#' * [ia()] calculates the index of association over all loci in the data set.
+#' * [pair.ia()] calculates the index of association in a pairwise manner
+#'   among all loci.
+#' * [resample.ia()] calculates the index of association on a reduced data set
+#'   multiple times to create a distribution, showing the variation of values
+#'   observed at a given sample size (previously [jack.ia()]).
+#' 
+#' 
+#' @param gid a [adegenet::genind()] or [genclone()] object.
+#' @param sample an integer indicating the number of permutations desired 
+#'   (eg 999).
+#' @param method an integer from 1 to 4 indicating the sampling method desired.
+#'   see [shufflepop()] for details.
 #' @param quiet Should the function print anything to the screen while it is 
 #'   performing calculations?
-#'   
-#'   \code{TRUE} prints nothing.
-#'   
-#'   \code{FALSE} (default) will print the population name and progress bar.
-#'   
-#' @param missing a character string. see \code{\link{missingno}} for details.
-#'   
-#' @param plot When \code{TRUE} (default), a heatmap of the values per locus
-#'   pair will be plotted (for \code{pair.ia()}). When \code{sampling > 0}, 
-#'   different things happen with \code{ia()} and \code{pair.ia()}. For 
-#'   \code{ia()}, a histogram for the data set is plotted. For \code{pair.ia()},
-#'   p-values are added as text on the heatmap. 
-#'   
-#' @param hist \code{logical} Deprecated. Use plot.
-#' 
-#' @param index \code{character} either "Ia" or "rbarD". If \code{hist = TRUE}, 
+#'   `TRUE` prints nothing.
+#'   `FALSE` (default) will print the population name and progress bar.
+#' @param missing a character string. see [missingno()] for details.
+#' @param plot When [TRUE] (default), a heatmap of the values per locus pair 
+#'   will be plotted (for [pair.ia()]). When [sampling > 0], different things
+#'   happen with [ia()] and [pair.ia()]. For [ia()], a histogram for the data
+#'   set is plotted. For [pair.ia()], p-values are added as text on the
+#'   heatmap. 
+#' @param hist [logical] Deprecated. Use plot.
+#' @param index [character] either "Ia" or "rbarD". If [hist = TRUE], 
 #'   this indicates which index you want represented in the plot (default:
 #'   "rbarD").
-#'   
-#' @param valuereturn \code{logical} if \code{TRUE}, the index values from the 
-#'   reshuffled data is returned. If \code{FALSE} (default), the index is 
+#' @param valuereturn [logical] if [TRUE], the index values from the 
+#'   reshuffled data is returned. If [FALSE] (default), the index is 
 #'   returned with associated p-values in a 4 element numeric vector.
-#'   
 #' @return 
-#'   \subsection{for \code{pair.ia}}{
-#'   A matrix with two columns and choose(nLoc(gid), 2) rows representing the
-#'   values for Ia and rbarD per locus pair.
-#'   }
-#'   \subsection{If no sampling has occurred:}{ 
-#'   A named number vector of length 2 giving the Index of Association, "Ia";
-#'   and the Standardized Index of Association, "rbarD" 
-#'   }
-#'   \subsection{If there is sampling:}{ A a named number vector of length 4
-#'   with the following values:
-#'   \itemize{
-#'     \item{Ia - }{numeric. The index of association.} 
-#'     \item{p.Ia - }{A number indicating the p-value resulting from a
-#'     one-sided permutation test based on the number of samples indicated in
-#'     the original call.}
-#'     \item{rbarD - }{numeric. The standardized index of association.}
-#'     \item{p.rD - }{A factor indicating the p-value resulting from a
-#'     one-sided permutation test based on the number of samples indicated in
-#'     the original call.} 
-#'   }
-#'   }
-#'   \subsection{If there is sampling and valureturn = TRUE}{ 
-#'   A list with the following elements:
-#'   \itemize{ 
-#'     \item{index }{The above vector}
-#'     \item{samples }{A data frame with s by 2 column data frame where s is the
-#'     number of samples defined. The columns are for the values of Ia and
-#'     rbarD, respectively.}
-#'   }
-#'   }
-#'   
-#' @note \code{jack.ia()} is deprecated as the name was misleading. Please use
-#'   \code{resample.ia()}
-#' @details The index of association was originally developed by A.H.D. Brown 
-#'   analyzing population structure of wild barley (Brown, 1980). It has been widely 
-#'   used as a tool to detect clonal reproduction within populations . 
-#'   Populations whose members are undergoing sexual reproduction, whether it be
-#'   selfing or out-crossing, will produce gametes via meiosis, and thus have a 
-#'   chance to shuffle alleles in the next generation. Populations whose members
-#'   are undergoing clonal reproduction, however, generally do so via mitosis. 
-#'   This means that the most likely mechanism for a change in genotype is via 
-#'   mutation. The rate of mutation varies from species to species, but it is 
-#'   rarely sufficiently high to approximate a random shuffling of alleles. The 
-#'   index of association is a calculation based on the ratio of the variance of
-#'   the raw number of differences between individuals and the sum of those 
-#'   variances over each locus . You can also think of it as the observed 
-#'   variance over the expected variance. If they  are the same, then the index 
-#'   is zero after subtracting one (from Maynard-Smith, 1993): \deqn{I_A = 
-#'   \frac{V_O}{V_E}-1}{Ia = (Vo/Ve) - 1} Since the distance is more or less a binary 
-#'   distance, any sort of marker can be used for this analysis. In the 
-#'   calculation, phase is not considered, and any difference increases the 
-#'   distance between two individuals. Remember that each column represents a 
-#'   different allele and that each entry in the table represents the fraction 
-#'   of the genotype made up by that allele at that locus. Notice also that the 
-#'   sum of the rows all equal one. Poppr uses this to calculate distances by 
-#'   simply taking the sum of the absolute values of the differences between 
-#'   rows.
-#'   
-#'   The calculation for the distance between two individuals at a single locus 
-#'   with \emph{a} allelic states and a ploidy of \emph{k} is as follows (except
-#'   for Presence/Absence data): \deqn{ d = \displaystyle 
-#'   \frac{k}{2}\sum_{i=1}^{a} \mid A_{i} - B_{i}\mid }{d(A,B) = (k/2)*sum(abs(Ai - Bi))} 
-#'   To find the total number of differences 
-#'   between two individuals over all loci, you just take \emph{d} over \emph{m}
-#'   loci, a value we'll call \emph{D}:
-#'   
-#'   \deqn{D = \displaystyle \sum_{i=1}^{m} d_i }{D = sum(di)}
-#'   
-#'   These values are calculated over all possible combinations of individuals 
-#'   in the data set, \eqn{{n \choose 2}}{choose(n, 2)} after which you end up 
-#'   with \eqn{{n \choose 2}\cdot{}m}{choose(n, 2) * m} values of \emph{d} and 
-#'   \eqn{{n \choose 2}}{choose(n, 2)} values of \emph{D}. Calculating the 
-#'   observed variances is fairly straightforward (modified from Agapow and 
-#'   Burt, 2001):
-#'   
-#'   \deqn{ V_O = \frac{\displaystyle \sum_{i=1}^{n \choose 2} D_{i}^2 - 
-#'   \frac{(\displaystyle\sum_{i=1}^{n \choose 2} D_{i})^2}{{n \choose 2}}}{{n 
-#'   \choose 2}}}{Vo = var(D)}
-#'   
-#'   Calculating the expected variance is the sum of each of the variances of 
-#'   the individual loci. The calculation at a single locus, \emph{j} is the 
-#'   same as the previous equation, substituting values of \emph{D} for 
-#'   \emph{d}:
-#'   
-#'   \deqn{ var_j = \frac{\displaystyle \sum_{i=1}^{n \choose 2} d_{i}^2 - 
-#'   \frac{(\displaystyle\sum_{i=1}^{n \choose 2} d_i)^2}{{n \choose 2}}}{{n 
-#'   \choose 2}} }{Varj = var(dj)}
-#'   
-#'   The expected variance is then the sum of all the variances over all 
-#'   \emph{m} loci:
-#'   
-#'   \deqn{ V_E = \displaystyle \sum_{j=1}^{m} var_j }{Ve = sum(var(dj))}
-#'   
-#'   Agapow and Burt showed that \eqn{I_A}{Ia} increases steadily with the
-#'   number of loci, so they came up with an approximation that is widely used,
-#'   \eqn{\bar r_d}{rbarD}. For the derivation, see the manual for
-#'   \emph{multilocus}.
-#'   
-#'   \deqn{ \bar r_d = \frac{V_O - V_E} {2\displaystyle 
-#'   \sum_{j=1}^{m}\displaystyle \sum_{k \neq j}^{m}\sqrt{var_j\cdot{}var_k}} 
-#'   }{rbarD = (Vo - Ve)/(2*sum(sum(sqrt(var(dj)*var(dk))))}
-#'   
-#' @references  Paul-Michael Agapow and Austin Burt. Indices of multilocus 
-#'   linkage disequilibrium. \emph{Molecular Ecology Notes}, 1(1-2):101-102, 
-#'   2001
-#'   
-#'   A.H.D. Brown, M.W. Feldman, and E. Nevo. Multilocus structure of natural 
-#'   populations of \emph{Hordeum spontaneum}. \emph{Genetics}, 96(2):523-536, 1980.
-#'   
-#'   J M Smith, N H Smith, M O'Rourke, and B G Spratt. How clonal are bacteria? 
-#'   Proceedings of the National Academy of Sciences, 90(10):4384-4388, 1993.
-#'   
-#' @seealso \code{\link{poppr}}, \code{\link{missingno}}, 
-#'   \code{\link{import2genind}}, \code{\link{read.genalex}}, 
-#'   \code{\link{clonecorrect}}, \code{\link{win.ia}}, \code{\link{samp.ia}}
-#'   
+#' ## for [pair.ia()]
+#'
+#' A matrix with two columns and choose(nLoc(gid), 2) rows representing the
+#' values for Ia and rbarD per locus pair.
+#' 
+#' ## If no sampling has occurred:
+#'
+#' A named number vector of length 2 giving the Index of Association, "Ia";
+#' and the Standardized Index of Association, "rbarD" 
+#' 
+#' ## If there is sampling:
+#'
+#' A a named numeric vector of length 4 with the following values:
+#' 
+#' * Ia - numeric. The index of association. 
+#' * p.Ia - A number indicating the p-value resulting from a one-sided
+#'   permutation test based on the number of samples indicated in the 
+#'   original call.
+#' * rbarD - numeric. The standardized index of association.
+#' * p.rD - A factor indicating the p-value resulting from a
+#'   one-sided permutation test based on the number of samples indicated in
+#'   the original call. 
+#' 
+#' ## If there is sampling and `valureturn = TRUE`
+#'
+#' A list with the following elements:
+#' 
+#' * index The above vector
+#' * samples A data frame with s by 2 column data frame where s is the
+#'   number of samples defined. The columns are for the values of Ia and
+#'   rbarD, respectively.
+#'
+#'
+#' @note [jack.ia()] is deprecated as the name was misleading. Please use
+#'   [resample.ia()]
+#' @details 
+#' The index of association was originally developed by A.H.D. Brown analyzing
+#' population structure of wild barley (Brown, 1980). It has been widely used
+#' as a tool to detect clonal reproduction within populations . Populations
+#' whose members are undergoing sexual reproduction, whether it be selfing or
+#' out-crossing, will produce gametes via meiosis, and thus have a chance to
+#' shuffle alleles in the next generation. Populations whose members are
+#' undergoing clonal reproduction, however, generally do so via mitosis. This
+#' means that the most likely mechanism for a change in genotype is via
+#' mutation. The rate of mutation varies from species to species, but it is
+#' rarely sufficiently high to approximate a random shuffling of alleles. The
+#' index of association is a calculation based on the ratio of the variance of
+#' the raw number of differences between individuals and the sum of those
+#' variances over each locus . You can also think of it as the observed
+#' variance over the expected variance. If they  are the same, then the index
+#' is zero after subtracting one (from Maynard-Smith, 1993): 
+#' \deqn{I_A = \frac{V_O}{V_E}-1}{Ia = (Vo/Ve) - 1} 
+#'
+#' Since the distance is more or less a binary distance, any sort of marker can
+#' be used for this analysis. In the calculation, phase is not considered, and
+#' any difference increases the distance between two individuals. Remember that
+#' each column represents a different allele and that each entry in the table
+#' represents the fraction of the genotype made up by that allele at that
+#' locus. Notice also that the sum of the rows all equal one. Poppr uses this
+#' to calculate distances by simply taking the sum of the absolute values of
+#' the differences between rows.
+#'
+#' The calculation for the distance between two individuals at a single locus 
+#' with _a_ allelic states and a ploidy of _k_ is as follows (except
+#' for Presence/Absence data): 
+#'
+#' \deqn{ d = \displaystyle \frac{k}{2}\sum_{i=1}^{a} \mid A_{i} - B_{i}\mid}{d(A,B) = (k/2)*sum(abs(Ai - Bi))} 
+#'
+#' To find the total number of differences between two individuals over all
+#' loci, you just take _d_ over _m_ loci, a value we'll call
+#' _D_:
+#'
+#' \deqn{D = \displaystyle \sum_{i=1}^{m} d_i }{D = sum(di)}
+#'
+#' These values are calculated over all possible combinations of individuals 
+#' in the data set, \eqn{{n \choose 2}}{choose(n, 2)} after which you end up 
+#' with \eqn{{n \choose 2}\cdot{}m}{choose(n, 2) * m} values of _d_ and 
+#' \eqn{{n \choose 2}}{choose(n, 2)} values of _D_. Calculating the 
+#' observed variances is fairly straightforward (modified from Agapow and 
+#' Burt, 2001):
+#'
+#' \deqn{ V_O = \frac{\displaystyle \sum_{i=1}^{n \choose 2} D_{i}^2 - 
+#' \frac{(\displaystyle\sum_{i=1}^{n \choose 2} D_{i})^2}{{n \choose 2}}}{{n 
+#' \choose 2}}}{Vo = var(D)}
+#'
+#' Calculating the expected variance is the sum of each of the variances of the
+#' individual loci. The calculation at a single locus, _j_ is the same as
+#' the previous equation, substituting values of _D_ for _d_:
+#'
+#' \deqn{ var_j = \frac{\displaystyle \sum_{i=1}^{n \choose 2} d_{i}^2 - 
+#' \frac{(\displaystyle\sum_{i=1}^{n \choose 2} d_i)^2}{{n \choose 2}}}{{n 
+#' \choose 2}} }{Varj = var(dj)}
+#'
+#' The expected variance is then the sum of all the variances over all _m_
+#' loci:
+#'
+#' \deqn{ V_E = \displaystyle \sum_{j=1}^{m} var_j }{Ve = sum(var(dj))}
+#'
+#' Agapow and Burt showed that \eqn{I_A}{Ia} increases steadily with the number
+#' of loci, so they came up with an approximation that is widely used,
+#' \eqn{\bar r_d}{rbarD}. For the derivation, see the manual for
+#' _multilocus_.
+#'
+#' \deqn{ \bar r_d = \frac{V_O - V_E} {2\displaystyle 
+#' \sum_{j=1}^{m}\displaystyle \sum_{k \neq j}^{m}\sqrt{var_j\cdot{}var_k}} 
+#' }{rbarD = (Vo - Ve)/(2*sum(sum(sqrt(var(dj)*var(dk))))}
+#'
+#' @references 
+#' Paul-Michael Agapow and Austin Burt. Indices of multilocus 
+#' linkage disequilibrium. _Molecular Ecology Notes_, 1(1-2):101-102, 
+#' 2001
+#'
+#' A.H.D. Brown, M.W. Feldman, and E. Nevo. Multilocus structure of natural 
+#' populations of _Hordeum spontaneum_. _Genetics_, 96(2):523-536, 1980.
+#'
+#' J M Smith, N H Smith, M O'Rourke, and B G Spratt. How clonal are bacteria? 
+#' Proceedings of the National Academy of Sciences, 90(10):4384-4388, 1993.
+#'
+#' @seealso [poppr()], [missingno()], 
+#'   [import2genind()], [read.genalex()], 
+#'   [clonecorrect()], [win.ia()], [samp.ia()]
+#'
 #' @export
+#' @md
 #' @rdname ia
 #' @author Zhian N. Kamvar
 #' @examples
@@ -759,7 +758,6 @@ poppr.all <- function(filelist, ...){
 #' plot_grid(plotlist = plotlist, labels = paste("Tree", popNames(monpop)))
 #' 
 #' }
-#==============================================================================#
 ia <- function(gid, sample = 0, method = 1, quiet = FALSE, missing = "ignore", 
                plot = TRUE, hist = TRUE, index = "rbarD", valuereturn = FALSE){
   namelist <- list(population = ifelse(nPop(gid) > 1 | is.null(gid@pop), 
@@ -833,17 +831,15 @@ ia <- function(gid, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
   return(final(Iout, result))
 }
 
-#==============================================================================#
 #' @rdname ia
-#' @param low (for pair.ia) a color to use for low values when \code{plot =
-#'   TRUE}
-#' @param high (for pair.ia) a color to use for low values when \code{plot =
-#'   TRUE}
+#' @param low (for pair.ia) a color to use for low values when `plot =
+#'   TRUE`
+#' @param high (for pair.ia) a color to use for low values when `plot =
+#'   TRUE`
 #' @param limits (for pair.ia) the limits to be used for the color scale. 
-#'   Defaults to \code{NULL}. If you want to use a custom range, supply two
-#'   numbers between -1 and 1, (e.g. \code{limits = c(-0.15, 1)})
+#'   Defaults to `NULL`. If you want to use a custom range, supply two
+#'   numbers between -1 and 1, (e.g. `limits = c(-0.15, 1)`)
 #' @export
-#==============================================================================#
 pair.ia <- function(gid, sample = 0L, quiet = FALSE, plot = TRUE, low = "blue", 
                     high = "red", limits = NULL, index = "rbarD", method = 1L){
   N       <- nInd(gid)
@@ -852,8 +848,6 @@ pair.ia <- function(gid, sample = 0L, quiet = FALSE, plot = TRUE, low = "blue",
   np      <- choose(N, 2)
   nploci  <- choose(numLoci, 2)
   shuffle <- sample > 0L
-  # quiet   <- should_poppr_be_quiet(quiet)
-  # QUIET   <- if (shuffle) TRUE else quiet
   if (quiet) {
     oh <- progressr::handlers()
     on.exit(progressr::handlers(oh))
@@ -921,47 +915,44 @@ pair_ia_internal <- function(gid, N, numLoci, lnames, np, nploci, p, sample = NU
   ia_pairs           <- t(ia_pairs)
   ia_pairs
 }
-#==============================================================================#
+
 #' Create a table of summary statistics per locus. 
 #' 
-#' @param x a [genind-class] or [genclone-class]
+#' @param x a [adegenet::genind-class] or [genclone-class]
 #'   object.
 #' 
-#' @param index Which diversity index to use. Choices are \itemize{ \item
-#'   `"simpson"` (Default) to give Simpson's index \item `"shannon"`
-#'   to give the Shannon-Wiener index \item `"invsimpson"` to give the
-#'   Inverse Simpson's index aka the Stoddard and Tayor index.}
-#'   
+#' @param index Which diversity index to use. Choices are 
+#' 
+#'  * `"simpson"` (Default) to give Simpson's index 
+#'  * `"shannon"` to give the Shannon-Wiener index 
+#'  * `"invsimpson"` to give the Inverse Simpson's index aka the Stoddard and
+#'    Tayor index.
 #' @param lev At what level do you want to analyze diversity? Choices are
 #'   `"allele"` (Default) or `"genotype"`.
-#'   
 #' @param population Select the populations to be analyzed. This is the
 #'   parameter `sublist` passed on to the function [popsub()].
 #'   Defaults to `"ALL"`.
-#'   
 #' @param information When `TRUE` (Default), this will print out a header
 #'   of information to the R console.
-#'   
 #' @return a table with 4 columns indicating the Number of alleles/genotypes 
 #'   observed, Diversity index chosen, Nei's 1978 gene diversity (expected
 #'   heterozygosity), and Evenness.
-#'   
 #' @seealso [vegan::diversity()], [poppr()]
 #' @md
-#'   
-#' @note The calculation of `Hexp` is \eqn{(\frac{n}{n-1}) 1 - \sum_{i = 
-#'   1}^k{p^{2}_{i}}}{(n/(n - 1))*(1 - sum(p^2))} where p is the allele 
-#'   frequencies at a given locus and n is the number of observed alleles (Nei, 
-#'   1978) in each locus and then returning the average. Caution should be 
-#'   exercised in interpreting the results of Hexp with polyploid organisms with
-#'   ambiguous ploidy. The lack of allelic dosage information will cause rare 
-#'   alleles to be over-represented and artificially inflate the index. This is 
-#'   especially true with small sample sizes.
-#'   
-#'   If `lev = "genotype"`, then all statistics reflect **genotypic** diversity
-#'   within each locus. This includes the calculation for `Hexp`, which turns
-#'   into the unbiased Simpson's index.
-#'   
+#'
+#' @note The calculation of `Hexp` is \eqn{(\frac{n}{n-1}) 1 - \sum_{i =
+#' 1}^k{p^{2}_{i}}}{(n/(n - 1))*(1 - sum(p^2))} where p is the allele
+#' frequencies at a given locus and n is the number of observed alleles (Nei,
+#' 1978) in each locus and then returning the average. Caution should be
+#' exercised in interpreting the results of Hexp with polyploid organisms with
+#' ambiguous ploidy. The lack of allelic dosage information will cause rare
+#' alleles to be over-represented and artificially inflate the index. This is
+#' especially true with small sample sizes.
+#'
+#' If `lev = "genotype"`, then all statistics reflect **genotypic** diversity
+#' within each locus. This includes the calculation for `Hexp`, which turns
+#' into the unbiased Simpson's index.
+#'
 #' @author Zhian N. Kamvar
 #' 
 #' @references
@@ -973,21 +964,21 @@ pair_ia_internal <- function(gid, N, numLoci, lnames, np, nploci, p, sample = NU
 #'   Niklaus J. Gr\"unwald, Stephen B. Goodwin, Michael G. Milgroom, and William
 #'   E. Fry. Analysis of genotypic diversity data for populations of 
 #'   microorganisms. Phytopathology, 93(6):738-46, 2003
-#'   
+#'
 #'   J.A. Ludwig and J.F. Reynolds. Statistical Ecology. A Primer on Methods and
 #'   Computing. New York USA: John Wiley and Sons, 1988.
-#'   
+#'
 #'   E.C. Pielou. Ecological Diversity. Wiley, 1975.
-#'   
+#'
 #'   J.A. Stoddart and J.F. Taylor. Genotypic diversity: estimation and
 #'   prediction in samples. Genetics, 118(4):705-11, 1988.
-#'   
+#'
 #'   Masatoshi Nei. Estimation of average heterozygosity and genetic distance 
 #'   from a small number of individuals. Genetics, 89(3):583-590, 1978.
 #' 
 #'   Claude Elwood Shannon. A mathematical theory of communication. Bell Systems
 #'   Technical Journal, 27:379-423,623-656, 1948
-#'   
+#'
 #' @export
 #' @examples
 #' 
@@ -1000,7 +991,7 @@ pair_ia_internal <- function(gid, N, numLoci, lnames, np, nploci, p, sample = NU
 #' data(Pinf)
 #' locus_table(Pinf, population = "North America")
 #' }
-#==============================================================================#
+
 locus_table <- function(x, index = "simpson", lev = "allele", 
                         population = "ALL", information = TRUE){
   ploid   <- unique(ploidy(x))
@@ -1034,23 +1025,23 @@ locus_table <- function(x, index = "simpson", lev = "allele",
   return(res)
 }
 
-#==============================================================================#
+
 #' Tabulate alleles the occur in only one population. 
 #' 
-#' @param gid a [genind-class] or [genclone-class]
+#' @param gid a [adegenet::genind-class] or [genclone-class]
 #'   object.
-#'   
+#'
 #' @param form a [formula()] giving the levels of markers and 
 #'   hierarchy to analyze. See Details.
-#'   
+#'
 #' @param report one of `"table", "vector",` or `"data.frame"`. Tables
 #'   (Default) and data frame will report counts along with populations or 
 #'   individuals. Vectors will simply report which populations or individuals 
 #'   contain private alleles. Tables are matrices with populations or 
 #'   individuals in rows and alleles in columns. Data frames are long form.
-#'   
+#'
 #' @param level one of `"population"` (Default) or `"individual"`.
-#'   
+#'
 #' @param count.alleles `logical`. If `TRUE` (Default), The report 
 #'   will return the observed number of alleles private to each population. If 
 #'   `FALSE`, each private allele will be counted once, regardless of 
@@ -1058,7 +1049,7 @@ locus_table <- function(x, index = "simpson", lev = "allele",
 #' 
 #' @param drop `logical`. if `TRUE`, populations/individuals without 
 #'   private alleles will be dropped from the result. Defaults to `FALSE`.
-#'   
+#'
 #' @return a matrix, data.frame, or vector defining the populations or
 #'   individuals containing private alleles. If vector is chosen, alleles are
 #'   not defined.
@@ -1096,7 +1087,6 @@ locus_table <- function(x, index = "simpson", lev = "allele",
 #' Pinfpriv <- private_alleles(Pinf, report = "data.frame")
 #' ggplot(Pinfpriv) + geom_tile(aes(x = population, y = allele, fill = count))
 #' }
-#==============================================================================#
 private_alleles <- function(gid, form = alleles ~ ., report = "table", 
                             level = "population", count.alleles = TRUE,
                             drop = FALSE){

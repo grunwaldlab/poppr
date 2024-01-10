@@ -24,7 +24,7 @@ difference is the cutoff threshold defining the clonal lineage threshold.
 }
 \note{
 This function originally appeared in 
-  \doi{10.5281/zenodo.17424}{DOI: 10.5281/zenodo.17424}. 
+  \doi{10.5281/zenodo.17424}. 
   This is a bit of a blunt instrument.
 }
 \examples{

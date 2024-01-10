@@ -41,88 +41,95 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
+
 #' Create counts, vectors, and matrices of multilocus genotypes.
 #' 
 #' @name mlg
+#' @md
 #'   
-#' @param gid a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}},
-#'   \code{\linkS4class{genlight}}, or \code{\linkS4class{snpclone}} object.
-#'  
+#' @param gid a [adegenet::genind], [genclone][genclone-class], [adegenet::genlight], or [snpclone][snpclone-class] object.
 #' @param strata a formula specifying the strata at which computation is to be
 #'   performed.
-#' 
-#' @param sublist a \code{vector} of population names or indices that the user 
+#' @param sublist a `vector` of population names or indices that the user 
 #'   wishes to keep. Default to "ALL".
-#'   
-#' @param exclude a \code{vector} of population names or indexes that the user
-#' wishes to discard. Default to \code{NULL}.
-#'
+#' @param exclude a `vector` of population names or indexes that the user
+#' wishes to discard. Default to `NULL`.
 #' @param blacklist DEPRECATED, use exclude.
-#'
-#' @param mlgsub a \code{vector} of multilocus genotype indices with which to 
-#'   subset \code{mlg.table} and \code{mlg.crosspop}. NOTE: The resulting table 
-#'   from \code{mlg.table} will only contain countries with those MLGs
-#'   
-#' @param quiet \code{Logical}. If FALSE, progress of functions will be printed 
+#' @param mlgsub a `vector` of multilocus genotype indices with which to 
+#'   subset `mlg.table` and `mlg.crosspop`. NOTE: The resulting table 
+#'   from `mlg.table` will only contain countries with those MLGs
+#' @param quiet `Logical`. If FALSE, progress of functions will be printed 
 #'   to the screen.
-#'   
-#' @param bar deprecated. Same as \code{plot}. Retained for compatibility.
-#'   
-#' @param plot \code{logical} If \code{TRUE}, a bar graph for each population 
+#' @param bar deprecated. Same as `plot`. Retained for compatibility.
+#' @param plot `logical` If `TRUE`, a bar graph for each population 
 #'   will be displayed showing the relative abundance of each MLG within the 
 #'   population.
-#'   
-#' @param indexreturn \code{logical} If \code{TRUE}, a vector will be returned 
-#'   to index the columns of \code{mlg.table}.
-#'   
-#' @param df \code{logical} If \code{TRUE}, return a data frame containing the 
+#' @param indexreturn `logical` If `TRUE`, a vector will be returned 
+#'   to index the columns of `mlg.table`.
+#' @param df `logical` If `TRUE`, return a data frame containing the 
 #'   counts of the MLGs and what countries they are in. Useful for making graphs
-#'   with \code{\link{ggplot}}.
-#'   
-#' @param total \code{logical} If \code{TRUE}, a row containing the sum of all 
+#'   with [ggplot].
+#' @param total `logical` If `TRUE`, a row containing the sum of all 
 #'   represented MLGs is appended to the matrix produced by mlg.table.
 #'   
-#' @return \subsection{mlg}{ an integer describing the number of multilocus
-#' genotypes observed. } \subsection{mlg.table}{ a matrix with columns
-#' indicating unique multilocus genotypes and rows indicating populations. 
-#' This table can be used with the funciton \code{\link{diversity_stats}} to calculate
-#' the Shannon-Weaver index (H), Stoddart and Taylor's 
-#' index (aka inverse Simpson's index; G), Simpson's index (lambda), and evenness (E5).} 
-#' \subsection{mlg.vector}{ a numeric vector naming the multilocus genotype of
-#' each individual in the dataset. } \subsection{mlg.crosspop}{ \itemize{ 
-#' \item{default}{ a \code{list} where each element contains a named integer
-#' vector representing the number of individuals represented from each
-#' population in that MLG} \item{\code{indexreturn = TRUE}}{ a \code{vector} of
-#' integers defining the multilocus genotypes that have individuals crossing
-#' populations} \item{\code{df = TRUE}}{ A long form data frame with the
-#' columns: MLG, Population, Count. Useful for graphing with ggplot2} } } 
-#' \subsection{mlg.id}{ a list of multilocus genotypes with the associated
-#' individual names per MLG. }
+#' @return 
+#' 
+#' ## mlg
+#'
+#' an integer describing the number of multilocus genotypes observed. 
+#'
+#' ## mlg.table
+#'
+#' a matrix with columns indicating unique multilocus genotypes and rows
+#' indicating populations. This table can be used with the funciton
+#' [diversity_stats] to calculate the Shannon-Weaver index (H), Stoddart and
+#' Taylor's index (aka inverse Simpson's index; G), Simpson's index (lambda),
+#' and evenness (E5).
+#' 
+#' ## mlg.vector
+#'
+#' a numeric vector naming the multilocus genotype of each individual in the
+#' dataset. 
+#'
+#' ## mlg.crosspop
+#'
+#' - **default** a `list` where each element contains a named integer
+#'   vector representing the number of individuals represented from each
+#'   population in that MLG 
+#' - `indexreturn = TRUE` a `vector` of integers defining the multilocus
+#'   genotypes that have individuals crossing populations 
+#' - `df = TRUE` A long form data frame with the columns: MLG, Population,
+#'   Count. Useful for graphing with ggplot2   
+#'
+#' ## mlg.id
+#'
+#' a list of multilocus genotypes with the associated individual names per MLG. 
 #' 
 #' @details Multilocus genotypes are the unique combination of alleles across
-#'   all loci. For details of how these are calculated see \code{vignette("mlg",
-#'   package = "poppr")}. In short, for genind and genclone objects, they are
+#'   all loci. For details of how these are calculated see `vignette("mlg",
+#'   package = "poppr")`. In short, for genind and genclone objects, they are
 #'   calculated by using a rank function on strings of alleles, which is
 #'   sensitive to missing data. For genlight and snpclone objects, they are
-#'   calculated with distance methods via \code{\link{bitwise.dist}} and
-#'   \code{\link{mlg.filter}}, which means that these are insensitive to missing
-#'   data. Three different types of MLGs can be defined in \pkg{poppr}: \itemize{ 
-#'   \item{original - }{the default definition of multilocus genotypes as
-#'   detailed above} \item{contracted - }{these are multilocus genotypes
-#'   collapsed into multilocus lineages (\code{\link{mll}}) with genetic
-#'   distance via \code{\link{mlg.filter}}} \item{custom - }{user-defined
-#'   multilocus genotypes. These are useful for information such as mycelial
-#'   compatibility groups}}
-#'   \strong{All of the functions documented here will work on any of the MLG
-#'   types defined in \pkg{poppr}}
-#'   
+#'   calculated with distance methods via [bitwise.dist] and
+#'   [mlg.filter], which means that these are insensitive to missing
+#'   data. Three different types of MLGs can be defined in \pkg{poppr}: 
+#'
+#' - **original** the default definition of multilocus genotypes as
+#'   detailed above 
+#' - **contracted** these are multilocus genotypes collapsed into multilocus
+#'   lineages ([mll]) with genetic distance via [mlg.filter] 
+#' - **custom** user-defined multilocus genotypes. These are useful for
+#'   information such as mycelial compatibility groups
+#'
+#' **All of the functions documented here will work on any of the MLG types
+#' defined in \pkg{poppr}**
 #' 
-#' @seealso \code{\link[vegan]{diversity}} 
-#'  \code{\link{diversity_stats}}
-#'  \code{\link{popsub}}
-#'  \code{\link{mll}}
-#'  \code{\link{mlg.filter}}
-#'  \code{\link{mll.custom}}
+#' @seealso `\link[vegan]{diversity`} 
+#'  [diversity_stats]
+#'  [popsub]
+#'  [mll]
+#'  [mlg.filter]
+#'  [mll.custom]
 #'  
 #' @author Zhian N. Kamvar
 #' @examples
@@ -235,13 +242,13 @@ mlg <- function(gid, quiet=FALSE){
 #' @rdname mlg 
 #' 
 #' @param color an option to display a single barchart for mlg.table, colored by
-#'   population (note, this becomes facetted if \code{background = TRUE}).
+#'   population (note, this becomes facetted if `background = TRUE`).
 #'   
 #' @param background an option to display the the total number of MLGs across
 #'   populations per facet in the background of the plot.
 #'
-#' @note The resulting matrix of \code{mlg.table} can be used for analysis with 
-#' the \code{\link{vegan}} package.
+#' @note The resulting matrix of `mlg.table` can be used for analysis with 
+#' the \pkg{vegan} package.
 #' 
 #' @export
 #==============================================================================#
@@ -316,21 +323,19 @@ mlg.table <- function(gid, strata = NULL, sublist = "ALL", exclude = NULL, black
   return(mlgtab)
 }
 
-#==============================================================================#
 #' @rdname mlg
 #' 
 #' @param reset logical. For genclone objects, the MLGs are defined by the input
 #'   data, but they do not change if more or less information is added (i.e.
-#'   loci are dropped). Setting \code{reset = TRUE} will recalculate MLGs.
-#'   Default is \code{FALSE}, returning the MLGs defined in the @@mlg slot.
+#'   loci are dropped). Setting `reset = TRUE` will recalculate MLGs.
+#'   Default is `FALSE`, returning the MLGs defined in the @@mlg slot.
 #'   
 #' @note mlg.vector will recalculate the mlg vector for
-#'   \code{\linkS4class{genind}} objects and will return the contents of the mlg
-#'   slot in \code{\linkS4class{genclone}} objects. This means that MLGs will be
-#'   different for subsetted \code{\linkS4class{genind}} objects.
+#'   [adegenet::genind] objects and will return the contents of the mlg
+#'   slot in [genclone][genclone-class] objects. This means that MLGs will be
+#'   different for subsetted [adegenet::genind] objects.
 #'   
 #' @export
-#==============================================================================#
 mlg.vector <- function(gid, reset = FALSE){
 
   # This will return a vector indicating the multilocus genotypes.
@@ -401,19 +406,8 @@ mlg.vector <- function(gid, reset = FALSE){
 
 
 
-#==============================================================================#
 #' @rdname mlg
-# Multilocus Genotypes Across Populations
-#
-# Show which multilocus genotypes exist accross populations. 
-#
-# @param gid a \code{\link{genind}} object.
-# 
-#' @return a \code{list} containing vectors of population names for each MLG. 
-#' 
 #' @export
-#==============================================================================#
-
 mlg.crosspop <- function(gid, strata = NULL, sublist = "ALL", exclude = NULL, blacklist = NULL, 
                          mlgsub = NULL,
                          indexreturn = FALSE, df = FALSE, quiet = FALSE){
@@ -516,12 +510,8 @@ mlg.crosspop <- function(gid, strata = NULL, sublist = "ALL", exclude = NULL, bl
 
 
 
-#==============================================================================#
 #' @rdname mlg
 #' @export
-#==============================================================================#
-
-
 mlg.id <- function (gid){
   if (!is.genind(gid) & !is(gid, "snpclone")){
     stop(paste(substitute(gid), "is not a genind or genclone object"))

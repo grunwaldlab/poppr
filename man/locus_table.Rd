@@ -13,13 +13,16 @@ locus_table(
 )
 }
 \arguments{
-\item{x}{a \linkS4class{genind} or \linkS4class{genclone}
+\item{x}{a \link[adegenet:genind]{adegenet::genind} or \linkS4class{genclone}
 object.}
 
-\item{index}{Which diversity index to use. Choices are \itemize{ \item
-\code{"simpson"} (Default) to give Simpson's index \item \code{"shannon"}
-to give the Shannon-Wiener index \item \code{"invsimpson"} to give the
-Inverse Simpson's index aka the Stoddard and Tayor index.}}
+\item{index}{Which diversity index to use. Choices are
+\itemize{
+\item \code{"simpson"} (Default) to give Simpson's index
+\item \code{"shannon"} to give the Shannon-Wiener index
+\item \code{"invsimpson"} to give the Inverse Simpson's index aka the Stoddard and
+Tayor index.
+}}
 
 \item{lev}{At what level do you want to analyze diversity? Choices are
 \code{"allele"} (Default) or \code{"genotype"}.}
@@ -40,8 +43,8 @@ heterozygosity), and Evenness.
 Create a table of summary statistics per locus.
 }
 \note{
-The calculation of \code{Hexp} is \eqn{(\frac{n}{n-1}) 1 - \sum_{i = 
-  1}^k{p^{2}_{i}}}{(n/(n - 1))*(1 - sum(p^2))} where p is the allele
+The calculation of \code{Hexp} is \eqn{(\frac{n}{n-1}) 1 - \sum_{i =
+1}^k{p^{2}_{i}}}{(n/(n - 1))*(1 - sum(p^2))} where p is the allele
 frequencies at a given locus and n is the number of observed alleles (Nei,
 1978) in each locus and then returning the average. Caution should be
 exercised in interpreting the results of Hexp with polyploid organisms with

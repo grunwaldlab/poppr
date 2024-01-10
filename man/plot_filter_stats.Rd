@@ -34,7 +34,7 @@ Plot the results of filter_stats
 }
 \note{
 This function originally appeared in 
-  \doi{10.5281/zenodo.17424}{DOI: 10.5281/zenodo.17424}
+  \doi{10.5281/zenodo.17424}
 }
 \references{
 ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary

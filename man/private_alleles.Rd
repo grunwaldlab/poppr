@@ -14,7 +14,7 @@ private_alleles(
 )
 }
 \arguments{
-\item{gid}{a \linkS4class{genind} or \linkS4class{genclone}
+\item{gid}{a \link[adegenet:genind]{adegenet::genind} or \linkS4class{genclone}
 object.}
 
 \item{form}{a \code{\link[=formula]{formula()}} giving the levels of markers and

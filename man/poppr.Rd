@@ -27,15 +27,14 @@ poppr(
 )
 }
 \arguments{
-\item{dat}{a \code{\linkS4class{genind}} object OR a 
-\code{\linkS4class{genclone}} object OR any fstat, structure, genetix, 
-genpop, or genalex formatted file.}
+\item{dat}{a \link[adegenet:new.genind]{adegenet::genind} object OR a \link[=genclone-class]{genclone} object OR any fstat, structure,
+genetix, genpop, or genalex formatted file.}
 
-\item{total}{When \code{TRUE} (default), indices will be calculated for the 
+\item{total}{When \code{TRUE} (default), indices will be calculated for the
 pooled populations.}
 
-\item{sublist}{a list of character strings or integers to indicate specific 
-population names (accessed via \code{popNames()}). 
+\item{sublist}{a list of character strings or integers to indicate specific
+population names (accessed via \code{\link[adegenet:accessors]{adegenet::popNames()}}).
 Defaults to "ALL".}
 
 \item{exclude}{a \code{vector} of population names or indexes that the user
@@ -43,137 +42,146 @@ wishes to discard. Default to \code{NULL}.}
 
 \item{blacklist}{DEPRECATED, use exclude.}
 
-\item{sample}{an integer indicating the number of permutations desired to 
-obtain p-values. Sampling will shuffle genotypes at each locus to simulate 
-a panmictic population using the observed genotypes. Calculating the 
-p-value includes the observed statistics, so set your sample number to one 
-off for a round p-value (eg. \code{sample = 999} will give you p = 0.001 
+\item{sample}{an integer indicating the number of permutations desired to
+obtain p-values. Sampling will shuffle genotypes at each locus to simulate
+a panmictic population using the observed genotypes. Calculating the
+p-value includes the observed statistics, so set your sample number to one
+off for a round p-value (eg. \code{sample = 999} will give you p = 0.001
 and \code{sample = 1000} will give you p = 0.000999001).}
 
-\item{method}{an integer from 1 to 4 indicating the method of sampling 
-desired. see \code{\link{shufflepop}} for details.}
+\item{method}{an integer from 1 to 4 indicating the method of sampling
+desired. see \code{\link[=shufflepop]{shufflepop()}} for details.}
 
-\item{missing}{how should missing data be treated? \code{"zero"} and 
-\code{"mean"} will set the missing values to those documented in 
-\code{\link{tab}}. \code{"loci"} and \code{"geno"} will remove any loci or
-genotypes with missing data, respectively (see \code{\link{missingno}} for
+\item{missing}{how should missing data be treated? \code{"zero"} and
+\code{"mean"} will set the missing values to those documented in
+\code{\link[=tab]{tab()}}. \code{"loci"} and \code{"geno"} will remove any loci or
+genotypes with missing data, respectively (see \code{\link[=missingno]{missingno()}} for
 more information.}
 
-\item{cutoff}{\code{numeric} a number from 0 to 1 indicating the percent 
-missing data allowed for analysis. This is to be used in conjunction with 
-the flag \code{missing} (see \code{\link{missingno}} for details)}
+\item{cutoff}{\code{numeric} a number from 0 to 1 indicating the percent
+missing data allowed for analysis. This is to be used in conjunction with
+the flag \code{missing} (see \code{\link[=missingno]{missingno()}} for details)}
 
-\item{quiet}{\code{FALSE} (default) will display a progress bar for each 
+\item{quiet}{\code{FALSE} (default) will display a progress bar for each
 population analyzed.}
 
 \item{clonecorrect}{default \code{FALSE}. must be used with the \code{strata}
 parameter, or the user will potentially get undesired results. see
-\code{\link{clonecorrect}} for details.}
+\code{\link[=clonecorrect]{clonecorrect()}} for details.}
 
 \item{strata}{a \code{formula} indicating the hierarchical levels to be used.
 The hierarchies should be present in the \code{strata} slot. See
-\code{\link{strata}} for details.}
+\code{\link[=strata]{strata()}} for details.}
 
-\item{keep}{an \code{integer}. This indicates which strata you wish to keep 
-after clone correcting your data sets. To combine strata, just set keep 
-from 1 to the number of straifications set in strata. see 
-\code{\link{clonecorrect}} for details.}
+\item{keep}{an \code{integer}. This indicates which strata you wish to keep
+after clone correcting your data sets. To combine strata, just set keep
+from 1 to the number of straifications set in strata. see
+\code{\link[=clonecorrect]{clonecorrect()}} for details.}
 
-\item{plot}{\code{logical} if \code{TRUE} (default) and \code{sampling > 0}, 
+\item{plot}{\code{logical} if \code{TRUE} (default) and \code{sampling > 0},
 a histogram will be produced for each population.}
 
 \item{hist}{\code{logical} Deprecated. Use plot.}
 
-\item{index}{\code{character} Either "Ia" or "rbarD". If \code{hist = TRUE}, 
+\item{index}{\code{character} Either "Ia" or "rbarD". If \code{hist = TRUE},
 this will determine the index used for the visualization.}
 
 \item{minsamp}{an \code{integer} indicating the minimum number of individuals
-to resample for rarefaction analysis. See \code{\link[vegan]{rarefy}} for 
+to resample for rarefaction analysis. See \verb{\link[vegan]\{rarefy}} for
 details.}
 
-\item{legend}{\code{logical}. When this is set to \code{TRUE}, a legend 
-describing the resulting table columns will be printed. Defaults to 
+\item{legend}{\code{logical}. When this is set to \code{TRUE}, a legend
+describing the resulting table columns will be printed. Defaults to
 \code{FALSE}}
 
-\item{...}{arguments to be passed on to \code{\link{diversity_stats}}}
+\item{...}{arguments to be passed on to \code{\link[=diversity_stats]{diversity_stats()}}}
 }
 \value{
 A data frame with populations in rows and the following columns:
-  \item{Pop}{A vector indicating the population factor} 
-  \item{N}{An integer vector indicating the number of individuals/isolates in
-  the specified population.}
-  \item{MLG}{An integer vector indicating the number of multilocus genotypes 
-  found in the specified population, (see: \code{\link{mlg}})}
-  \item{eMLG}{The expected number of MLG at the lowest common sample size
-  (set by the parameter \code{minsamp}).}
-  \item{SE}{The standard error for the rarefaction analysis}
-  \item{H}{Shannon-Weiner Diversity index}
-  \item{G}{Stoddard and Taylor's Index} 
-  \item{lambda}{Simpson's index} 
-  \item{E.5}{Evenness} 
-  \item{Hexp}{Nei's gene diversity (expected heterozygosity)}
-  \item{Ia}{A numeric vector giving the value of the Index of Association for
-  each population factor, (see \code{\link{ia}}).}
-  \item{p.Ia}{A numeric vector indicating the p-value for Ia from the number
-  of reshufflings indicated in \code{sample}. Lowest value is 1/n where n is
-  the number of observed values.}
-  \item{rbarD}{A numeric vector giving the value of the Standardized Index of
-  Association for each population factor, (see \code{\link{ia}}).}
-  \item{p.rD}{A numeric vector indicating the p-value for rbarD from the
-  number of reshuffles indicated in \code{sample}. Lowest value is 1/n where
-  n is the number of observed values.}
-  \item{File}{A vector indicating the name of the original data file.}
+\itemize{
+\item \strong{Pop}: A vector indicating the population factor
+\item \strong{N}: An integer vector indicating the number of individuals/isolates in
+the specified population.
+\item \strong{MLG}: An integer vector indicating the number of multilocus genotypes
+found in the specified population, (see: \code{\link[=mlg]{mlg()}})
+\item \strong{eMLG}: The expected number of MLG at the lowest common sample size (set
+by the parameter \code{minsamp}).
+\item \strong{SE}: The standard error for the rarefaction analysis
+\item \strong{H}: Shannon-Weiner Diversity index
+\item \strong{G}: Stoddard and Taylor's Index
+\item \strong{lambda}: Simpson's index
+\item \strong{E.5}: Evenness
+\item \strong{Hexp}: Nei's gene diversity (expected heterozygosity)
+\item \strong{Ia}: A numeric vector giving the value of the Index of Association for
+each population factor, (see \code{\link[=ia]{ia()}}).
+\item \strong{p.Ia}: A numeric vector indicating the p-value for Ia from the number
+of reshufflings indicated in \code{sample}. Lowest value is 1/n where n is the
+number of observed values.
+\item \strong{rbarD}: A numeric vector giving the value of the Standardized Index of
+Association for each population factor, (see \code{\link[=ia]{ia()}}).
+\item \strong{p.rD}: A numeric vector indicating the p-value for rbarD from the
+number of reshuffles indicated in \code{sample}. Lowest value is 1/n where n is
+the number of observed values.
+\item \strong{File}: A vector indicating the name of the original data file.
+}
 }
 \description{
 For the \pkg{poppr} package description, please see
-\code{\link[=poppr-package]{package?poppr}}
+\link{package?poppr}
 
-This function allows the user to quickly view indices of heterozygosity, 
-evenness, and linkage to aid in the decision of a path to further analyze 
-a specified dataset. It natively takes \code{\linkS4class{genind}} and 
-\code{\linkS4class{genclone}} objects, but can convert any raw data formats 
-that adegenet can take (fstat, structure, genetix, and genpop) as well as 
-genalex files exported into a csv format (see \code{\link{read.genalex}} for 
-details).
+This function allows the user to quickly view indices of heterozygosity,
+evenness, and linkage to aid in the decision of a path to further analyze
+a specified dataset. It natively takes \link[adegenet:new.genind]{adegenet::genind} and \link[=genclone-class]{genclone}
+objects, but can convert any raw data formats that adegenet can take (fstat,
+structure, genetix, and genpop) as well as genalex files exported into a csv
+format (see \code{\link[=read.genalex]{read.genalex()}} for details).
 }
 \details{
-This table is intended to be a first look into the dynamics of 
-  mutlilocus genotype diversity. Many of the statistics (except for the the 
-  index of association) are simply based on counts of multilocus genotypes 
-  and do not take into account the actual allelic states.
-  \strong{Descriptions of the statistics can be found in the Algorithms and
-  Equations vignette}: \code{vignette("algo", package = "poppr")}.
-  \subsection{sampling}{The sampling procedure is explicitly for testing the
-  index of association. None of the other diversity statistics (H, G, lambda,
-  E.5) are tested with this sampling due to the differing data types. To
-  obtain confidence intervals for these statistics, please see 
-  \code{\link{diversity_ci}}.}
-  \subsection{rarefaction}{Rarefaction analysis is performed on the number of
-  multilocus genotypes because it is relatively easy to estimate (Grünwald et
-  al., 2003). To obtain rarefied estimates of diversity, it is possible to
-  use \code{\link{diversity_ci}} with the argument \code{rarefy = TRUE}}
-  \subsection{graphic}{This function outputs a \pkg{ggplot2} graphic of
-  histograms. These can be manipulated to be visualized in another manner by
-  retrieving the plot with the \code{\link{last_plot}} command from
-  \pkg{ggplot2}. A useful manipulation would be to arrange the graphs into a
-  single column so that the values of the statistic line up: \cr \code{p <-
-  last_plot(); p + facet_wrap(~population, ncol = 1, scales = "free_y")}\cr
-  The name for the groupings is "population" and the name for the x axis is
-  "value".}
+This table is intended to be a first look into the dynamics of mutlilocus
+genotype diversity. Many of the statistics (except for the the index of
+association) are simply based on counts of multilocus genotypes and do not
+take into account the actual allelic states. \strong{Descriptions of the
+statistics can be found in the Algorithms and Equations vignette}:
+\code{vignette("algo", package = "poppr")}.
+\subsection{sampling}{
+
+The sampling procedure is explicitly for testing the index of association.
+None of the other diversity statistics (H, G, lambda, E.5) are tested with
+this sampling due to the differing data types. To obtain confidence
+intervals for these statistics, please see \code{\link[=diversity_ci]{diversity_ci()}}.
+}
+
+\subsection{rarefaction}{
+
+Rarefaction analysis is performed on the number of multilocus genotypes
+because it is relatively easy to estimate (Grünwald et al., 2003). To
+obtain rarefied estimates of diversity, it is possible to use
+\code{\link[=diversity_ci]{diversity_ci()}} with the argument \code{rarefy = TRUE}
+}
+
+\subsection{graphic}{
+
+This function outputs a \pkg{ggplot2} graphic of histograms. These can be
+manipulated to be visualized in another manner by retrieving the plot with
+the \code{\link[=last_plot]{last_plot()}} command from \pkg{ggplot2}. A useful manipulation would
+be to arrange the graphs into a single column so that the values of the
+statistic line up: \verb{p <- last_plot(); p + facet_wrap(~population, ncol = 1, scales = "free_y")} The name for the groupings is
+"population" and the name for the x axis is "value".
+}
 }
 \note{
 The calculation of \code{Hexp} has changed from \pkg{poppr} 1.x. It was
-  previously calculated based on the diversity of multilocus genotypes, 
-  resulting in a value of 1 for sexual populations. This was obviously not 
-  Nei's 1978 expected heterozygosity. We have thus changed the statistic to 
-  be the true value of Hexp by calculating \eqn{(\frac{n}{n-1}) 1 - \sum_{i =
+previously calculated based on the diversity of multilocus genotypes,
+resulting in a value of 1 for sexual populations. This was obviously not
+Nei's 1978 expected heterozygosity. We have thus changed the statistic to
+be the true value of Hexp by calculating \eqn{(\frac{n}{n-1}) 1 - \sum_{i =
   1}^k{p^{2}_{i}}}{(n/(n - 1))*(1 - sum(p^2))} where p is the allele
-  frequencies at a given locus and n is the number of observed alleles (Nei,
-  1978) in each locus and then returning the average. Caution should be 
-  exercised in interpreting the results of Hexp with polyploid organisms with
-  ambiguous ploidy. The lack of allelic dosage information will cause rare 
-  alleles to be over-represented and artificially inflate the index. This is 
-  especially true with small sample sizes.
+frequencies at a given locus and n is the number of observed alleles (Nei,
+1978) in each locus and then returning the average. Caution should be
+exercised in interpreting the results of Hexp with polyploid organisms with
+ambiguous ploidy. The lack of allelic dosage information will cause rare
+alleles to be over-represented and artificially inflate the index. This is
+especially true with small sample sizes.
 }
 \examples{
 data(nancycats)
@@ -219,71 +227,71 @@ data(H3N2)
 strata(H3N2) <- data.frame(other(H3N2)$x)
 setPop(H3N2) <- ~country
 poppr(H3N2, total = FALSE, sublist=c("Austria", "China", "USA"), 
-				clonecorrect = TRUE, strata = ~country/year)
+  clonecorrect = TRUE, strata = ~country/year)
 }
 }
 \references{
-Paul-Michael Agapow and Austin Burt. Indices of multilocus 
-  linkage disequilibrium. \emph{Molecular Ecology Notes}, 1(1-2):101-102, 
-  2001
-  
-  A.H.D. Brown, M.W. Feldman, and E. Nevo. Multilocus structure of natural 
-  populations of \emph{Hordeum spontaneum}. \emph{Genetics}, 96(2):523-536,
-  1980.
-  
-  Niklaus J. Gr\"unwald, Stephen B. Goodwin, Michael G. Milgroom, and William
-  E. Fry. Analysis of genotypic diversity data for populations of 
-  microorganisms. Phytopathology, 93(6):738-46, 2003
-  
-  Bernhard Haubold and Richard R. Hudson. Lian 3.0: detecting linkage 
-  disequilibrium in multilocus data. Bioinformatics, 16(9):847-849, 2000.
-  
-  Kenneth L.Jr. Heck, Gerald van Belle, and Daniel Simberloff. Explicit 
-  calculation of the rarefaction diversity measurement and the determination 
-  of sufficient sample size. Ecology, 56(6):pp. 1459-1461, 1975
-  
-  Masatoshi Nei. Estimation of average heterozygosity and genetic distance 
-  from a small number of individuals. Genetics, 89(3):583-590, 1978.
-  
-  S H Hurlbert. The nonconcept of species diversity: a critique and 
-  alternative parameters. Ecology, 52(4):577-586, 1971.
-  
-  J.A. Ludwig and J.F. Reynolds. Statistical Ecology. A Primer on Methods and
-  Computing. New York USA: John Wiley and Sons, 1988.
-  
-  Simpson, E. H. Measurement of diversity. Nature 163: 688, 1949 
-  doi:10.1038/163688a0
-  
-  Good, I. J. (1953). On the Population Frequency of Species and the 
-  Estimation of Population Parameters. \emph{Biometrika} 40(3/4): 237-264.
-  
-  Lande, R. (1996). Statistics and partitioning of species diversity, and 
-  similarity among multiple communities. \emph{Oikos} 76: 5-13.
-  
-  Jari Oksanen, F. Guillaume Blanchet, Roeland Kindt, Pierre Legendre, Peter 
-  R. Minchin, R. B. O'Hara, Gavin L. Simpson, Peter Solymos, M. Henry H. 
-  Stevens, and Helene Wagner. vegan: Community Ecology Package, 2012. R 
-  package version 2.0-5.
-  
-  E.C. Pielou. Ecological Diversity. Wiley, 1975.
-  
-  Claude Elwood Shannon. A mathematical theory of communication. Bell Systems
-  Technical Journal, 27:379-423,623-656, 1948
-  
-  J M Smith, N H Smith, M O'Rourke, and B G Spratt. How clonal are bacteria? 
-  Proceedings of the National Academy of Sciences, 90(10):4384-4388, 1993.
-  
-  J.A. Stoddart and J.F. Taylor. Genotypic diversity: estimation and 
-  prediction in samples. Genetics, 118(4):705-11, 1988.
+Paul-Michael Agapow and Austin Burt. Indices of multilocus
+linkage disequilibrium. \emph{Molecular Ecology Notes}, 1(1-2):101-102,
+2001
+
+A.H.D. Brown, M.W. Feldman, and E. Nevo. Multilocus structure of natural
+populations of \emph{Hordeum spontaneum}. \emph{Genetics}, 96(2):523-536,
+1980.
+
+Niklaus J. Gr\"unwald, Stephen B. Goodwin, Michael G. Milgroom, and William
+E. Fry. Analysis of genotypic diversity data for populations of
+microorganisms. Phytopathology, 93(6):738-46, 2003
+
+Bernhard Haubold and Richard R. Hudson. Lian 3.0: detecting linkage
+disequilibrium in multilocus data. Bioinformatics, 16(9):847-849, 2000.
+
+Kenneth L.Jr. Heck, Gerald van Belle, and Daniel Simberloff. Explicit
+calculation of the rarefaction diversity measurement and the determination
+of sufficient sample size. Ecology, 56(6):pp. 1459-1461, 1975
+
+Masatoshi Nei. Estimation of average heterozygosity and genetic distance
+from a small number of individuals. Genetics, 89(3):583-590, 1978.
+
+S H Hurlbert. The nonconcept of species diversity: a critique and
+alternative parameters. Ecology, 52(4):577-586, 1971.
+
+J.A. Ludwig and J.F. Reynolds. Statistical Ecology. A Primer on Methods and
+Computing. New York USA: John Wiley and Sons, 1988.
+
+Simpson, E. H. Measurement of diversity. Nature 163: 688, 1949
+doi:10.1038/163688a0
+
+Good, I. J. (1953). On the Population Frequency of Species and the
+Estimation of Population Parameters. \emph{Biometrika} 40(3/4): 237-264.
+
+Lande, R. (1996). Statistics and partitioning of species diversity, and
+similarity among multiple communities. \emph{Oikos} 76: 5-13.
+
+Jari Oksanen, F. Guillaume Blanchet, Roeland Kindt, Pierre Legendre, Peter
+R. Minchin, R. B. O'Hara, Gavin L. Simpson, Peter Solymos, M. Henry H.
+Stevens, and Helene Wagner. vegan: Community Ecology Package, 2012. R
+package version 2.0-5.
+
+E.C. Pielou. Ecological Diversity. Wiley, 1975.
+
+Claude Elwood Shannon. A mathematical theory of communication. Bell Systems
+Technical Journal, 27:379-423,623-656, 1948
+
+J M Smith, N H Smith, M O'Rourke, and B G Spratt. How clonal are bacteria?
+Proceedings of the National Academy of Sciences, 90(10):4384-4388, 1993.
+
+J.A. Stoddart and J.F. Taylor. Genotypic diversity: estimation and
+prediction in samples. Genetics, 118(4):705-11, 1988.
 }
 \seealso{
-\code{\link{clonecorrect}}, 
-  \code{\link{poppr.all}}, 
-  \code{\link{ia}}, 
-  \code{\link{missingno}}, 
-  \code{\link{mlg}}, 
-  \code{\link{diversity_stats}},
-  \code{\link{diversity_ci}}
+\code{\link[=clonecorrect]{clonecorrect()}},
+\code{\link[=poppr.all]{poppr.all()}},
+\code{\link[=ia]{ia()}},
+\code{\link[=missingno]{missingno()}},
+\code{\link[=mlg]{mlg()}},
+\code{\link[=diversity_stats]{diversity_stats()}},
+\code{\link[=diversity_ci]{diversity_ci()}}
 }
 \author{
 Zhian N. Kamvar
