@@ -42,14 +42,6 @@ vector will be reset}
 \item{fullnames}{\code{logical}. If \code{TRUE}, then the full names of the
 populations will be printed. If \code{FALSE}, then only the first and last
 three population names are displayed.}
-
-\item{gen}{\code{"\linkS4class{genind}"} object}
-
-\item{loc}{passed on to \code{\linkS4class{genind}} object.}
-
-\item{treatOther}{passed on to \code{\linkS4class{genind}} object.}
-
-\item{quiet}{passed on to \code{\linkS4class{genind}} object.}
 }
 \description{
 Default methods for subsetting genclone objects.

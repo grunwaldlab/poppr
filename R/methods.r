@@ -515,7 +515,6 @@ is.genclone <- function(x){
 #==============================================================================#
 #' @rdname genclone-method
 #' @param .Object a character, "genclone"
-#' @param gen \code{"\linkS4class{genind}"} object
 #' @param mlg a vector where each element assigns the multilocus genotype of 
 #'   that individual in the data set.
 #' @param mlgclass a logical value specifying whether or not to translate the 
@@ -552,9 +551,6 @@ setMethod(
 #' @param drop set to \code{FALSE}
 #' @param mlg.reset logical. Defaults to \code{FALSE}. If \code{TRUE}, the mlg
 #'   vector will be reset
-#' @param loc passed on to \code{\linkS4class{genind}} object.
-#' @param treatOther passed on to \code{\linkS4class{genind}} object.
-#' @param quiet passed on to \code{\linkS4class{genind}} object.
 #' @author Zhian N. Kamvar
 #==============================================================================#
 setMethod(
