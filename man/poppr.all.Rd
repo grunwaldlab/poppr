@@ -12,11 +12,11 @@ poppr.all(filelist, ...)
 \item{...}{arguments passed on to poppr}
 }
 \value{
-see \code{\link{poppr}}
+see [poppr()]
 }
 \description{
 poppr.all is a wrapper function that will loop through a list of files from
-the working directory, execute \code{\link{poppr}}, and concatenate the
+the working directory, execute [poppr()], and concatenate the
 output into one data frame.
 }
 \examples{
@@ -29,7 +29,7 @@ poppr.all(file.path(x$path, x$files))
 }
 }
 \seealso{
-\code{\link{poppr}}, \code{\link{getfile}}
+[poppr()], [getfile()]
 }
 \author{
 Zhian N. Kamvar

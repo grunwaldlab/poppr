@@ -75,7 +75,7 @@
 #' @seealso \code{\link{mlg.filter}} \code{\link{cutoff_predictor}} 
 #'   \code{\link{bitwise.dist}} \code{\link{diss.dist}}
 #' @note This function originally appeared in 
-#'   \doi{10.5281/zenodo.17424}{DOI: 10.5281/zenodo.17424}
+#'   \doi{10.5281/zenodo.17424}
 #' @references ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary 
 #'   Material for Frontiers Plant Genetics and Genomics 'Novel R tools for 
 #'   analysis of genome-wide population genetic data with emphasis on
@@ -137,7 +137,7 @@ filter_stats <- function(x, distance = bitwise.dist,
   }
   return(fanlist)
 }
-#==============================================================================#
+
 #' Predict cutoff thresholds for use with mlg.filter
 #' 
 #' Given a series of thresholds for a data set that collapse it into one giant 
@@ -153,7 +153,7 @@ filter_stats <- function(x, distance = bitwise.dist,
 #'   lineages should be defined.
 #' @seealso \code{\link{filter_stats}} \code{\link{mlg.filter}}
 #' @note This function originally appeared in 
-#'   \doi{10.5281/zenodo.17424}{DOI: 10.5281/zenodo.17424}. 
+#'   \doi{10.5281/zenodo.17424}. 
 #'   This is a bit of a blunt instrument.
 #' @export
 #' @references ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary
@@ -188,7 +188,6 @@ cutoff_predictor <- function(thresholds, fraction = 0.5){
   mean(thresholds[diffmax:(diffmax + 1)])
 }
 
-#==============================================================================#
 #' Plot the results of filter_stats
 #' 
 #' @param x a genlight of genind object
@@ -203,7 +202,7 @@ cutoff_predictor <- function(thresholds, fraction = 0.5){
 #' @export
 #' @seealso \code{\link{filter_stats}}
 #' @note This function originally appeared in 
-#'   \doi{10.5281/zenodo.17424}{DOI: 10.5281/zenodo.17424}
+#'   \doi{10.5281/zenodo.17424}
 #' @author Zhian N. Kamvar
 #' @references ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary
 #' Material for Frontiers Plant Genetics and Genomics 'Novel R tools for

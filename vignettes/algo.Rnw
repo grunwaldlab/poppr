@@ -8,7 +8,7 @@
             linkcolor = blue]{hyperref}
 \usepackage{array}
 \usepackage{color}
-\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[dvipsnames,svgnames,table]{xcolor}
 \usepackage[utf8]{inputenc} % for UTF-8/single quotes from sQuote()
 \usepackage{fullpage}
 \usepackage{mathtools}

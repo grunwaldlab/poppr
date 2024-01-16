@@ -1,3 +1,13 @@
+poppr 2.9.5
+===========
+
+CRAN MAINTENANCE
+----------------
+
+* The `usenames` option from xcolor has been removed from the algorithms and
+  equations vignette.
+* Old documentation has been fixed to conform with CRAN standards.
+
 poppr 2.9.4
 ===========
 
