@@ -1,3 +1,12 @@
+poppr 2.9.6
+
+MISC
+----
+
+* Poppr itself will no longer accidentally modify the random seed when it is
+  attached (found by @timtaylor,
+  https://github.com/grunwaldlab/poppr/issues/259)
+
 poppr 2.9.5
 ===========
 
