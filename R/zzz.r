@@ -54,15 +54,17 @@
   paralltype <- ifelse(poppr::poppr_has_parallel(), "available", "unavailable")
   startupmsg <- paste0(startupmsg, "\nOMP parallel support: ", paralltype, appendix)
   packageStartupMessage(startupmsg)
-  if (!interactive() || stats::runif(1) > 0.1) return()
+  if (!interactive()) return()
+
+  msec <- floor(as.POSIXlt(Sys.time())$sec*1000)
+  if (msec %% 10 > 0) return()
 
   tips <- c(
     "\nNeed help? Try the poppr mailing list: http://groups.google.com/d/forum/poppr.\n",
     "\nUse suppressPackageStartupMessages(library(\"poppr\")) to eliminate package startup messages.\n"
   )
-  
-  tip <- sample(tips, 1)
-  packageStartupMessage(tip)
+  msec <- floor(as.POSIXlt(Sys.time())$sec*1000)
+  packageStartupMessage(tips[1 + (msec %% length(n))])
 }
 
 .onLoad <- function(...){
