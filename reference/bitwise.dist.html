@@ -12,7 +12,7 @@ genlight or snpclone objects."><meta property="og:image" content="/logo.png"><!-
     
     <a class="navbar-brand me-2" href="../index.html">poppr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.9.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.9.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -194,7 +194,7 @@ calculation.</p>
 <span class="r-in"><span><span class="co"># Assess fraction of different alleles</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">xd</span> <span class="op">&lt;-</span> <span class="fu">bitwise.dist</span><span class="op">(</span><span class="va">x</span>, threads <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    user  system elapsed </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.001   0.000   0.005 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.000   0.000   0.001 </span>
 <span class="r-in"><span><span class="va">xd</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         1      2      3      4      5      6      7      8      9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  0.2230                                                        </span>
@@ -210,7 +210,7 @@ calculation.</p>
 <span class="r-in"><span><span class="co"># Calculate Euclidean distance</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">xdt</span> <span class="op">&lt;-</span> <span class="fu">bitwise.dist</span><span class="op">(</span><span class="va">x</span>, euclidean <span class="op">=</span> <span class="cn">TRUE</span>, scale_missing <span class="op">=</span> <span class="cn">TRUE</span>, threads <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    user  system elapsed </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.001   0.000   0.000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       0       0       0 </span>
 <span class="r-in"><span><span class="va">xdt</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           1        2        3        4        5        6        7        8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  23.40940                                                               </span>
@@ -251,12 +251,12 @@ calculation.</p>
 <span class="r-in"><span><span class="co"># Default Euclidean distance </span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="va">glite</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    user  system elapsed </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1.768   0.037   1.812 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1.712   0.057   1.782 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Bitwise dist</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">bitwise.dist</span><span class="op">(</span><span class="va">glite</span>, euclidean <span class="op">=</span> <span class="cn">TRUE</span>, scale_missing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    user  system elapsed </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.676   0.003   0.723 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.673   0.005   0.705 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">poppr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.9.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.9.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -124,14 +124,14 @@ represented as an <code><a href="MLG-class.html">MLG</a></code> object.</p></dd>
 <span class="r-in"><span><span class="co"># Without parallel processing</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">as.snpclone</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/adegenet/man/glSim.html" class="external-link">glSim</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">1e5</span>, ploid<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    user  system elapsed </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 103.761  17.851 121.638 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 110.935  14.390 125.455 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># With parallel processing... doesn't really save you much time.</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">as.snpclone</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/adegenet/man/glSim.html" class="external-link">glSim</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">1e5</span>, ploid<span class="op">=</span><span class="fl">2</span>, parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, </span></span>
 <span class="r-in"><span>                             parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: parallel</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    user  system elapsed </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 103.208  11.911 115.625 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 110.695  12.397 123.898 </span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

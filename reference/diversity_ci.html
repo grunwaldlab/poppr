@@ -16,7 +16,7 @@ the results."><meta property="og:image" content="/logo.png"><!-- mathjax --><scr
     
     <a class="navbar-brand me-2" href="../index.html">poppr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.9.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.9.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -251,10 +251,10 @@ For details, see <a href="https://stats.stackexchange.com/q/156235/49413" class=
 <h3 id="user-defined-functions">User-defined functions<a class="anchor" aria-label="anchor" href="#user-defined-functions"></a></h3>
 <p>While it is possible to use custom functions with this, there are three
 important things to remember when using these functions:</p>
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fl">1.</span> The <span class="cf">function</span> must return a single value. </span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fl">2.</span> The <span class="cf">function</span> must allow <span class="cf">for</span> both matrix and vector inputs </span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fl">3.</span> The <span class="cf">function</span> name cannot match or partially match any arguments </span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>from [boot<span class="sc">::</span><span class="fu">boot</span>()]</span></code></pre><p></p></div>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fl">1.</span> The <span class="cf">function</span> must return a single value. </span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fl">2.</span> The <span class="cf">function</span> must allow <span class="cf">for</span> both matrix and vector inputs </span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fl">3.</span> The <span class="cf">function</span> name cannot match or partially match any arguments </span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>from [boot<span class="sc">::</span><span class="fu">boot</span>()]</span></code></pre><p></p></div>
 <p>Anonymous functions are okay <br>(e.g. <code>function(x) vegan::rarefy(t(as.matrix(x)), 10)</code>).</p>
 </div>
 
@@ -398,14 +398,14 @@ of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Please see ?diversity_ci for details.</span>
 <span class="r-plt img"><img src="diversity_ci-3.png" alt="" width="700" height="433"></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    user  system elapsed </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   6.641   2.500   3.933 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   5.553   2.171   3.259 </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">diversity_ci</span><span class="op">(</span><span class="va">Pinf</span>, <span class="fl">10000L</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Confidence Intervals have been centered around observed statistic.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Please see ?diversity_ci for details.</span>
 <span class="r-plt img"><img src="diversity_ci-4.png" alt="" width="700" height="433"></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    user  system elapsed </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3.618   0.126   3.823 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   3.543   0.126   3.848 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># We often get many requests for a clonal fraction statistic. As this is </span></span></span>
 <span class="r-in"><span><span class="co"># simply the number of observed MLGs over the number of samples, we </span></span></span>

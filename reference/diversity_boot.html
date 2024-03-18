@@ -16,7 +16,7 @@ to have a downward bias. See the details for more information."><meta property="
     
     <a class="navbar-brand me-2" href="../index.html">poppr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.9.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.9.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -145,13 +145,13 @@ inverse Simpson's index).</p></dd>
     <p>Bootstrapping is performed in three ways:</p><ul><li><p>if <code>n.rare</code> is a number greater than zero, then bootstrapping
 is performed by randomly sampling without replacement <em>n.rare</em>
 samples from the data.</p>
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>\item <span class="cf">if</span> <span class="st">`</span><span class="at">n.boot</span><span class="st">`</span> is greater than <span class="dv">1</span>, bootstrapping is performed by</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>sampling n.boot samples from a multinomial distribution weighted by the</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>proportion of each MLG <span class="cf">in</span> the data.</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>\item <span class="cf">if</span> <span class="st">`</span><span class="at">n.boot</span><span class="st">`</span> is less than <span class="dv">2</span>, bootstrapping is performed by </span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>sampling N samples from a multinomial distribution weighted by the</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>proportion of each MLG <span class="cf">in</span> the data.</span></code></pre><p></p></div></li>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>\item <span class="cf">if</span> <span class="st">`</span><span class="at">n.boot</span><span class="st">`</span> is greater than <span class="dv">1</span>, bootstrapping is performed by</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>sampling n.boot samples from a multinomial distribution weighted by the</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>proportion of each MLG <span class="cf">in</span> the data.</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>\item <span class="cf">if</span> <span class="st">`</span><span class="at">n.boot</span><span class="st">`</span> is less than <span class="dv">2</span>, bootstrapping is performed by </span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>sampling N samples from a multinomial distribution weighted by the</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>proportion of each MLG <span class="cf">in</span> the data.</span></code></pre><p></p></div></li>
 </ul><div class="section">
 <h3 id="downward-bias">Downward Bias<a class="anchor" aria-label="anchor" href="#downward-bias"></a></h3>
 <p>When sampling with replacement, the diversity statistics here present a
@@ -225,10 +225,10 @@ interpret the results of this function.</p>
 <span class="r-in"><span><span class="co"># This can be done in a parallel fashion (OSX uses "multicore", Windows uses "snow")</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">diversity_boot</span><span class="op">(</span><span class="va">tab</span>, <span class="fl">10000L</span>, parallel <span class="op">=</span> <span class="st">"multicore"</span>, ncpus <span class="op">=</span> <span class="fl">4L</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    user  system elapsed </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3.955   2.159   3.277 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   4.847   4.502   3.945 </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">diversity_boot</span><span class="op">(</span><span class="va">tab</span>, <span class="fl">10000L</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    user  system elapsed </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2.269   0.088   2.389 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1.988   0.086   2.152 </span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
