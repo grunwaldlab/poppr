@@ -72,10 +72,12 @@ test_that("correction is properly applied in rraf", {
   
   # sum_to_one argument augments does what it says
   monc_sum2one <- vapply(monc_sto, sum, numeric(1))
-  tol <- min(monc_vec - monc_sum2one)
+  # If the sum to one works, then we should have leftover tolerance that is
+  # greater than zero but less than one.
+  tol <- sum(monc_vec - monc_sum2one)
   expect_lt(tol, 1)
+  expect_gt(tol, 0)
   expect_equal(sum(monc_sum2one), nLoc(monpop))
-  expect_equal(monc_vec, monc_sum2one, tolerance = tol)
   # The default is 1/n
   expect_equivalent(SER(monc), 1/nInd(monpop))
   expect_true(identical(SER(monc)[[1]], SED(monc)[[1]]))
