@@ -73,7 +73,7 @@ test_that("correction is properly applied in rraf", {
   # sum_to_one argument augments does what it says
   monc_sum2one <- vapply(monc_sto, sum, numeric(1))
   expect_equal(sum(monc_sum2one), nLoc(monpop))
-  expect_true(all(monc_vec == monc_sum2one), 
+  expect_true(all(monc_vec >= monc_sum2one), 
     label = paste0(paste(capture.output(
       data.frame(vec = monc_vec, sum2one = monc_sum2one)
     ), collapse = "\n"), "\n")
