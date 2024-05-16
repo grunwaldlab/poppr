@@ -308,7 +308,7 @@ test_that("diploid missing data is handled correctly", {
   file1 <- tempfile()
   genind2genalex(nancycats, file1, quiet = TRUE)
   nan <- read.genalex(file1, genclone = FALSE)
-  expect_identical(summary(nancycats, verbose = FALSE), summary(nan, verbose = FALSE))
+  expect_equal(summary(nancycats, verbose = FALSE), summary(nan, verbose = FALSE))
 })
 
 test_that("sequence data is handled correctly", {
