@@ -75,7 +75,7 @@ test_that("correction is properly applied in rraf", {
   expect_equal(sum(monc_sum2one), nLoc(monpop))
   expect_true(all(monc_vec >= monc_sum2one), 
     label = paste0(paste(capture.output(
-      data.frame(vec = monc_vec, sum2one = monc_sum2one)
+      data.frame(vec = monc_vec, sum2one = monc_sum2one, equal = monc_vec >= monc_sum2one)
     ), collapse = "\n"), "\n")
   )
   
