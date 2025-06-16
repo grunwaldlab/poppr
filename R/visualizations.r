@@ -601,7 +601,7 @@ info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot 
 
       outplot <- ggplot(plotdf, aes_string(x = "Locus", y = "Population")) + 
         geom_tile(aes_string(fill = valname)) +
-        labs(list(title = title, x = "Locus", y = "Population")) +
+        labs(title = title, x = "Locus", y = "Population") +
         labs(fill = leg_title) + 
         scale_fill_gradient(low = low, high = high, na.value = "white", 
                             limits = lims) +
@@ -646,8 +646,8 @@ info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot 
                    scale_x_discrete(expand = c(0, -1)) + 
                    scale_y_discrete(expand = c(0, -1), 
                                     limits = rev(unique(data_df$Samples))) + 
-                   labs(list(title = title, x = "Locus", y = "Sample", 
-                             fill = "Observed\nPloidy")) +
+                   labs(title = title, x = "Locus", y = "Sample", 
+                             fill = "Observed\nPloidy") +
                    mytheme 
 
       print(outplot)
@@ -1363,9 +1363,9 @@ genotype_curve <- function(gen, sample = 100, maxloci = 0L, quiet = FALSE,
   aesthetics      <- aes_string(x = "NumLoci", y = "MLG")
   outplot <- ggplot(outmelt, aesthetics) + 
              geom_boxplot(aes_string(group = "factor(NumLoci)")) + 
-             labs(list(title = paste("Genotype accumulation curve for", datacall[2]), 
-                       y           = "Number of multilocus genotypes",
-                       x           = "Number of loci sampled")) +
+             labs(title = paste("Genotype accumulation curve for", datacall[2]), 
+                  y           = "Number of multilocus genotypes",
+                  x           = "Number of loci sampled") +
              scale_x_continuous(breaks = seq(nloci), expand = c(0, 0.125))
   if (!is.null(thresh)) {
     outbreaks <- sort(c(pretty(0:max_obs), threshdf$x))
