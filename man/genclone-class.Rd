@@ -9,8 +9,8 @@
 \title{GENclone and SNPclone classes}
 \description{
 \strong{GENclone} is an S4 class that extends the 
-  \code{\linkS4class{genind}} object.\cr \strong{SNPclone} is an S4 class
-  that extends the \code{\linkS4class{genlight}} object.\cr\cr They will have
+  \code{\link[adegenet:genind-class]{genind}} object.\cr \strong{SNPclone} is an S4 class
+  that extends the \code{\link[adegenet:genlight-class]{genlight}} object.\cr\cr They will have
   all of the same attributes as their parent classes, but they will contain
   one extra slot to store extra information about multilocus genotypes.
 }
@@ -18,7 +18,7 @@
 The genclone and snpclone classes will allow for more optimized 
   methods of clone correction.
   
-  Previously for \linkS4class{genind} and \linkS4class{genlight} objects, 
+  Previously for \link[adegenet:genind-class]{genind} and \link[adegenet:genlight-class]{genlight} objects, 
   multilocus genotypes were not retained after a data set was subset by 
   population. The new \strong{\code{mlg}} slot allows us to assign the 
   multilocus genotypes and retain that information no matter how we subset 
@@ -43,8 +43,8 @@ When calculating multilocus genotypes for genclone objects, a rank
 }
 \section{Extends}{
  The \code{genclone} class extends class 
-  \code{"\linkS4class{genind}"}, directly. \cr The \code{snpclone} class 
-  extends class \code{"\linkS4class{genlight}"}, directly.
+  \code{"\link[adegenet:genind-class]{genind}"}, directly. \cr The \code{snpclone} class 
+  extends class \code{"\link[adegenet:genlight-class]{genlight}"}, directly.
 }
 
 \examples{
@@ -70,7 +70,7 @@ sc # 82 mlgs
 }
 \seealso{
 \code{\link{as.genclone}} \code{\link{as.snpclone}} 
-  \code{\linkS4class{genind}} \code{\linkS4class{genlight}} 
+  \code{\link[adegenet:genind-class]{genind}} \code{\link[adegenet:genlight-class]{genlight}} 
   \code{\link[adegenet:accessors]{strata}} \code{\link[adegenet:accessors]{setPop}} 
   \code{\link{MLG}} \code{\link{mll}} \code{\link{mlg.filter}}
 }

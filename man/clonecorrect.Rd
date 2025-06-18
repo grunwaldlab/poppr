@@ -8,7 +8,7 @@ object.}
 clonecorrect(pop, strata = 1, combine = FALSE, keep = 1)
 }
 \arguments{
-\item{pop}{a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}}, or
+\item{pop}{a \code{\link[adegenet:genind-class]{genind}}, \code{\linkS4class{genclone}}, or
 \code{\linkS4class{snpclone}} object}
 
 \item{strata}{a hierarchical formula or numeric vector. This will define the
@@ -26,7 +26,7 @@ can set \code{keep = c(1,3)}.}
 }
 \value{
 a clone corrected \code{\linkS4class{genclone}}, 
-  \code{\linkS4class{snpclone}}, or \code{\linkS4class{genind}} object.
+  \code{\linkS4class{snpclone}}, or \code{\link[adegenet:genind-class]{genind}} object.
 }
 \description{
 This function removes any duplicated multilocus genotypes from any specified 

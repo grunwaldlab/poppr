@@ -105,7 +105,7 @@ rrmlg <- function(gid){
 #' 
 #' @param gid a genind or genclone object
 #' @param pop either a formula to set the population factor from the 
-#'   \code{\link{strata}} slot or a vector specifying the population factor for 
+#'   \code{\link[adegenet]{strata}} slot or a vector specifying the population factor for 
 #'   each sample. Defaults to \code{NULL}.
 #' @param res either "list" (default), "vector", or "data.frame".
 #' @param by_pop When this is \code{TRUE}, the calculation will be done by 

@@ -48,7 +48,7 @@
 #' This function removes any duplicated multilocus genotypes from any specified 
 #' population strata.
 #' 
-#' @param pop a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}}, or
+#' @param pop a \code{\link[adegenet:genind-class]{genind}}, \code{\linkS4class{genclone}}, or
 #'   \code{\linkS4class{snpclone}} object
 #'   
 #' @param strata a hierarchical formula or numeric vector. This will define the
@@ -65,7 +65,7 @@
 #'   can set \code{keep = c(1,3)}.
 #'   
 #' @return a clone corrected \code{\linkS4class{genclone}}, 
-#'   \code{\linkS4class{snpclone}}, or \code{\linkS4class{genind}} object.
+#'   \code{\linkS4class{snpclone}}, or \code{\link[adegenet:genind-class]{genind}} object.
 #'   
 #' @details This function will clone correct based on the stratification 
 #'   provided. To clone correct indiscriminately of population structure, set 
@@ -205,8 +205,8 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
 #' Create a new dataset with specified populations or exclude specified
 #' populations from the dataset.
 #' 
-#' @param gid a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}},
-#'   \code{\linkS4class{genlight}}, or \code{\linkS4class{snpclone}} object.
+#' @param gid a \code{\link[adegenet:genind-class]{genind}}, \code{\linkS4class{genclone}},
+#'   \code{\link[adegenet:genlight-class]{genlight}}, or \code{\linkS4class{snpclone}} object.
 #' 
 #' @param sublist a \code{vector} of population names or indexes that the user
 #' wishes to keep. Default to \code{"ALL"}.
@@ -351,7 +351,7 @@ popsub <- function(gid, sublist="ALL", exclude=NULL, blacklist=NULL, mat=NULL, d
 #' missingno gives the user four options to deal with missing data: remove loci,
 #' remove samples, replace with zeroes, or replace with average allele counts.
 #'
-#'@param pop a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} 
+#'@param pop a \code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}} 
 #'  object.
 #'  
 #'@param type a \code{character} string: can be "ignore", "zero", "mean", 
@@ -370,7 +370,7 @@ popsub <- function(gid, sublist="ALL", exclude=NULL, blacklist=NULL, mat=NULL, d
 #'  instead.
 #'  
 #'@details These methods provide a way to deal with systematic missing data and 
-#'  to give a wrapper for \code{adegenet}'s \code{ \link{tab}} function. 
+#'  to give a wrapper for \code{adegenet}'s \code{ \link[adegenet]{tab}} function. 
 #'  ALL OF THESE ARE TO BE USED WITH CAUTION. 
 #'  
 #'  Using this function with polyploid data (where missing data is coded as "0")
@@ -389,7 +389,7 @@ popsub <- function(gid, sublist="ALL", exclude=NULL, blacklist=NULL, mat=NULL, d
 #'  more diversity.}
 #'  }
 #'  }
-#'@return a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object.
+#'@return a \code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}} object.
 #'  
 #'@note \emph{"wild missingno appeared!"}
 #'  
@@ -513,12 +513,12 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE, freq = FAL
 #' Remove all non-phylogentically informative loci
 #' 
 #' This function will facilitate in removing phylogenetically uninformative loci
-#' from a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object. 
+#' from a \code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}} object. 
 #' The user has the ability to define what uninformative means by setting a 
 #' cutoff value for either percentage of differentiating genotypes or minor 
 #' allele frequency.
 #' 
-#' @param pop a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} 
+#' @param pop a \code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}} 
 #'   object.
 #'   
 #' @param cutoff \code{numeric}. A number from 0 to 1 defining the minimum 
@@ -658,12 +658,12 @@ informloci <- function(pop, cutoff = 2/nInd(pop), MAF = 0.01, quiet = FALSE){
 #' diversity statistics. The tradeoff was the fact that this broke all other 
 #' analyses as they relied on allele frequencies and the missing alleles are 
 #' treated as extra alleles. This function removes those alleles and returns a 
-#' \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object where 
+#' \code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}} object where 
 #' allele frequencies are coded based on the number of alleles observed at a 
 #' single locus per individual. See the examples for more details.
 #' 
-#' @param poly a \code{\linkS4class{genclone}}, \code{\linkS4class{genind}}, or 
-#'   \code{\linkS4class{genpop}} object that has a ploidy of > 2
+#' @param poly a \code{\linkS4class{genclone}}, \code{\link[adegenet:genind-class]{genind}}, or 
+#'   \code{\link[adegenet:genpop-class]{genpop}} object that has a ploidy of > 2
 #' @param newploidy for genind or genclone objects: if \code{FALSE} (default),
 #'   the user-defined ploidy will stay constant. if \code{TRUE}, the ploidy for
 #'   each sample will be determined by the maximum ploidy observed for each
@@ -673,8 +673,8 @@ informloci <- function(pop, cutoff = 2/nInd(pop), MAF = 0.01, quiet = FALSE){
 #' if \code{TRUE}, objects with uneven ploidies will have zeroes appended to all
 #' loci to allow conversion to genpop objects. Defaults to \code{FALSE}.
 #'   
-#' @return a \code{\linkS4class{genclone}}, \code{\linkS4class{genind}}, or
-#'   \code{\linkS4class{genpop}} object.
+#' @return a \code{\linkS4class{genclone}}, \code{\link[adegenet:genind-class]{genind}}, or
+#'   \code{\link[adegenet:genpop-class]{genpop}} object.
 #'   
 #' @details The genind object has two caveats that make it difficult to work 
 #'   with polyploid data sets: 

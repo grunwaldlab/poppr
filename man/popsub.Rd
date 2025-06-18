@@ -14,8 +14,8 @@ popsub(
 )
 }
 \arguments{
-\item{gid}{a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}},
-\code{\linkS4class{genlight}}, or \code{\linkS4class{snpclone}} object.}
+\item{gid}{a \code{\link[adegenet:genind-class]{genind}}, \code{\linkS4class{genclone}},
+\code{\link[adegenet:genlight-class]{genlight}}, or \code{\linkS4class{snpclone}} object.}
 
 \item{sublist}{a \code{vector} of population names or indexes that the user
 wishes to keep. Default to \code{"ALL"}.}

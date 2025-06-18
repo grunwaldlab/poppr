@@ -20,8 +20,8 @@ Check for validity of a genclone or snpclone object
 }
 \note{
 a \linkS4class{genclone} object will always be a valid 
-\linkS4class{genind} object and a \linkS4class{snpclone} object will always
-be a valid \linkS4class{genlight} object.
+\link[adegenet:genind-class]{genind} object and a \linkS4class{snpclone} object will always
+be a valid \link[adegenet:genlight-class]{genlight} object.
 }
 \examples{
 (sc <- as.snpclone(glSim(100, 1e3, ploid=2, parallel = FALSE), 

@@ -17,7 +17,7 @@ bruvo.between(
 )
 }
 \arguments{
-\item{pop}{a \code{\link{genind}} or \code{\link{genclone}} object}
+\item{pop}{a \code{\link[adegenet]{genind}} or \code{\link{genclone}} object}
 
 \item{replen}{a \code{vector} of \code{integers} indicating the length of the
 nucleotide repeats for each microsatellite locus. E.g. a locus with a (CAT) 
@@ -36,9 +36,9 @@ is \code{by_locus = FALSE}, indicating that Bruvo's distance is to be
 averaged over all loci. When \code{by_locus = TRUE}, a list of distance
 matrices will be returned.}
 
-\item{query}{a \code{\link{genind}} or \code{\link{genclone}} object}
+\item{query}{a \code{\link[adegenet]{genind}} or \code{\link{genclone}} object}
 
-\item{ref}{a \code{\link{genind}} or \code{\link{genclone}} object}
+\item{ref}{a \code{\link[adegenet]{genind}} or \code{\link{genclone}} object}
 }
 \value{
 an object of class \code{\link{dist}} or a list of these objects if

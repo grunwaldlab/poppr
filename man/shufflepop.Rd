@@ -3,23 +3,23 @@
 \name{shufflepop}
 \alias{shufflepop}
 \title{Shuffle individuals in a \code{\linkS4class{genclone}} or
-\code{\linkS4class{genind}} object independently over each locus.}
+\code{\link[adegenet:genind-class]{genind}} object independently over each locus.}
 \usage{
 shufflepop(pop, method = 1)
 }
 \arguments{
-\item{pop}{a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+\item{pop}{a \code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}}
 object}
 
 \item{method}{an integer between 1 and 4. See details below.}
 }
 \value{
-a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object
+a \code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}} object
   shuffled by a specified method
 }
 \description{
 Shuffle individuals in a \code{\linkS4class{genclone}} or
-\code{\linkS4class{genind}} object independently over each locus.
+\code{\link[adegenet:genind-class]{genind}} object independently over each locus.
 }
 \details{
 This function will shuffle each locus in the data set independently 

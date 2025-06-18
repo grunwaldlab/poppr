@@ -19,7 +19,7 @@ info_table(
 )
 }
 \arguments{
-\item{gen}{a \linkS4class{genind} or \linkS4class{genclone} object.}
+\item{gen}{a \link[adegenet:genind-class]{genind} or \linkS4class{genclone} object.}
 
 \item{type}{\code{character}. What information should be returned. Choices
 are "missing" (Default) and "ploidy". See Description.}
@@ -58,7 +58,7 @@ If \code{FALSE}, the color specified in \code{high} will represent 100\%.}
 \value{
 a matrix, data frame (\code{df = TRUE}), or a list (\code{returnplot 
   = TRUE}) representing missing data per population (\code{type = 'missing'})
-  or ploidy per individual (\code{type = 'ploidy'}) in a \linkS4class{genind}
+  or ploidy per individual (\code{type = 'ploidy'}) in a \link[adegenet:genind-class]{genind}
   or \linkS4class{genclone} object.
 }
 \description{

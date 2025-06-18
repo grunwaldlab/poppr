@@ -23,7 +23,7 @@ allele.}
 
 \section{Extends}{
  
-Virtual Class \code{"\linkS4class{gen}"}.
+Virtual Class \code{"\link[adegenet:gen-class]{gen}"}.
 }
 
 \author{

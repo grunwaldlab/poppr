@@ -15,7 +15,7 @@
 \arguments{
 \item{.Object}{a character, "bruvomat"}
 
-\item{gen}{\code{"\linkS4class{genind}"} object}
+\item{gen}{\code{"\link[adegenet:genind-class]{genind}"} object}
 
 \item{replen}{a vector of numbers indicating the repeat length for each 
 microsatellite locus.}
