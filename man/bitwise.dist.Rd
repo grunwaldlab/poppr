@@ -16,7 +16,7 @@ bitwise.dist(
 )
 }
 \arguments{
-\item{x}{a \link[=genlight-class]{genlight} or \link[=snpclone-class]{snpclone} object.}
+\item{x}{a \link[adegenet:genlight]{genlight} or \link[=snpclone-class]{snpclone} object.}
 
 \item{percent}{\code{logical}. Should the distance be represented from 0 to
 1? Default set to \code{TRUE}. \code{FALSE} will return the distance
@@ -60,7 +60,7 @@ A dist object containing pairwise distances between samples.
 }
 \description{
 This function calculates both dissimilarity and Euclidean distances for
-\link[=genlight-class]{genlight} or \link[=snpclone-class]{snpclone} objects.
+\link[adegenet:genlight]{genlight} or \link[=snpclone-class]{snpclone} objects.
 }
 \details{
 The default distance calculated here is quite simple and goes by
@@ -72,7 +72,7 @@ distance and is considerably faster and more memory-efficient than the
 standard \code{dist()} function.
 }
 \note{
-This function is optimized for \link[=genlight-class]{genlight} and
+This function is optimized for \link[adegenet:genlight]{genlight} and
 \link[=snpclone-class]{snpclone} objects. This does not mean that it is a
 catch-all optimization for SNP data. Three assumptions must be met for this
 function to work:
@@ -82,7 +82,7 @@ function to work:
 \item All samples have the same ploidy
 }
 
-If the user supplies a \link[=genind-class]{genind} or
+If the user supplies a \link[adegenet:genind]{genind} or
 \link[=genclone-class]{genclone} object, \code{\link[=prevosti.dist]{prevosti.dist()}} will be used for
 calculation.
 }
@@ -123,7 +123,7 @@ system.time(bitwise.dist(glite, euclidean = TRUE, scale_missing = TRUE))
 }
 \seealso{
 \code{\link[=diss.dist]{diss.dist()}}, \link[=snpclone-class]{snpclone},
-\link[=genlight-class]{genlight}, \code{\link[=win.ia]{win.ia()}},  \code{\link[=samp.ia]{samp.ia()}}
+\link[adegenet:genlight]{genlight}, \code{\link[=win.ia]{win.ia()}},  \code{\link[=samp.ia]{samp.ia()}}
 }
 \author{
 Zhian N. Kamvar, Jonah C. Brooks

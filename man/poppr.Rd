@@ -55,7 +55,7 @@ desired. see \code{\link[=shufflepop]{shufflepop()}} for details.}
 
 \item{missing}{how should missing data be treated? \code{"zero"} and
 \code{"mean"} will set the missing values to those documented in
-\code{\link[=tab]{tab()}}. \code{"loci"} and \code{"geno"} will remove any loci or
+\code{\link[adegenet:tab]{adegenet::tab()}}. \code{"loci"} and \code{"geno"} will remove any loci or
 genotypes with missing data, respectively (see \code{\link[=missingno]{missingno()}} for
 more information.}
 
@@ -72,7 +72,7 @@ parameter, or the user will potentially get undesired results. see
 
 \item{strata}{a \code{formula} indicating the hierarchical levels to be used.
 The hierarchies should be present in the \code{strata} slot. See
-\code{\link[=strata]{strata()}} for details.}
+\code{\link[adegenet:strata-methods]{adegenet::strata()}} for details.}
 
 \item{keep}{an \code{integer}. This indicates which strata you wish to keep
 after clone correcting your data sets. To combine strata, just set keep
@@ -162,7 +162,7 @@ obtain rarefied estimates of diversity, it is possible to use
 
 This function outputs a \pkg{ggplot2} graphic of histograms. These can be
 manipulated to be visualized in another manner by retrieving the plot with
-the \code{\link[=last_plot]{last_plot()}} command from \pkg{ggplot2}. A useful manipulation would
+the \code{\link[ggplot2:get_last_plot]{ggplot2::last_plot()}} command from \pkg{ggplot2}. A useful manipulation would
 be to arrange the graphs into a single column so that the values of the
 statistic line up: \verb{p <- last_plot(); p + facet_wrap(~population, ncol = 1, scales = "free_y")} The name for the groupings is
 "population" and the name for the x axis is "value".

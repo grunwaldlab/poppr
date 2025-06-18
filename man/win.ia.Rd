@@ -15,7 +15,7 @@ win.ia(
 )
 }
 \arguments{
-\item{x}{a \link[=genlight-class]{genlight} or \link[=snpclone-class]{snpclone} object.}
+\item{x}{a \link[adegenet:genlight]{genlight} or \link[=snpclone-class]{snpclone} object.}
 
 \item{window}{an integer specifying the size of the window.}
 
@@ -104,7 +104,7 @@ ggplot(res_tidy, aes(x = position, y = rd, color = chromosome)) +
 
 }
 \seealso{
-\link[=genlight-class]{genlight}, \link[=snpclone-class]{snpclone}, \code{\link[=ia]{ia()}}, \code{\link[=samp.ia]{samp.ia()}}, \code{\link[=bitwise.dist]{bitwise.dist()}}
+\link[adegenet:genlight]{genlight}, \link[=snpclone-class]{snpclone}, \code{\link[=ia]{ia()}}, \code{\link[=samp.ia]{samp.ia()}}, \code{\link[=bitwise.dist]{bitwise.dist()}}
 }
 \author{
 Zhian N. Kamvar, Jonah C. Brooks
