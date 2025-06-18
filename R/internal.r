@@ -159,7 +159,7 @@ percent_missing <- function(pop, type="loci", cutoff=0.05){
 # # .PA.pairwise.differences, .pairwise.differences
 #==============================================================================#
 
-round.poppr <- Vectorize(function(x){
+round_poppr <- Vectorize(function(x){
   ix <- as.integer(x)
   is_even <- ix %% 2 == 0
   if (is_even) {
@@ -347,7 +347,7 @@ mlg.matrix <- function(x){
     # a binary distance. The way we will handle this is to replace numbers that
     # are not one or zero with a rounded value. 
     tempz <- !temp.d.vector %in% 0:1
-    temp.d.vector[tempz] <- vapply(temp.d.vector[tempz], round.poppr, 1)
+    temp.d.vector[tempz] <- vapply(temp.d.vector[tempz], round_poppr, 1)
   } else {    
     temp.d.vector <- vapply(seq(numLoci), 
                           function(x) as.vector(dist(pop@tab[, x])), 
