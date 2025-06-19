@@ -38,7 +38,7 @@ mlg.filter(
 }
 \arguments{
 \item{pop}{a \code{\linkS4class{genclone}}, \code{\linkS4class{snpclone}}, or
-\code{\linkS4class{genind}} object.}
+\code{\link[adegenet:genind-class]{genind}} object.}
 
 \item{threshold}{a number indicating the minimum distance two MLGs must be
 separated by to be considered different. Defaults to 0, which will reflect

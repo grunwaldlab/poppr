@@ -186,8 +186,8 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #' Create a minimum spanning network of selected populations using a distance 
 #' matrix.
 #' 
-#' @param gid a \code{\link{genind}}, \code{\link{genclone}},
-#'   \code{\link{genlight}}, or \code{\link{snpclone}} object
+#' @param gid a \code{\link[adegenet]{genind}}, \code{\link{genclone}},
+#'   \code{\link[adegenet]{genlight}}, or \code{\link{snpclone}} object
 #'   
 #' @param distmat a distance matrix that has been derived from your data set.
 #'   
@@ -306,9 +306,9 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #' @note The edges of these graphs may cross each other if the graph becomes too
 #'   large.
 #'   
-#' @seealso \code{\link{plot_poppr_msn}} \code{\link{nancycats}},
-#'   \code{\link{upgma}}, \code{\link{nj}}, \code{\link{nodelabels}},
-#'   \code{\link{tab}}, \code{\link{missingno}}, \code{\link{bruvo.msn}},
+#' @seealso \code{\link{plot_poppr_msn}} \code{\link[adegenet]{nancycats}},
+#'   \code{\link{upgma}}, \code{\link[ape]{nj}}, \code{\link[ape]{nodelabels}},
+#'   \code{\link[adegenet]{tab}}, \code{\link{missingno}}, \code{\link{bruvo.msn}},
 #'   \code{\link{greycurve}}
 #' 
 #' @export
@@ -470,7 +470,7 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
 #' Create a table summarizing missing data or ploidy information of a genind or
 #' genclone object
 #' 
-#' @param gen a \linkS4class{genind} or \linkS4class{genclone} object.
+#' @param gen a \link[adegenet:genind-class]{genind} or \linkS4class{genclone} object.
 #'   
 #' @param type \code{character}. What information should be returned. Choices
 #'   are "missing" (Default) and "ploidy". See Description.
@@ -508,7 +508,7 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
 #'   
 #' @return a matrix, data frame (\code{df = TRUE}), or a list (\code{returnplot 
 #'   = TRUE}) representing missing data per population (\code{type = 'missing'})
-#'   or ploidy per individual (\code{type = 'ploidy'}) in a \linkS4class{genind}
+#'   or ploidy per individual (\code{type = 'ploidy'}) in a \link[adegenet:genind-class]{genind}
 #'   or \linkS4class{genclone} object.
 #' 
 #' @details 
@@ -601,7 +601,7 @@ info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot 
 
       outplot <- ggplot(plotdf, aes_string(x = "Locus", y = "Population")) + 
         geom_tile(aes_string(fill = valname)) +
-        labs(list(title = title, x = "Locus", y = "Population")) +
+        labs(title = title, x = "Locus", y = "Population") +
         labs(fill = leg_title) + 
         scale_fill_gradient(low = low, high = high, na.value = "white", 
                             limits = lims) +
@@ -646,8 +646,8 @@ info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot 
                    scale_x_discrete(expand = c(0, -1)) + 
                    scale_y_discrete(expand = c(0, -1), 
                                     limits = rev(unique(data_df$Samples))) + 
-                   labs(list(title = title, x = "Locus", y = "Sample", 
-                             fill = "Observed\nPloidy")) +
+                   labs(title = title, x = "Locus", y = "Sample", 
+                             fill = "Observed\nPloidy") +
                    mytheme 
 
       print(outplot)
@@ -737,8 +737,8 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' customize the plot by labeling groups of individuals, size of nodes, and 
 #' adjusting the palette and scale bar.
 #' 
-#' @param x a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}},
-#'   \code{\linkS4class{genlight}}, or \code{\linkS4class{snpclone}} object from
+#' @param x a \code{\link[adegenet:genind-class]{genind}}, \code{\linkS4class{genclone}},
+#'   \code{\link[adegenet:genlight-class]{genlight}}, or \code{\linkS4class{snpclone}} object from
 #'   which \code{poppr_msn} was derived.
 #'   
 #' @param poppr_msn a \code{list} produced from either \code{\link{poppr.msn}} 
@@ -1220,7 +1220,7 @@ plot_poppr_msn <- function(x,
 #' function will randomly sample loci without replacement and count the number 
 #' of multilocus genotypes observed.
 #' 
-#' @param gen a \code{\linkS4class{genclone}}, \code{\linkS4class{genind}}, or
+#' @param gen a \code{\linkS4class{genclone}}, \code{\link[adegenet:genind-class]{genind}}, or
 #'   \code{\link[pegas:read.loci]{loci}} object.
 #'   
 #' @param sample an \code{integer} defining the number of times loci will be 
@@ -1363,9 +1363,9 @@ genotype_curve <- function(gen, sample = 100, maxloci = 0L, quiet = FALSE,
   aesthetics      <- aes_string(x = "NumLoci", y = "MLG")
   outplot <- ggplot(outmelt, aesthetics) + 
              geom_boxplot(aes_string(group = "factor(NumLoci)")) + 
-             labs(list(title = paste("Genotype accumulation curve for", datacall[2]), 
-                       y           = "Number of multilocus genotypes",
-                       x           = "Number of loci sampled")) +
+             labs(title = paste("Genotype accumulation curve for", datacall[2]), 
+                  y           = "Number of multilocus genotypes",
+                  x           = "Number of loci sampled") +
              scale_x_continuous(breaks = seq(nloci), expand = c(0, 0.125))
   if (!is.null(thresh)) {
     outbreaks <- sort(c(pretty(0:max_obs), threshdf$x))

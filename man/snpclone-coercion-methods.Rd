@@ -9,7 +9,7 @@
 as.snpclone(x, ..., parallel = FALSE, n.cores = NULL, mlg, mlgclass = TRUE)
 }
 \arguments{
-\item{x}{a \code{\linkS4class{genlight}} or \code{\linkS4class{snpclone}} 
+\item{x}{a \code{\link[adegenet:genlight-class]{genlight}} or \code{\linkS4class{snpclone}} 
 object}
 
 \item{...}{arguments to be passed on to the genlight constructor. These are
@@ -18,7 +18,7 @@ not used if x is not missing.}
 \item{parallel}{should the parallel package be used to construct the object?}
 
 \item{n.cores}{how many cores should be utilized? See documentation for
-\code{\linkS4class{genlight}} for details.}
+\code{\link[adegenet:genlight-class]{genlight}} for details.}
 
 \item{mlg}{a vector of multilocus genotypes or an object of class MLG for the
 new snpclone object.}

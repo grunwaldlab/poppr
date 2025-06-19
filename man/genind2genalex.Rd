@@ -18,7 +18,7 @@ genind2genalex(
 )
 }
 \arguments{
-\item{gid}{a \linkS4class{genclone} or \linkS4class{genind}
+\item{gid}{a \linkS4class{genclone} or \link[adegenet:genind]{adegenet::genind}
 object.}
 
 \item{filename}{a string indicating the name and/or path of the file you wish
@@ -78,7 +78,7 @@ genind2genalex(nancycats, "~/Documents/nancycats.csv", geo=TRUE)
 }
 }
 \seealso{
-\code{\link[=read.genalex]{read.genalex()}}, \code{\link[=clonecorrect]{clonecorrect()}}, \linkS4class{genclone}, \linkS4class{genind}
+\code{\link[=read.genalex]{read.genalex()}}, \code{\link[=clonecorrect]{clonecorrect()}}, \linkS4class{genclone}, \link[adegenet:genind]{adegenet::genind}
 }
 \author{
 Zhian N. Kamvar

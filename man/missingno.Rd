@@ -7,7 +7,7 @@
 missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE, freq = FALSE)
 }
 \arguments{
-\item{pop}{a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} 
+\item{pop}{a \code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}} 
 object.}
 
 \item{type}{a \code{character} string: can be "ignore", "zero", "mean", 
@@ -26,7 +26,7 @@ THIS IS NOT RECOMMENDED. USE THE FUNCTION \code{\link[adegenet]{tab}}
 instead.}
 }
 \value{
-a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object.
+a \code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}} object.
 }
 \description{
 missingno gives the user four options to deal with missing data: remove loci,
@@ -34,7 +34,7 @@ remove samples, replace with zeroes, or replace with average allele counts.
 }
 \details{
 These methods provide a way to deal with systematic missing data and 
- to give a wrapper for \code{adegenet}'s \code{ \link{tab}} function. 
+ to give a wrapper for \code{adegenet}'s \code{ \link[adegenet]{tab}} function. 
  ALL OF THESE ARE TO BE USED WITH CAUTION. 
  
  Using this function with polyploid data (where missing data is coded as "0")

@@ -26,7 +26,7 @@ provesti.dist(x)
 prevosti.dist
 }
 \arguments{
-\item{x}{a \linkS4class{genind}, \linkS4class{genclone}, or matrix object.}
+\item{x}{a \link[adegenet:genind-class]{genind}, \linkS4class{genclone}, or matrix object.}
 
 \item{warning}{If \code{TRUE}, a warning will be printed if any infinite 
 values are detected and replaced. If \code{FALSE}, these values will be 
@@ -57,7 +57,7 @@ Prevosti's distance is identical to \code{\link{diss.dist}}, except
   compatibility.
   
   These distances were adapted from the \pkg{adegenet} function
-  \code{\link{dist.genpop}} to work with \code{\linkS4class{genind}} objects.
+  \code{\link[adegenet]{dist.genpop}} to work with \code{\link[adegenet:genind-class]{genind}} objects.
 }
 \examples{
 

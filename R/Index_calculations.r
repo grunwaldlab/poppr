@@ -161,7 +161,7 @@
 #'
 #' This function outputs a \pkg{ggplot2} graphic of histograms. These can be
 #' manipulated to be visualized in another manner by retrieving the plot with
-#' the [last_plot()] command from \pkg{ggplot2}. A useful manipulation would
+#' the last plot command from \pkg{ggplot2}. A useful manipulation would
 #' be to arrange the graphs into a single column so that the values of the
 #' statistic line up: `p <- last_plot(); p + facet_wrap(~population,
 #' ncol = 1, scales = "free_y")` The name for the groupings is

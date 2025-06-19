@@ -19,7 +19,7 @@ bruvo.boot(
 )
 }
 \arguments{
-\item{pop}{a \code{\link{genind}} or \code{\link{genclone}} object}
+\item{pop}{a \code{\link[adegenet]{genind}} or \code{\link{genclone}} object}
 
 \item{replen}{a \code{vector} of \code{integers} indicating the length of the
 nucleotide repeats for each microsatellite locus.}
@@ -52,7 +52,7 @@ produces an unrooted tree (e.g. "nj"), then the value should be
 \code{FALSE}. By default, it is set to \code{NULL}, which will assume an
 unrooted phylogeny unless the function name contains "upgma".}
 
-\item{...}{any argument to be passed on to \code{\link{boot.phylo}}. eg. 
+\item{...}{any argument to be passed on to \code{\link[ape]{boot.phylo}}. eg. 
 \code{quiet = TRUE}.}
 }
 \value{
@@ -118,9 +118,9 @@ genotype distances irrespective of ploidy level. Molecular Ecology,
 13(7):2101-2106, 2004.
 }
 \seealso{
-\code{\link{bruvo.dist}}, \code{\link{nancycats}}, 
-  \code{\link{upgma}}, \code{\link{nj}}, \code{\link{boot.phylo}}, 
-  \code{\link{nodelabels}}, \code{\link{tab}}, 
+\code{\link{bruvo.dist}}, \code{\link[adegenet]{nancycats}}, 
+  \code{\link{upgma}}, \code{\link[ape]{nj}}, \code{\link[ape]{boot.phylo}}, 
+  \code{\link[ape]{nodelabels}}, \code{\link[adegenet]{tab}}, 
   \code{\link{missingno}}.
 }
 \author{

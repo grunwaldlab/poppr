@@ -18,7 +18,7 @@
 \arguments{
 \item{.Object}{a character, "genclone"}
 
-\item{...}{passed on to the \code{\linkS4class{genind}} object.}
+\item{...}{passed on to the \code{\link[adegenet:genind-class]{genind}} object.}
 
 \item{mlg}{a vector where each element assigns the multilocus genotype of 
 that individual in the data set.}

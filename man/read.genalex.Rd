@@ -21,12 +21,12 @@ read.genalex(
 
 \item{geo}{indicates the presence of geographic data in the file. This data
 will be included in a data frame labeled \code{xy} in the
-\code{\link[=other]{other()}} slot.}
+\code{\link[adegenet:accessors]{adegenet::other()}} slot.}
 
 \item{region}{indicates the presence of regional data in the file.}
 
 \item{genclone}{when \code{TRUE} (default), the output will be a \linkS4class{genclone}
-object. When \code{FALSE}, the output will be a \linkS4class{genind} object}
+object. When \code{FALSE}, the output will be a \link[adegenet:genind]{adegenet::genind} object}
 
 \item{sep}{A character specifying the column separator of the data. Defaults
 to ",".}
@@ -39,15 +39,15 @@ being returned. Note that this will prevent conversion to genpop objects in
 the future. See details.}
 }
 \value{
-A \linkS4class{genclone} or \linkS4class{genind} bject.
+A \linkS4class{genclone} or \link[adegenet:genind]{adegenet::genind} bject.
 }
 \description{
 read.genalex will read in a genalex-formatted file that has been exported in
 a comma separated format and will parse most types of genalex data. The
-output is a \link[=genclone]{genclone-class} or \link[=genind]{genind-class} object.
+output is a \link[=genclone]{genclone-class} or \link[adegenet:new.genind]{genind-class} object.
 }
 \details{
-The resulting \link[=genclone]{genclone-class} or \link[=genind]{genind-class}
+The resulting \link[=genclone]{genclone-class} or \link[adegenet:new.genind]{genind-class}
 object will have a single strata defined in the strata slot. This will be
 called "Pop" and will reflect the population factor defined in the genalex
 input. If \code{region = TRUE}, a second column will be inserted and labeled
@@ -99,7 +99,7 @@ genalex4 <- read.genalex("genalex4.csv", region=TRUE, geo=TRUE)
 }
 \seealso{
 \code{\link[=genind2genalex]{genind2genalex()}}, \code{\link[=clonecorrect]{clonecorrect()}}, \linkS4class{genclone},
-\linkS4class{genind}, \code{\link[=recode_polyploids]{recode_polyploids()}}
+\link[adegenet:genind]{adegenet::genind}, \code{\link[=recode_polyploids]{recode_polyploids()}}
 }
 \author{
 Zhian N. Kamvar

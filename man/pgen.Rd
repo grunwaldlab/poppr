@@ -10,7 +10,7 @@ pgen(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL, ...)
 \item{gid}{a genind or genclone object.}
 
 \item{pop}{either a formula to set the population factor from the 
-\code{\link{strata}} slot or a vector specifying the population factor for 
+\code{\link[adegenet]{strata}} slot or a vector specifying the population factor for 
 each sample. Defaults to \code{NULL}.}
 
 \item{by_pop}{When this is \code{TRUE} (default), the calculation will be

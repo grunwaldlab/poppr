@@ -202,7 +202,7 @@ setMethod(
 #==============================================================================#
 #' @rdname bruvomat-methods
 #' @param .Object a character, "bruvomat"
-#' @param gen \code{"\linkS4class{genind}"} object
+#' @param gen \code{"\link[adegenet:genind-class]{genind}"} object
 #' @param replen a vector of numbers indicating the repeat length for each 
 #'   microsatellite locus.
 #' @keywords internal
@@ -314,7 +314,7 @@ is.clone <- function(x){
 #' @param x a snpclone object
 #' @param i vector of numerics indicating number of individuals desired
 #' @param j a vector of numerics corresponding to the loci desired.
-#' @param ... passed on to the \code{\linkS4class{genlight}} object.
+#' @param ... passed on to the \code{\link[adegenet:genlight-class]{genlight}} object.
 #' @param mlg.reset logical. Defaults to \code{FALSE}. If \code{TRUE}, the mlg
 #'   vector will be reset
 #' @param drop set to \code{FALSE} 
@@ -424,13 +424,13 @@ setMethod(
 #' @export
 #' @rdname snpclone-coercion-methods
 #' @aliases as.snpclone,genlight-method
-#' @param x a \code{\linkS4class{genlight}} or \code{\linkS4class{snpclone}} 
+#' @param x a \code{\link[adegenet:genlight-class]{genlight}} or \code{\linkS4class{snpclone}} 
 #'   object
 #' @param ... arguments to be passed on to the genlight constructor. These are
 #'   not used if x is not missing.
 #' @param parallel should the parallel package be used to construct the object?
 #' @param n.cores how many cores should be utilized? See documentation for
-#'   \code{\linkS4class{genlight}} for details.
+#'   \code{\link[adegenet:genlight-class]{genlight}} for details.
 #' @param mlg a vector of multilocus genotypes or an object of class MLG for the
 #'   new snpclone object.
 #' @param mlgclass if \code{TRUE} (default), the multilocus genotypes will be
@@ -496,8 +496,8 @@ setMethod(
 #' Check for validity of a genclone or snpclone object
 #' 
 #' @note a \linkS4class{genclone} object will always be a valid 
-#' \linkS4class{genind} object and a \linkS4class{snpclone} object will always
-#' be a valid \linkS4class{genlight} object.
+#' \link[adegenet:genind-class]{genind} object and a \linkS4class{snpclone} object will always
+#' be a valid \link[adegenet:genlight-class]{genlight} object.
 #' 
 #' @export
 #' @rdname is.clone
@@ -547,7 +547,7 @@ setMethod(
 #' @param x a genclone object
 #' @param i vector of numerics indicating number of individuals desired
 #' @param j a vector of numerics corresponding to the loci desired.
-#' @param ... passed on to the \code{\linkS4class{genind}} object.
+#' @param ... passed on to the \code{\link[adegenet:genind-class]{genind}} object.
 #' @param drop set to \code{FALSE}
 #' @param mlg.reset logical. Defaults to \code{FALSE}. If \code{TRUE}, the mlg
 #'   vector will be reset
@@ -753,14 +753,14 @@ setMethod(
 #' @export
 #' @rdname coercion-methods
 #' @aliases as.genclone,genind-method
-#' @param x a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}} 
+#' @param x a \code{\link[adegenet:genind-class]{genind}} or \code{\linkS4class{genclone}} 
 #'   object
-#' @param ... arguments passed on to the \code{\linkS4class{genind}} constructor
+#' @param ... arguments passed on to the \code{\link[adegenet:genind-class]{genind}} constructor
 #' @param mlg an optional vector of multilocus genotypes as integers
 #' @param mlgclass should the mlg slot be of class MLG?
 #' @docType methods
 #'   
-#' @seealso \code{\link{splitStrata}}, \code{\linkS4class{genclone}},
+#' @seealso \code{\link[adegenet]{splitStrata}}, \code{\linkS4class{genclone}},
 #'   \code{\link{read.genalex}}
 #'   \code{\link{aboot}}
 #' @author Zhian N. Kamvar
@@ -1361,7 +1361,7 @@ setMethod(
 #' genotyping error into their parent clusters.
 #'   
 #' @param pop a \code{\linkS4class{genclone}}, \code{\linkS4class{snpclone}}, or
-#'   \code{\linkS4class{genind}} object.
+#'   \code{\link[adegenet:genind-class]{genind}} object.
 #' @param threshold a number indicating the minimum distance two MLGs must be
 #'   separated by to be considered different. Defaults to 0, which will reflect
 #'   the original (naive) MLG definition.

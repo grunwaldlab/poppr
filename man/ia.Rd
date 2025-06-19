@@ -302,7 +302,7 @@ Proceedings of the National Academy of Sciences, 90(10):4384-4388, 1993.
 }
 \seealso{
 \code{\link[=poppr]{poppr()}}, \code{\link[=missingno]{missingno()}},
-\code{\link[=import2genind]{import2genind()}}, \code{\link[=read.genalex]{read.genalex()}},
+\code{\link[adegenet:import2genind]{adegenet::import2genind()}}, \code{\link[=read.genalex]{read.genalex()}},
 \code{\link[=clonecorrect]{clonecorrect()}}, \code{\link[=win.ia]{win.ia()}}, \code{\link[=samp.ia]{samp.ia()}}
 }
 \author{

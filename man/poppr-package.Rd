@@ -16,8 +16,8 @@ beginning of a sentence.
 }
 \details{
 This package relies on the \pkg{\link[adegenet:adegenet.package]{adegenet}} package.
-It is built around the \linkS4class{genind} and
-\linkS4class{genlight} object. Genind objects store genetic
+It is built around the \link[adegenet:genind]{adegenet::genind} and
+\link[adegenet:genlight]{adegenet::genlight} object. Genind objects store genetic
 information in a table of allele frequencies while genlight objects store
 SNP data efficiently by packing binary allele calls into single bits.
 \pkg{Poppr} has extended these object into new objects called
@@ -263,6 +263,16 @@ Goss, E. M., Larsen, M., Chastagner, G. A., Givens, D. R., and Grünwald, N.
 J. 2009. Population genetic analysis infers migration pathways of
 \emph{Phytophthora ramorum} in US nurseries. PLoS Pathog. 5:e1000583. doi:
 \doi{10.1371/journal.ppat.1000583}
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://grunwaldlab.github.io/poppr/}
+  \item \url{https://github.com/grunwaldlab/poppr/}
+  \item \url{https://grunwaldlab.github.io/Population_Genetics_in_R/}
+  \item Report bugs at \url{https://github.com/grunwaldlab/poppr/issues/}
+}
+
 }
 \author{
 Zhian N. Kamvar, Jonah C. Brooks, Sydney E. Everhart, Javier F.

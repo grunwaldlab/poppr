@@ -87,7 +87,7 @@ to index the columns of \code{mlg.table}.}
 
 \item{df}{\code{logical} If \code{TRUE}, return a data frame containing the
 counts of the MLGs and what countries they are in. Useful for making graphs
-with \link{ggplot}.}
+with \link[ggplot2:ggplot]{ggplot2::ggplot}.}
 }
 \value{
 \subsection{mlg}{

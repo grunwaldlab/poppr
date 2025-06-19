@@ -7,8 +7,8 @@
 recode_polyploids(poly, newploidy = FALSE, addzero = FALSE)
 }
 \arguments{
-\item{poly}{a \code{\linkS4class{genclone}}, \code{\linkS4class{genind}}, or 
-\code{\linkS4class{genpop}} object that has a ploidy of > 2}
+\item{poly}{a \code{\linkS4class{genclone}}, \code{\link[adegenet:genind-class]{genind}}, or 
+\code{\link[adegenet:genpop-class]{genpop}} object that has a ploidy of > 2}
 
 \item{newploidy}{for genind or genclone objects: if \code{FALSE} (default),
 the user-defined ploidy will stay constant. if \code{TRUE}, the ploidy for
@@ -20,8 +20,8 @@ if \code{TRUE}, objects with uneven ploidies will have zeroes appended to all
 loci to allow conversion to genpop objects. Defaults to \code{FALSE}.}
 }
 \value{
-a \code{\linkS4class{genclone}}, \code{\linkS4class{genind}}, or
-  \code{\linkS4class{genpop}} object.
+a \code{\linkS4class{genclone}}, \code{\link[adegenet:genind-class]{genind}}, or
+  \code{\link[adegenet:genpop-class]{genpop}} object.
 }
 \description{
 As the genind object requires ploidy to be consistent across loci, a 
@@ -31,7 +31,7 @@ able to calculate Bruvo's distance, the index of association, and genotypic
 diversity statistics. The tradeoff was the fact that this broke all other 
 analyses as they relied on allele frequencies and the missing alleles are 
 treated as extra alleles. This function removes those alleles and returns a 
-\code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object where 
+\code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}} object where 
 allele frequencies are coded based on the number of alleles observed at a 
 single locus per individual. See the examples for more details.
 }

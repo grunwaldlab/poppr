@@ -25,7 +25,7 @@ plot(tree)
 
 }
 \seealso{
-\code{\link{hclust}}, \code{\link{as.phylo}}
+\code{\link{hclust}}, \code{\link[ape]{as.phylo}}
 }
 \author{
 Klaus Schliep \email{klaus.schliep@gmail.com}

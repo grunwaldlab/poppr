@@ -22,8 +22,8 @@ aboot(
 )
 }
 \arguments{
-\item{x}{a \link[=genind]{genind-class}, \link[=genpop]{genpop-class},
-\link[=genclone]{genclone-class}, \linkS4class{genlight}, \linkS4class{snpclone} or
+\item{x}{a \link[adegenet:new.genind]{genind-class}, \link[adegenet:new.genpop]{genpop-class},
+\link[=genclone]{genclone-class}, \link[adegenet:genlight]{adegenet::genlight}, \linkS4class{snpclone} or
 \link{matrix} object.}
 
 \item{strata}{a formula specifying the strata to be used to convert x to a

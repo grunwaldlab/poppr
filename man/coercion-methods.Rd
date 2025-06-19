@@ -23,10 +23,10 @@ as.genambig(x)
 \arguments{
 \item{bg}{a bootgen object}
 
-\item{x}{a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}} 
+\item{x}{a \code{\link[adegenet:genind-class]{genind}} or \code{\linkS4class{genclone}} 
 object}
 
-\item{...}{arguments passed on to the \code{\linkS4class{genind}} constructor}
+\item{...}{arguments passed on to the \code{\link[adegenet:genind-class]{genind}} constructor}
 
 \item{mlg}{an optional vector of multilocus genotypes as integers}
 
@@ -74,7 +74,7 @@ nan.gid
 
 }
 \seealso{
-\code{\link{splitStrata}}, \code{\linkS4class{genclone}},
+\code{\link[adegenet]{splitStrata}}, \code{\linkS4class{genclone}},
   \code{\link{read.genalex}}
   \code{\link{aboot}}
 }

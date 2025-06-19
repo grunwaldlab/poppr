@@ -5,7 +5,7 @@
 #' @param d A distance matrix.
 #' @return A phylogenetic tree of class \code{phylo}.
 #' @author Klaus Schliep \email{klaus.schliep@@gmail.com}
-#' @seealso \code{\link{hclust}}, \code{\link{as.phylo}}
+#' @seealso \code{\link{hclust}}, \code{\link[ape]{as.phylo}}
 #' @importFrom ape as.phylo.hclust as.phylo
 #' @importFrom stats hclust as.dist
 #' @keywords cluster

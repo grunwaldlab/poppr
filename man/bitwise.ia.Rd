@@ -7,7 +7,7 @@
 bitwise.ia(x, missing_match = TRUE, differences_only = FALSE, threads = 0)
 }
 \arguments{
-\item{x}{a \link[=genlight-class]{genlight} or \link[=snpclone-class]{snpclone} object.}
+\item{x}{a \link[adegenet:genlight]{genlight} or \link[=snpclone-class]{snpclone} object.}
 
 \item{missing_match}{a boolean determining whether missing data should be
 considered a match. If TRUE (default) missing data at a locus will match

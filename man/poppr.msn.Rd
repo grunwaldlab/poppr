@@ -28,8 +28,8 @@ poppr.msn(
 )
 }
 \arguments{
-\item{gid}{a \code{\link{genind}}, \code{\link{genclone}},
-\code{\link{genlight}}, or \code{\link{snpclone}} object}
+\item{gid}{a \code{\link[adegenet]{genind}}, \code{\link{genclone}},
+\code{\link[adegenet]{genlight}}, or \code{\link{snpclone}} object}
 
 \item{distmat}{a distance matrix that has been derived from your data set.}
 
@@ -196,9 +196,9 @@ edge.label.color = "red")
 
 }
 \seealso{
-\code{\link{plot_poppr_msn}} \code{\link{nancycats}},
-  \code{\link{upgma}}, \code{\link{nj}}, \code{\link{nodelabels}},
-  \code{\link{tab}}, \code{\link{missingno}}, \code{\link{bruvo.msn}},
+\code{\link{plot_poppr_msn}} \code{\link[adegenet]{nancycats}},
+  \code{\link{upgma}}, \code{\link[ape]{nj}}, \code{\link[ape]{nodelabels}},
+  \code{\link[adegenet]{tab}}, \code{\link{missingno}}, \code{\link{bruvo.msn}},
   \code{\link{greycurve}}
 }
 \author{

@@ -54,7 +54,7 @@
 #' 
 #' Calculate the average Bruvo's distance over all loci in a population.
 #' 
-#' @param pop a \code{\link{genind}} or \code{\link{genclone}} object
+#' @param pop a \code{\link[adegenet]{genind}} or \code{\link{genclone}} object
 #'   
 #' @param replen a \code{vector} of \code{integers} indicating the length of the
 #'   nucleotide repeats for each microsatellite locus. E.g. a locus with a (CAT) 
@@ -243,9 +243,9 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE, by_locus = FALS
 #' Only diferences between query individuals and reference individuals will be reported
 #' All other values are NaN
 #' 
-#' @param query a \code{\link{genind}} or \code{\link{genclone}} object
+#' @param query a \code{\link[adegenet]{genind}} or \code{\link{genclone}} object
 #' 
-#' @param ref a \code{\link{genind}} or \code{\link{genclone}} object
+#' @param ref a \code{\link[adegenet]{genind}} or \code{\link{genclone}} object
 #' 
 #' @export
 #' @author David Folarin
@@ -282,7 +282,7 @@ bruvo.between <- function(query, ref, replen = 1, add = TRUE, loss = TRUE, by_lo
 #
 #' Create a tree using Bruvo's Distance with non-parametric bootstrapping.
 #' 
-#' @param pop a \code{\link{genind}} or \code{\link{genclone}} object
+#' @param pop a \code{\link[adegenet]{genind}} or \code{\link{genclone}} object
 #'   
 #' @param replen a \code{vector} of \code{integers} indicating the length of the
 #'   nucleotide repeats for each microsatellite locus.
@@ -315,15 +315,15 @@ bruvo.between <- function(query, ref, replen = 1, add = TRUE, loss = TRUE, by_lo
 #'   \code{FALSE}. By default, it is set to \code{NULL}, which will assume an
 #'   unrooted phylogeny unless the function name contains "upgma".
 #' 
-#' @param ... any argument to be passed on to \code{\link{boot.phylo}}. eg. 
+#' @param ... any argument to be passed on to \code{\link[ape]{boot.phylo}}. eg. 
 #'   \code{quiet = TRUE}.
 #'   
 #'   
 #' @return a tree of class phylo with nodelables
 #'   
-#' @seealso \code{\link{bruvo.dist}}, \code{\link{nancycats}}, 
-#'   \code{\link{upgma}}, \code{\link{nj}}, \code{\link{boot.phylo}}, 
-#'   \code{\link{nodelabels}}, \code{\link{tab}}, 
+#' @seealso \code{\link{bruvo.dist}}, \code{\link[adegenet]{nancycats}}, 
+#'   \code{\link{upgma}}, \code{\link[ape]{nj}}, \code{\link[ape]{boot.phylo}}, 
+#'   \code{\link[ape]{nodelabels}}, \code{\link[adegenet]{tab}}, 
 #'   \code{\link{missingno}}.
 #'   
 #' @details This function will calculate a tree based off of Bruvo's distance
@@ -455,7 +455,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #' Create minimum spanning network of selected populations using Bruvo's 
 #' distance.
 #' 
-#' @param gid a \code{\link{genind}} or \code{\link{genclone}} object
+#' @param gid a \code{\link[adegenet]{genind}} or \code{\link{genclone}} object
 #'   
 #' @param replen a \code{vector} of \code{integers} indicating the length of the
 #'   nucleotide repeats for each microsatellite locus.
@@ -516,7 +516,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #'   used to filter un-contracted data sets.
 #'   }
 #'   
-#' @seealso \code{\link{bruvo.dist}}, \code{\link{nancycats}}, 
+#' @seealso \code{\link{bruvo.dist}}, \code{\link[adegenet]{nancycats}}, 
 #'   \code{\link{plot_poppr_msn}}, \code{\link[igraph]{mst}} 
 #'   \code{\link{bruvo.boot}}, \code{\link{greycurve}} \code{\link{poppr.msn}}
 #'   
@@ -663,7 +663,7 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
 #' 
 #' This function will test for consistency in the sense that all alleles are 
 #' able to be represented as discrete units after division and rounding.
-#' @param gid a \code{\link{genind}} or \code{\link{genclone}} object
+#' @param gid a \code{\link[adegenet]{genind}} or \code{\link{genclone}} object
 #' @param replen a numeric vector of repeat motif lengths.
 #' @return a logical vector indicating whether or not the repeat motif length is
 #'   consistent.
@@ -711,7 +711,7 @@ consistent_replen <- function(index, alleles, replen){
 #' 
 #' Attempts to fix inconsistent repeat lengths found by \code{test_replen}
 #' 
-#' @param gid a \code{\link{genind}} or \code{\link{genclone}} object
+#' @param gid a \code{\link[adegenet]{genind}} or \code{\link{genclone}} object
 #' @param replen a numeric vector of repeat motif lengths.
 #' @param e a number to be subtracted or added to inconsistent repeat lengths to
 #'   allow for proper rounding.

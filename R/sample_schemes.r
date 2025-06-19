@@ -43,14 +43,14 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #==============================================================================#
 #' Shuffle individuals in a \code{\linkS4class{genclone}} or
-#' \code{\linkS4class{genind}} object independently over each locus.
+#' \code{\link[adegenet:genind-class]{genind}} object independently over each locus.
 #' 
-#' @param pop a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+#' @param pop a \code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}}
 #'   object
 #'   
 #' @param method an integer between 1 and 4. See details below.
 #'   
-#' @return a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object
+#' @return a \code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}} object
 #'   shuffled by a specified method
 #'   
 #' @details This function will shuffle each locus in the data set independently 

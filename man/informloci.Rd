@@ -7,7 +7,7 @@
 informloci(pop, cutoff = 2/nInd(pop), MAF = 0.01, quiet = FALSE)
 }
 \arguments{
-\item{pop}{a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} 
+\item{pop}{a \code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}} 
 object.}
 
 \item{cutoff}{\code{numeric}. A number from 0 to 1 defining the minimum 
@@ -26,7 +26,7 @@ A \code{genind} object with user-defined informative loci.
 }
 \description{
 This function will facilitate in removing phylogenetically uninformative loci
-from a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object. 
+from a \code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}} object. 
 The user has the ability to define what uninformative means by setting a 
 cutoff value for either percentage of differentiating genotypes or minor 
 allele frequency.

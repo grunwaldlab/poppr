@@ -19,7 +19,7 @@ diversity_ci(
 )
 }
 \arguments{
-\item{tab}{a \code{\link[=genind]{genind()}}, \code{\link[=genclone]{genclone()}},
+\item{tab}{a \code{\link[adegenet:new.genind]{adegenet::genind()}}, \code{\link[=genclone]{genclone()}},
 \code{\link[=snpclone]{snpclone()}}, OR a matrix produced from
 \code{\link[=mlg.table]{mlg.table()}}.}
 

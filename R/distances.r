@@ -52,7 +52,7 @@
 #' individuals who share half of the same alleles will have a distance of 0.5.
 #' This function can analyze distances for any marker system.
 #' 
-#' @param x a \code{\link{genind}} object.
+#' @param x a \code{\link[adegenet]{genind}} object.
 #'   
 #' @param percent \code{logical}. Should the distance be represented as a 
 #'   percent? If set to \code{FALSE} (default), the distance will be reflected 
@@ -139,7 +139,7 @@ diss.dist <- function(x, percent=FALSE, mat=FALSE){
 #' These functions are modified from the function \link[adegenet]{dist.genpop} to
 #' be applicable for distances between individuals.
 #' 
-#' @param x a \linkS4class{genind}, \linkS4class{genclone}, or matrix object.
+#' @param x a \link[adegenet:genind-class]{genind}, \linkS4class{genclone}, or matrix object.
 #'   
 #' @param warning If \code{TRUE}, a warning will be printed if any infinite 
 #'   values are detected and replaced. If \code{FALSE}, these values will be 
@@ -163,7 +163,7 @@ diss.dist <- function(x, percent=FALSE, mat=FALSE){
 #'   compatibility.
 #'   
 #'   These distances were adapted from the \pkg{adegenet} function
-#'   \code{\link{dist.genpop}} to work with \code{\linkS4class{genind}} objects.
+#'   \code{\link[adegenet]{dist.genpop}} to work with \code{\link[adegenet:genind-class]{genind}} objects.
 #' 
 #' @seealso \code{\link{aboot}} \code{\link{diss.dist}} \code{\link{poppr.amova}}
 #' @rdname genetic_distance

@@ -107,7 +107,7 @@ cutoff(m)["contracted"] <- 0.2
 }
 \seealso{
 \code{\link{MLG}} \code{\linkS4class{genclone}} 
-  \code{\linkS4class{genlight}} \code{\link{initialize,MLG-method}}
+  \code{\link[adegenet:genlight-class]{genlight}} \code{\link{initialize,MLG-method}}
   \code{\link{levels,MLG-method}} \code{\link{unique,MLG-method}}
 }
 \keyword{internal}

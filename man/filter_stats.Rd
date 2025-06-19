@@ -19,8 +19,8 @@ filter_stats(
 )
 }
 \arguments{
-\item{x}{a \code{\link{genind}}, \code{\link{genclone}},
-\code{\link{genlight}}, or \code{\link{snpclone}} object}
+\item{x}{a \code{\link[adegenet]{genind}}, \code{\link{genclone}},
+\code{\link[adegenet]{genlight}}, or \code{\link{snpclone}} object}
 
 \item{distance}{a distance function or matrix}
 

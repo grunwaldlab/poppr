@@ -19,7 +19,7 @@
 
 \item{j}{a vector of numerics corresponding to the loci desired.}
 
-\item{...}{passed on to the \code{\linkS4class{genlight}} object.}
+\item{...}{passed on to the \code{\link[adegenet:genlight-class]{genlight}} object.}
 
 \item{mlg.reset}{logical. Defaults to \code{FALSE}. If \code{TRUE}, the mlg
 vector will be reset}

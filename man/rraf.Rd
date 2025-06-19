@@ -10,7 +10,7 @@ rraf(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRUE, ...)
 \item{gid}{a genind or genclone object}
 
 \item{pop}{either a formula to set the population factor from the 
-\code{\link{strata}} slot or a vector specifying the population factor for 
+\code{\link[adegenet]{strata}} slot or a vector specifying the population factor for 
 each sample. Defaults to \code{NULL}.}
 
 \item{res}{either "list" (default), "vector", or "data.frame".}

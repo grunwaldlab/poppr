@@ -27,7 +27,7 @@ poppr.amova(
 )
 }
 \arguments{
-\item{x}{a \link[=genind-class]{genind}, \link[=genclone-class]{genclone}, \link[=genlight-class]{genlight}, or \link[=snpclone-class]{snpclone} object}
+\item{x}{a \link[adegenet:genind]{genind}, \link[=genclone-class]{genclone}, \link[adegenet:genlight]{genlight}, or \link[=snpclone-class]{snpclone} object}
 
 \item{hier}{a hierarchical \link[=formula]{formula} that defines your population
 hierarchy. (e.g.: \code{~Population/Subpopulation}). \strong{See Details below}.}
@@ -128,17 +128,17 @@ are:
 \item a genotype (haplotype) frequency table.
 }
 
-All of this data can be constructed from a \link[=genind-class]{genind} or
-\link[=genlight-class]{genlight} object, but can be daunting for a novice R user.
+All of this data can be constructed from a \link[adegenet:genind]{genind} or
+\link[adegenet:genlight]{genlight} object, but can be daunting for a novice R user.
 \emph{This function automates the entire process}. Since there are many
 variables regarding genetic data, some points need to be highlighted:
 
 \subsection{On Hierarchies:}{The hierarchy is defined by different
 population strata that separate your data hierarchically. These strata are
-defined in the \strong{strata} slot of \link[=genind-class]{genind},
-\link[=genlight-class]{genlight}, \link[=genclone-class]{genclone}, and
+defined in the \strong{strata} slot of \link[adegenet:genind]{genind},
+\link[adegenet:genlight]{genlight}, \link[=genclone-class]{genclone}, and
 \link[=snpclone-class]{snpclone} objects. They are useful for defining the
-population factor for your data. See the function \code{\link[=strata]{strata()}} for details on
+population factor for your data. See the function \code{\link[adegenet:strata-methods]{adegenet::strata()}} for details on
 how to properly define these strata.}
 
 \subsection{On Within Individual Variance:}{ Heterozygosities within
@@ -158,7 +158,7 @@ AMOVA (utilized by \pkg{poppr}), distances must be Euclidean (due to the
 nature of the calculations). Unfortunately, many genetic distance measures
 are not always euclidean and must be corrected for before being analyzed.
 Poppr automates this with three methods implemented in \pkg{ade4},
-\code{\link[=quasieuclid]{quasieuclid()}}, \code{\link[=lingoes]{lingoes()}}, and \code{\link[=cailliez]{cailliez()}}. The correction of these
+\code{\link[ade4:quasieuclid]{ade4::quasieuclid()}}, \code{\link[ade4:lingoes]{ade4::lingoes()}}, and \code{\link[ade4:cailliez]{ade4::cailliez()}}. The correction of these
 distances should not adversely affect the outcome of the analysis.}
 
 \subsection{On Filtering:}{ Filtering multilocus genotypes is performed by
@@ -253,7 +253,7 @@ Autopolyploids \emph{Submitted}.
 }
 \seealso{
 \code{\link[ade4:amova]{ade4::amova()}}, \code{\link[pegas:amova]{pegas::amova()}}, \code{\link[=clonecorrect]{clonecorrect()}}, \code{\link[=diss.dist]{diss.dist()}},
-\code{\link[=missingno]{missingno()}}, \code{\link[ade4:is.euclid]{ade4::is.euclid()}}, \code{\link[=strata]{strata()}}, \code{\link[=make_haplotypes]{make_haplotypes()}},
+\code{\link[=missingno]{missingno()}}, \code{\link[ade4:is.euclid]{ade4::is.euclid()}}, \code{\link[adegenet:strata-methods]{adegenet::strata()}}, \code{\link[=make_haplotypes]{make_haplotypes()}},
 \code{\link[=as.genambig]{as.genambig()}}
 }
 \keyword{amova}

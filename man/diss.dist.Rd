@@ -7,7 +7,7 @@
 diss.dist(x, percent = FALSE, mat = FALSE)
 }
 \arguments{
-\item{x}{a \code{\link{genind}} object.}
+\item{x}{a \code{\link[adegenet]{genind}} object.}
 
 \item{percent}{\code{logical}. Should the distance be represented as a 
 percent? If set to \code{FALSE} (default), the distance will be reflected 

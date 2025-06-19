@@ -30,7 +30,7 @@ bruvo.msn(
 )
 }
 \arguments{
-\item{gid}{a \code{\link{genind}} or \code{\link{genclone}} object}
+\item{gid}{a \code{\link[adegenet]{genind}} or \code{\link{genclone}} object}
 
 \item{replen}{a \code{vector} of \code{integers} indicating the length of the
 nucleotide repeats for each microsatellite locus.}
@@ -212,7 +212,7 @@ Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and
   13(7):2101-2106, 2004.
 }
 \seealso{
-\code{\link{bruvo.dist}}, \code{\link{nancycats}}, 
+\code{\link{bruvo.dist}}, \code{\link[adegenet]{nancycats}}, 
   \code{\link{plot_poppr_msn}}, \code{\link[igraph]{mst}} 
   \code{\link{bruvo.boot}}, \code{\link{greycurve}} \code{\link{poppr.msn}}
 }
