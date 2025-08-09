@@ -581,17 +581,18 @@ informloci <- function(pop, cutoff = 2 / nInd(pop), MAF = 0.01, quiet = FALSE) {
   if (!is.genind(pop)) {
     stop("This function only works on genind objects.")
   }
+  noisy <- !isTRUE(quiet)
   MLG <- mlg(pop, quiet = TRUE)
   if (MLG < 3) {
-    if (!isTRUE(quiet)) {
-      cat("Not enough multilocus genotypes to be meaningful.\n")
+    if (noisy) {
+      message("Not enough multilocus genotypes to be meaningful.\n")
     }
     return(pop)
   }
   cutoff <- ifelse(cutoff > 0.5, 1 - cutoff, cutoff)
   MAF <- ifelse(MAF > 0.5, 1 - MAF, MAF)
   min_ind <- round(cutoff * nInd(pop))
-  if (!isTRUE(quiet)) {
+  if (noisy) {
     ind <- if (min_ind == 1) "sample" else "samples"
     message("cutoff value: ", cutoff * 100, " % ( ", min_ind, " ", ind, " ).")
     message("MAF         : ", MAF)
@@ -606,26 +607,24 @@ informloci <- function(pop, cutoff = 2 / nInd(pop), MAF = 0.01, quiet = FALSE) {
   }
 
   alocivals <- isPoly(pop, "locus", thres = MAF)
-
   locivals <- alocivals & glocivals
 
-  if (all(locivals == TRUE)) {
-    msg <- paste("\nAll sites polymorphic")
-  } else if (sum(locivals) < 2) {
-    msg <- paste0(
-      "\nFewer than 2 loci found informative.",
-      "\nPerhaps you should choose a ",
-      "lower cutoff value?\nReturning with no changes."
-    )
-    locivals <- rep(TRUE, nLoc(pop))
-  } else {
-    msg <- uninformative_loci_message(
-      pop, glocivals, alocivals, locivals,
-      min_ind, MAF
-    )
-  }
-
   if (!isTRUE(quiet)) {
+    if (all(locivals == TRUE)) {
+      msg <- paste("\nAll sites polymorphic")
+    } else if (sum(locivals) < 2) {
+      msg <- paste0(
+        "\nFewer than 2 loci found informative.",
+        "\nPerhaps you should choose a ",
+        "lower cutoff value?\nReturning with no changes."
+      )
+      locivals <- rep(TRUE, nLoc(pop))
+    } else {
+      msg <- uninformative_loci_message(
+        pop, glocivals, alocivals, locivals,
+        min_ind, MAF
+      )
+    }
     message(msg)
   }
 
