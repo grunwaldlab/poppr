@@ -1,3 +1,11 @@
+poppr 2.9.8
+===========
+
+BUG FIX
+-------
+
+* `informloci()` no longer throws an error with `quiet = TRUE` (reported: @IdoBar, #266; fixed: @zkamvar, #267)
+
 poppr 2.9.7
 ===========
 
