@@ -42,3 +42,14 @@ test_that("informloci works for Presence/Absence data", {
   expect_message(informloci(Aeut), "All sites polymorphic")
   expect_message(informloci(Aeut, MAF = 0.5), "Fewer than 2 loci found informative")
 })
+
+test_that("informloci only works on genind objects", {
+  skip_on_cran()
+  expect_error(informloci(mtcars), "genind objects")
+})
+
+test_that("informloci will return the data set as a whole if not meaningful", {
+  skip_on_cran()
+  expect_message(dt <- informloci(dat[1:2, ]), "Not enough multilocus")
+  expect_equal(dt, dat[1:2, ])
+})
