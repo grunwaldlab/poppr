@@ -1,3 +1,3 @@
-# Poppr version 2.9.5
+# Poppr version 2.9.8
 
-This removes the xcolor.sty option usenames
+This fixes a small bug that a user found.
