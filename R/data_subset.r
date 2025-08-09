@@ -593,7 +593,7 @@ informloci <- function(pop, cutoff = 2/nInd(pop), MAF = 0.01, quiet = FALSE){
   MAF    <- ifelse(MAF > 0.5, 1 - MAF, MAF)
   min_ind = round(cutoff * nInd(pop))
   if (!isTRUE(quiet)){
-    ind <- ifelse(min_ind == 1, "sample", "samples")
+    ind <- if(min_ind == 1) "sample" else "samples"
     message("cutoff value: ", cutoff*100, " % ( ",min_ind, " ", ind," ).")
     message("MAF         : ", MAF)
   }
