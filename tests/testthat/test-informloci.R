@@ -13,6 +13,11 @@ df <- data.frame(v = v, w = w, x = x, y = y, z = z)
 rownames(df) <- .genlab("i", 100)
 
 dat <- df2genind(df, sep = "/")
+test_that("informloci can work in quiet mode", {
+  expect_no_message(out <- informloci(dat, MAF = 0, quiet = TRUE))
+  expect_equal(nLoc(out), 3)
+  expect_equivalent(locNames(out), c("v", "x", "z"))
+})
 
 test_that("informloci finds differentiating samples", {
   expect_message(out <- informloci(dat, MAF = 0), "2 loci found with a cutoff")
@@ -36,4 +41,15 @@ test_that("informloci works for Presence/Absence data", {
   skip_on_cran()
   expect_message(informloci(Aeut), "All sites polymorphic")
   expect_message(informloci(Aeut, MAF = 0.5), "Fewer than 2 loci found informative")
+})
+
+test_that("informloci only works on genind objects", {
+  skip_on_cran()
+  expect_error(informloci(mtcars), "genind objects")
+})
+
+test_that("informloci will return the data set as a whole if not meaningful", {
+  skip_on_cran()
+  expect_message(dt <- informloci(dat[1:2, ]), "Not enough multilocus")
+  expect_equal(dt, dat[1:2, ])
 })

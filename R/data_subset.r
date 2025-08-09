@@ -509,141 +509,126 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE, freq = FAL
   return(pop)
 }
 
-#==============================================================================#
+# ==============================================================================#
 #' Remove all non-phylogentically informative loci
-#' 
+#'
 #' This function will facilitate in removing phylogenetically uninformative loci
-#' from a \code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}} object. 
-#' The user has the ability to define what uninformative means by setting a 
-#' cutoff value for either percentage of differentiating genotypes or minor 
+#' from a \code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}} object.
+#' The user has the ability to define what uninformative means by setting a
+#' cutoff value for either percentage of differentiating genotypes or minor
 #' allele frequency.
-#' 
-#' @param pop a \code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}} 
+#'
+#' @param pop a \code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}}
 #'   object.
-#'   
-#' @param cutoff \code{numeric}. A number from 0 to 1 defining the minimum 
+#'
+#' @param cutoff \code{numeric}. A number from 0 to 1 defining the minimum
 #'   number of differentiating samples.
-#'   
+#'
 #' @param MAF \code{numeric}. A number from 0 to 1 defining the minimum minor
 #'   allele frequency. This is passed as the \code{thresh} parameter of
 #'   \code{\link[adegenet]{isPoly}}.
-#'   
-#' @param quiet \code{logical}. When \code{quiet = TRUE} (default), messages 
-#'   indicating the loci removed will be printed to screen. When \code{quiet = 
+#'
+#' @param quiet \code{logical}. When \code{quiet = TRUE} (default), messages
+#'   indicating the loci removed will be printed to screen. When \code{quiet =
 #'   FALSE}, nothing will be printed to screen.
-#'   
+#'
 #' @return A \code{genind} object with user-defined informative loci.
-#'   
+#'
 #' @details This function will remove uninformative loci using a traditional MAF
 #'   cutoff (using \code{\link[adegenet]{isPoly}} from \pkg{adegenet}) as well
 #'   as analyzing the number of observed genotypes in a locus. This is important
 #'   for clonal organisms that can have fixed heterozygous sites not detected by
 #'   MAF methods.
-#'   
-#' @note This will have a few side effects that affect certain analyses. First, 
-#'   the number of multilocus genotypes might be reduced due to the reduced 
-#'   number of markers (if you are only using a genind object). Second, if you 
-#'   plan on using this data for analysis of the index of association, be sure 
-#'   to use the standardized version (rbarD) that corrects for the number of 
+#'
+#' @note This will have a few side effects that affect certain analyses. First,
+#'   the number of multilocus genotypes might be reduced due to the reduced
+#'   number of markers (if you are only using a genind object). Second, if you
+#'   plan on using this data for analysis of the index of association, be sure
+#'   to use the standardized version (rbarD) that corrects for the number of
 #'   observed loci.
-#'   
+#'
 #' @author Zhian N. Kamvar
 #' @examples
 #' # We will use a dummy data set to demonstrate how this detects uninformative
 #' # loci using both MAF and a cutoff.
-#' 
+#'
 #' genos <- c("A/A", "A/B", "A/C", "B/B", "B/C", "C/C")
-#' 
+#'
 #' v <- sample(genos, 100, replace = TRUE)
-#' w <- c(rep(genos[2], 99), genos[3])           # found by cutoff
+#' w <- c(rep(genos[2], 99), genos[3]) # found by cutoff
 #' x <- c(rep(genos[1], 98), genos[3], genos[2]) # found by MAF
-#' y <- c(rep(genos[1], 99), genos[2])           # found by both
+#' y <- c(rep(genos[1], 99), genos[2]) # found by both
 #' z <- sample(genos, 100, replace = TRUE)
 #' dat <- df2genind(data.frame(v = v, w = w, x = x, y = y, z = z), sep = "/")
-#' 
+#'
 #' informloci(dat)
-#' 
+#'
 #' \dontrun{
 #' # Ignore MAF
 #' informloci(dat, MAF = 0)
-#' 
+#'
 #' # Ignore cutoff
 #' informloci(dat, cutoff = 0)
-#' 
+#'
 #' # Real data
 #' data(H3N2)
 #' informloci(H3N2)
-#' 
 #' }
 #' @export
 #==============================================================================#
 #' @importFrom pegas as.loci
-informloci <- function(pop, cutoff = 2/nInd(pop), MAF = 0.01, quiet = FALSE){
-  if (!is.genind(pop)){
+informloci <- function(pop, cutoff = 2 / nInd(pop), MAF = 0.01, quiet = FALSE) {
+  if (!is.genind(pop)) {
     stop("This function only works on genind objects.")
   }
+  noisy <- !isTRUE(quiet)
   MLG <- mlg(pop, quiet = TRUE)
-  if (MLG < 3){
-    if(!isTRUE(quiet)){
-      cat("Not enough multilocus genotypes to be meaningful.\n")
+  if (MLG < 3) {
+    if (noisy) {
+      message("Not enough multilocus genotypes to be meaningful.\n")
     }
     return(pop)
   }
   cutoff <- ifelse(cutoff > 0.5, 1 - cutoff, cutoff)
-  MAF    <- ifelse(MAF > 0.5, 1 - MAF, MAF)
-  min_ind = round(cutoff * nInd(pop))
-  if (!isTRUE(quiet)){
-    ind <- ifelse(min_ind == 1, "sample", "samples")
-    message("cutoff value: ", cutoff*100, " % ( ",min_ind, " ", ind," ).")
+  MAF <- ifelse(MAF > 0.5, 1 - MAF, MAF)
+  min_ind <- round(cutoff * nInd(pop))
+  if (noisy) {
+    ind <- if (min_ind == 1) "sample" else "samples"
+    message("cutoff value: ", cutoff * 100, " % ( ", min_ind, " ", ind, " ).")
     message("MAF         : ", MAF)
   }
-  if (pop@type == "PA"){
+  if (pop@type == "PA") {
     # cutoff applies to too many or too few typed individuals in AFLP cases.
     glocivals <- apply(tab(pop), 2, sum) %in% min_ind:(nInd(pop) - min_ind)
   } else {
-    genloc    <- as.loci(pop)
-    the_loci  <- attr(genloc, "locicol")
+    genloc <- as.loci(pop)
+    the_loci <- attr(genloc, "locicol")
     glocivals <- apply(genloc[the_loci], 2, test_table, min_ind, nInd(pop))
   }
 
   alocivals <- isPoly(pop, "locus", thres = MAF)
-  
-  locivals  <- alocivals & glocivals
-  
-  if (all(locivals == TRUE)){
-    msg <- paste("\nAll sites polymorphic")
-  } else if (sum(locivals) < 2){
-    msg <- paste0("\nFewer than 2 loci found informative.",
-                  "\nPerhaps you should choose a ",
-                  "lower cutoff value?\nReturning with no changes.")
-    locivals <- rep(TRUE, nLoc(pop))
-  } else {
-    msg <- uninformative_loci_message(pop, glocivals, alocivals, locivals, 
-                                      min_ind, ind, MAF)
-    # glocsum <- sum(!glocivals)
-    # alocsum <- sum(!alocivals)
-    # locsum  <- sum(!locivals)
-    # fmsg <- paste("Found", locsum, "uninformative", 
-    #               ifelse(locsum != 1, "loci", "locus"), "\n",
-    #               "============================")
-    # gmsg <- paste(glocsum, 
-    #               ifelse(glocsum != 1, "loci", "locus"), "found with",
-    #               "a cutoff of", min_ind, ind, 
-    #               ifelse(glocsum == 0, "", ":\n"),
-    #               paste(locNames(pop)[!glocivals], collapse = ", "))
-    # amsg <- paste(alocsum, 
-    #               ifelse(alocsum != 1, "loci", "locus"),
-    #               "found with MAF <", signif(MAF, 3), 
-    #               ifelse(alocsum == 0, "", ":\n"),
-    #               paste(locNames(pop)[!alocivals], collapse = ", "))
-    # msg <- paste("\n", fmsg, "\n", gmsg, "\n", amsg)
-  }
+  locivals <- alocivals & glocivals
 
-  if (!isTRUE(quiet)){
+  if (!isTRUE(quiet)) {
+    if (all(locivals == TRUE)) {
+      msg <- paste("\nAll sites polymorphic")
+    } else if (sum(locivals) < 2) {
+      msg <- paste0(
+        "\nFewer than 2 loci found informative.",
+        "\nPerhaps you should choose a ",
+        "lower cutoff value?\nReturning with no changes."
+      )
+      locivals <- rep(TRUE, nLoc(pop))
+    } else {
+      msg <- uninformative_loci_message(
+        pop, glocivals, alocivals, locivals,
+        min_ind, MAF
+      )
+    }
     message(msg)
   }
-  
-  if (pop@type == "PA"){
+
+  if (pop@type == "PA") {
     return(pop[, locivals])
   }
   return(pop[, loc = locNames(pop)[locivals]])
