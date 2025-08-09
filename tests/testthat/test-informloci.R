@@ -13,6 +13,11 @@ df <- data.frame(v = v, w = w, x = x, y = y, z = z)
 rownames(df) <- .genlab("i", 100)
 
 dat <- df2genind(df, sep = "/")
+test_that("informloci can work in quiet mode", {
+  expect_no_message(out <- informloci(dat, MAF = 0, quiet = TRUE))
+  expect_equal(nLoc(out), 3)
+  expect_equivalent(locNames(out), c("v", "x", "z"))
+})
 
 test_that("informloci finds differentiating samples", {
   expect_message(out <- informloci(dat, MAF = 0), "2 loci found with a cutoff")
