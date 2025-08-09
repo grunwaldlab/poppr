@@ -7,18 +7,18 @@
 informloci(pop, cutoff = 2/nInd(pop), MAF = 0.01, quiet = FALSE)
 }
 \arguments{
-\item{pop}{a \code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}} 
+\item{pop}{a \code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}}
 object.}
 
-\item{cutoff}{\code{numeric}. A number from 0 to 1 defining the minimum 
+\item{cutoff}{\code{numeric}. A number from 0 to 1 defining the minimum
 number of differentiating samples.}
 
 \item{MAF}{\code{numeric}. A number from 0 to 1 defining the minimum minor
 allele frequency. This is passed as the \code{thresh} parameter of
 \code{\link[adegenet]{isPoly}}.}
 
-\item{quiet}{\code{logical}. When \code{quiet = TRUE} (default), messages 
-indicating the loci removed will be printed to screen. When \code{quiet = 
+\item{quiet}{\code{logical}. When \code{quiet = TRUE} (default), messages
+indicating the loci removed will be printed to screen. When \code{quiet =
 FALSE}, nothing will be printed to screen.}
 }
 \value{
@@ -26,9 +26,9 @@ A \code{genind} object with user-defined informative loci.
 }
 \description{
 This function will facilitate in removing phylogenetically uninformative loci
-from a \code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}} object. 
-The user has the ability to define what uninformative means by setting a 
-cutoff value for either percentage of differentiating genotypes or minor 
+from a \code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}} object.
+The user has the ability to define what uninformative means by setting a
+cutoff value for either percentage of differentiating genotypes or minor
 allele frequency.
 }
 \details{
@@ -39,11 +39,11 @@ This function will remove uninformative loci using a traditional MAF
   MAF methods.
 }
 \note{
-This will have a few side effects that affect certain analyses. First, 
-  the number of multilocus genotypes might be reduced due to the reduced 
-  number of markers (if you are only using a genind object). Second, if you 
-  plan on using this data for analysis of the index of association, be sure 
-  to use the standardized version (rbarD) that corrects for the number of 
+This will have a few side effects that affect certain analyses. First,
+  the number of multilocus genotypes might be reduced due to the reduced
+  number of markers (if you are only using a genind object). Second, if you
+  plan on using this data for analysis of the index of association, be sure
+  to use the standardized version (rbarD) that corrects for the number of
   observed loci.
 }
 \examples{
@@ -53,9 +53,9 @@ This will have a few side effects that affect certain analyses. First,
 genos <- c("A/A", "A/B", "A/C", "B/B", "B/C", "C/C")
 
 v <- sample(genos, 100, replace = TRUE)
-w <- c(rep(genos[2], 99), genos[3])           # found by cutoff
+w <- c(rep(genos[2], 99), genos[3]) # found by cutoff
 x <- c(rep(genos[1], 98), genos[3], genos[2]) # found by MAF
-y <- c(rep(genos[1], 99), genos[2])           # found by both
+y <- c(rep(genos[1], 99), genos[2]) # found by both
 z <- sample(genos, 100, replace = TRUE)
 dat <- df2genind(data.frame(v = v, w = w, x = x, y = y, z = z), sep = "/")
 
@@ -71,7 +71,6 @@ informloci(dat, cutoff = 0)
 # Real data
 data(H3N2)
 informloci(H3N2)
-
 }
 }
 \author{

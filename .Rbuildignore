@@ -25,3 +25,4 @@ vignettes/poppr_manual.Rmd
 ^\.github$
 ^docs$
 ^CRAN-SUBMISSION$
+^.lintr$

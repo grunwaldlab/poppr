@@ -1,10 +1,18 @@
+poppr 2.9.8
+===========
+
+BUG FIX
+-------
+
+* `informloci()` no longer throws an error with `quiet = TRUE` (reported: @IdoBar, #266; fixed: @zkamvar, #267)
+
 poppr 2.9.7
 ===========
 
 MISC
 ----
 
-* compatibility fix for ggplot2 4.0.0 (reported: @teunbrand, #263, 
+* compatibility fix for ggplot2 4.0.0 (reported: @teunbrand, #263,
   fixed: @zkamvar, #264)
 * CRAN maintenance: documentaiton fixes
 
@@ -16,7 +24,7 @@ MISC
 
 * Poppr itself will no longer accidentally modify the random seed when it is
   attached (found by @timtaylor,
-  https://github.com/grunwaldlab/poppr/issues/259)
+  <https://github.com/grunwaldlab/poppr/issues/259>)
 
 poppr 2.9.5
 ===========
@@ -51,7 +59,7 @@ CRAN MAINTENANCE
 ----------------
 
 * C headers were re-arranged to place R-specific headers _after_ OMP headers to
-  avoid problems in clang 13 (@zkamvar, https://github.com/grunwaldlab/poppr/pull/246).
+  avoid problems in clang 13 (@zkamvar, <https://github.com/grunwaldlab/poppr/pull/246>).
 
 poppr 2.9.2
 ===========
@@ -60,7 +68,7 @@ CRAN MAINTENANCE
 ----------------
 
 * A test for `bruvo.between()` was fixed in a superficial way to avoid an error
-  on CRAN R-devel (@zkamvar, https://github.com/grunwaldlab/poppr/pull/242).
+  on CRAN R-devel (@zkamvar, <https://github.com/grunwaldlab/poppr/pull/242>).
 
 poppr 2.9.1
 ===========
@@ -69,8 +77,8 @@ DEPENDENCY UPDATE
 ----------------
 
 * The {phangorn} package is no longer imported. We only used one line of code
-  from the package (upgma), so we copied over the implementation with the 
-  author's permission (@KlausVigo, https://github.com/grunwaldlab/poppr/pull/237).
+  from the package (upgma), so we copied over the implementation with the
+  author's permission (@KlausVigo, <https://github.com/grunwaldlab/poppr/pull/237>).
 
 poppr 2.9.0
 ===========
@@ -85,7 +93,7 @@ DEPRECATION
 -----------
 
 * The argument `blacklist` has been deprecated in favor of `exclude` for the
-  following functions: `bruvo.msn()`, `poppr.msn()`, `clonecorrect()`, `poppr()`, 
+  following functions: `bruvo.msn()`, `poppr.msn()`, `clonecorrect()`, `poppr()`,
   `mlg.table()`, `mlg.crosspop()`, and `popsub()`. It will be removed in the
   poppr version 2.10 (@zkamvar, #218)
 
@@ -116,8 +124,8 @@ poppr 2.8.6
 BUG FIX
 -------
 
-* `read.genalex()` now can import columns with entirely "T" alleles as "T" 
-  instead of "TRUE". (See https://github.com/grunwaldlab/poppr/issues/214
+* `read.genalex()` now can import columns with entirely "T" alleles as "T"
+  instead of "TRUE". (See <https://github.com/grunwaldlab/poppr/issues/214>
   for details).
 
 NEW IMPORTS
@@ -139,8 +147,8 @@ CRAN MAINTENANCE
 
 * The output from the `poppr()` function will no longer contain factor columns
   for the population names or the file names. This is due to R 4.0.0 changing
-  behavior with the `stringsAsFactors` default in `data.frame()`. (See 
-  https://github.com/grunwaldlab/poppr/issue/212 for details).
+  behavior with the `stringsAsFactors` default in `data.frame()`. (See
+  <https://github.com/grunwaldlab/poppr/issue/212> for details).
 
 poppr 2.8.4
 ===========
@@ -158,14 +166,14 @@ BUG FIX
 
 * `read.genalex()` now correctly parses strata when the user imports data that
   contains duplicated data AND has some individuals named as integers less than
-  the number of samples in the data (prepended by zeroes) 
-  (See https://github.com/grunwaldlab/poppr/pull/202).
+  the number of samples in the data (prepended by zeroes)
+  (See <https://github.com/grunwaldlab/poppr/pull/202>).
 
 NEW FEATURES
 ------------
 
-* MSN functions: nodes with single populations displayed as circles instead of 
-  pies. (@fdchevalier, https://github.com/grunwaldlab/poppr/pull/203)
+* MSN functions: nodes with single populations displayed as circles instead of
+  pies. (@fdchevalier, <https://github.com/grunwaldlab/poppr/pull/203>)
 
 MISC
 ----
@@ -175,7 +183,7 @@ MISC
 * `shufflepop()` is now safer as it now uses a for loop instead of a
   function with the out-of-scope operator (`<<-`) (see #205)
 * The MLG class gains a new `distenv` slot, which will store the environment
-  where the distance function or matrix exists. This is accompanied by an 
+  where the distance function or matrix exists. This is accompanied by an
   accessor of the same name (see #206).
 * `"mlg.filter<-"()` replacement methods will no longer search the global
   environment when evaluating the distance function or matrix (see #206).
@@ -190,7 +198,7 @@ MISC
 
 * Tests relying on randomization were updated before R 3.6.0, which fixes a
   biased randomization. This has no visible impact on users.
-  See https://github.com/grunwaldlab/poppr/pull/198 for details.
+  See <https://github.com/grunwaldlab/poppr/pull/198> for details.
 
 poppr 2.8.1
 ===========
@@ -199,8 +207,8 @@ BUG FIX
 -------
 
 * An error that appeared in some AMOVA calls with genind objects with character-
-  based alleles was fixed 
-  (see https://github.com/grunwaldlab/poppr/issues/190 for details)
+  based alleles was fixed
+  (see <https://github.com/grunwaldlab/poppr/issues/190> for details)
 
 DOCUMENTATION
 -------------
@@ -220,8 +228,8 @@ BUG FIX
 -------
 
 * `win.ia()` now has more consistent behavior with chromosome structure and will
-  no longer result in an integer overflow. 
-  (see https://github.com/grunwaldlab/poppr/issues/179). Thanks to @MarisaMiller
+  no longer result in an integer overflow.
+  (see <https://github.com/grunwaldlab/poppr/issues/179>). Thanks to @MarisaMiller
   for the detailed bug report.
 * `plot_filter_stats()` will plot stats if supplied a list of thresholds.
 
@@ -230,47 +238,47 @@ ALGORITHMIC CHANGE
 
 * `win.ia()` may result in slightly different results because of two changes:
   1. The windows will now always start at position one on any given chromosome.
-  This will result in some windows at the beginning of chromosomes having a 
-  value of `NA` if the first variant starts beyond the first window. 
+  This will result in some windows at the beginning of chromosomes having a
+  value of `NA` if the first variant starts beyond the first window.
   2. Windows are now calculated for each chromosome independently. The previous
-  version first concatenated chromosomes with at least a window-sized gap 
+  version first concatenated chromosomes with at least a window-sized gap
   between the chromosomes, but failed to ensure that the window always started
-  at the beginning of the chromosome. This version fixes that issue. 
-  (see https://github.com/grunwaldlab/poppr/issues/179).
+  at the beginning of the chromosome. This version fixes that issue.
+  (see <https://github.com/grunwaldlab/poppr/issues/179>).
   
 DEPRECATION
 -----------
 
 * The `chromosome_buffer` argument for `win.ia()` has been permanently set to
-  `TRUE` and deprecated as it is no longer used. 
+  `TRUE` and deprecated as it is no longer used.
 
 NEW FEATURES
 ------------
 
 * `poppr.amova()` will now handle genlight/snpclone objects.
-   See https://github.com/grunwaldlab/poppr/pull/185 for details.
+   See <https://github.com/grunwaldlab/poppr/pull/185> for details.
 
 * `bitwise.dist()` now has two new options: `euclidean` and `scale_missing`.
   When both of these are set to `TRUE`, the distance measured will be Euclidean
-  scaled for the amount of missing data in each comparison. This matches the 
-  output of base R's `dist()` function at a fraction of time and memory. 
-  See https://github.com/grunwaldlab/poppr/pull/176 for details.
+  scaled for the amount of missing data in each comparison. This matches the
+  output of base R's `dist()` function at a fraction of time and memory.
+  See <https://github.com/grunwaldlab/poppr/pull/176> for details.
 
 * `make_haplotypes()` is now a generic defined for both genind and genlight.
   
 * `genind2genalex()` will no longer write to "genalex.csv" by default. Instead,
-  it will warn the user and write to a temporary file. 
-  See https://github.com/grunwaldlab/poppr/issues/175 for details.
+  it will warn the user and write to a temporary file.
+  See <https://github.com/grunwaldlab/poppr/issues/175> for details.
 
 * `genind2genalex()` now has an `overwrite` parameter set to `FALSE` to prevent
-  accidental overwriting of files. 
+  accidental overwriting of files.
 
-* `win.ia()` has a new argument `name_window`, which will give each element in 
+* `win.ia()` has a new argument `name_window`, which will give each element in
   the result the designation of the terminal position of that window. Thanks to
   @MarisaMiller for the suggestion!
 
 * `pair.ia()` can now calculate p-values via permutations.
-   (See https://github.com/grunwaldlab/poppr/issues/180 for details)
+   (See <https://github.com/grunwaldlab/poppr/issues/180> for details)
 
 DOCUMENTATION
 -------------
@@ -281,7 +289,7 @@ MISC
 ----
 
 * The RClone package has been added to suggests
-  (see https://github.com/grunwaldlab/poppr/issues/187)
+  (see <https://github.com/grunwaldlab/poppr/issues/187>)
 
 poppr 2.7.1
 ============
@@ -299,26 +307,25 @@ NEW FUNCTIONS
 -------------
 
 * `make_haplotypes()` will split your data into pseudo-haplotypes for use in
-  AMOVA-like analyses. This was a previously internal function, but has been 
-  promoted to a user-facing function in this version. 
+  AMOVA-like analyses. This was a previously internal function, but has been
+  promoted to a user-facing function in this version.
 
 * `as.genambig()` will convert genind/genclone objects to Polysat's "genambig"
-  class. Note that polysat must be installed for this to work. 
+  class. Note that polysat must be installed for this to work.
 
 ALGORITHMIC CHANGE
 ------------
 
-* AMOVA will now default to using euclidean distance. This affects all 
-  calculations made with `within = FALSE` or `filter = TRUE` without a 
-  user-supplied distance. This will not have affect those with haploid or 
-  diploid data using `within = TRUE`. The dissimilarity distance is equivalent 
-  to a squared euclidean distance for haploid genotypes, but not for any higher 
+* AMOVA will now default to using euclidean distance. This affects all
+  calculations made with `within = FALSE` or `filter = TRUE` without a
+  user-supplied distance. This will not have affect those with haploid or
+  diploid data using `within = TRUE`. The dissimilarity distance is equivalent
+  to a squared euclidean distance for haploid genotypes, but not for any higher
   ploidy. Those using `filter = TRUE` without specifying a distance should use
   a euclidean threshold. This should not be an issue for those who simply want
   to group isolates with missing data, however as a zero distance is the same
   for euclidean and dissimilarity. Thanks goes to Patrick Meirmans for alerting
   me to this error.
-
 
 NEW FEATURES
 ------------
@@ -329,7 +336,7 @@ MISC
 ----
 
 * printing of AMOVA will now better handle any changes in methods from pegas or
-  ade4. 
+  ade4.
 
 poppr 2.6.1
 ===========
@@ -338,7 +345,7 @@ BUG FIX
 -------
 
 * An out-of-bounds memory access error in `bitwise.dist()` was fixed.
-  See https://github.com/grunwaldlab/poppr/issues/169 for details.
+  See <https://github.com/grunwaldlab/poppr/issues/169> for details.
 
 poppr 2.6.0
 ===========
@@ -347,32 +354,32 @@ NEW FUNCTIONS
 -------------
 
 * The new function `boot.ia()` is conceptually similar to `resample.ia()`,
-  except it resamples with replacement. 
+  except it resamples with replacement.
   
 NEW FEATURES
 ------------
 
 * The function `resample.ia()` now can resample individuals weighted by their
-  Psex value. 
+  Psex value.
 * The minimum spanning networks will now scale nodes by area instead of radius.
   This gives a more accurate picture of the differences between MLGs. See
-  https://github.com/grunwaldlab/poppr/issues/154 for details.
+  <https://github.com/grunwaldlab/poppr/issues/154> for details.
 * A legend for samples/node is now added to all minimum spanning networks. See
-  https://github.com/grunwaldlab/poppr/issues/158 for details.
+  <https://github.com/grunwaldlab/poppr/issues/158> for details.
 * The imsn() option for node size scale has been changed to a slider.
   
 BUG FIX
 -------
 
 * An issue where data with sample names containing apostrophes could not be
-  imported was fixed (Identified in 
-  https://github.com/grunwaldlab/poppr/issues/156).
+  imported was fixed (Identified in
+  <https://github.com/grunwaldlab/poppr/issues/156>).
 * a bug in `imsn()` where custom MLGs would result in an error was fixed. See
-  https://github.com/grunwaldlab/poppr/issues/155 for details.
+  <https://github.com/grunwaldlab/poppr/issues/155> for details.
 * a bug in `plot_poppr_msn()` where setting `scale.leg = FALSE` would result in a
   very small MSN plot was fixed.
-* `mlg()` now works properly for snpclone and genlight objects. See 
-  https://github.com/grunwaldlab/poppr/issues/155 for details.
+* `mlg()` now works properly for snpclone and genlight objects. See
+  <https://github.com/grunwaldlab/poppr/issues/155> for details.
 
 DEPENDENCIES
 ------------
@@ -391,34 +398,34 @@ poppr 2.5.0
 ALGORITHMIC CHANGE
 ------------------
 
-* Identified in https://github.com/grunwaldlab/poppr/issues/139, Bruvo's 
+* Identified in <https://github.com/grunwaldlab/poppr/issues/139>, Bruvo's
   distance will now consider all possible combinations of ordered alleles in the
   calculation under the genome addition and loss models for missing data. This
-  will affect those who have polyploid data that contain more than one missing 
+  will affect those who have polyploid data that contain more than one missing
   allele at any genotype
   
   To facilitate comparison, the global option old.bruvo.model, has been created.
-  By default it is set to FALSE, indicating that poppr should use the ordered 
-  allele combinations. If the user wants to use the method considering unorderd 
+  By default it is set to FALSE, indicating that poppr should use the ordered
+  allele combinations. If the user wants to use the method considering unorderd
   allele combinations, they can set options(old.bruvo.model = TRUE)
   
-  It must be repeated that this does not affect haploid or diploid comparisons, 
-  those that use the infinite alleles model, or those who do not have more than 
+  It must be repeated that this does not affect haploid or diploid comparisons,
+  those that use the infinite alleles model, or those who do not have more than
   one missing allele at any genotype.
 
 DEPRECATION
 -----------
 
-* The warning for a short repeat length vector for Bruvo's distance is 
+* The warning for a short repeat length vector for Bruvo's distance is
   deprecated and will become an error in the future
 * jack.ia is deprecated in favor of resample.ia for clarity.
   
 BUG FIX
 -------
 
- * A bug in read.genalex() where removed samples would have incorrect strata
+* A bug in read.genalex() where removed samples would have incorrect strata
    labels was fixed. Thanks to Hernán Dario Capador-Barreto for identifying it.
-   See https://github.com/grunwaldlab/poppr/issues/147.
+   See <https://github.com/grunwaldlab/poppr/issues/147>.
   
 MISC
 ----
@@ -426,7 +433,7 @@ MISC
 * The internal plotting function for mlg.table now uses tidy evaluation for
   dplyr versions > 0.5.0
 * The package reshape2 was removed from imports and replaced with base functions
-  (see https://github.com/grunwaldlab/poppr/issues/144 for details)
+  (see <https://github.com/grunwaldlab/poppr/issues/144> for details)
 
 NEW IMPORTS
 -----------
@@ -442,11 +449,10 @@ BUG FIX
 
 * A corner case where repeat length vectors out of order would be erroneously
   subset with `test_replen()` and `fix_replen()` has been fixed. See
-  https://github.com/grunwaldlab/poppr/issues/136 for details.
+  <https://github.com/grunwaldlab/poppr/issues/136> for details.
 * All functions that perform filtering will now run serially due to a bug on
   Fedora machines with at least two threads. Details can be found at
-  https://github.com/grunwaldlab/poppr/issues/138.
-
+  <https://github.com/grunwaldlab/poppr/issues/138>.
 
 poppr 2.4.0
 ===========
@@ -455,7 +461,7 @@ NEW FUNCTIONS
 -------------
 
 * `jack.ia()` will randomly jackknife your sample to a specified n (default
-  is the number of MLG), and calculate the index of association over 
+  is the number of MLG), and calculate the index of association over
   multiple iterations, giving a distribution of possible values at a given
   sample size.
 
@@ -463,8 +469,8 @@ NEW FEATURES
 ------------
 
 * The function `mlg.table()` gains new parameters, "color" and "background". The
-  "color" parameter will create a single barplot with colors representing 
-  populations while the "background" parameter will create a background plot 
+  "color" parameter will create a single barplot with colors representing
+  populations while the "background" parameter will create a background plot
   showing the abundance of MLGs across populations within the facets.
 * The function `win.ia()` will now take into consideration chromosomal
   coordinates when constructing windows. It has additionally acquired a new
@@ -474,54 +480,54 @@ NEW FEATURES
 NOTABLE CHANGES
 ---------------
 
-* calculation of MLGs for snpclone and genlight objects will be performed via 
+* calculation of MLGs for snpclone and genlight objects will be performed via
   distance-based methods by default. This is in contrast to the previous behavior
-  where individuals were assumed to have unique genotypes. 
-  see https://github.com/grunwaldlab/poppr/issues/125 for details.
+  where individuals were assumed to have unique genotypes.
+  see <https://github.com/grunwaldlab/poppr/issues/125> for details.
 * An error will be thrown when attempting to use `mlg.crosspop()` with an object
   that has < 2 populations.
 * `genotype_curve()` will now remove monomorphic loci before calculation by
   default as these loci misleadingly influence the shape of the curve. This will
   change the shape of the curve if you have monomorphic loci. This change IS
-  optional via the drop and dropna parameters, but it is not recommended to 
-  change these parameters. 
+  optional via the drop and dropna parameters, but it is not recommended to
+  change these parameters.
 * The calculation for `psex()` has changed to be more accurate when using
   method = "multiple". It also gains the ability to use several values of G,
   one for each population. Documentation for `psex()` has also been improved.
-  For details of the change, see https://github.com/grunwaldlab/poppr/issues/101
+  For details of the change, see <https://github.com/grunwaldlab/poppr/issues/101>
 
 BUG FIX
 -------
 
 * The error given when a genlight object is passed to `poppr()` now correctly
   identifies the substitute function as `diversity_stats()` and not diversity
-  table (see https://github.com/grunwaldlab/poppr/issues/123). 
+  table (see <https://github.com/grunwaldlab/poppr/issues/123>).
 * GenAlEx files imported with duplicate loci will generate a warning telling the
   user that the duplicated loci have been renamed (usually to <locus name>_1)
-  (see https://github.com/grunwaldlab/poppr/issues/122).
-* Haplodiploids imported in genalex files will be properly treated 
-  (see https://github.com/grunwaldlab/poppr/issues/124).
-* `read.genalex()` will now implicitly check for the correct number of 
-  individuals in the data (see https://github.com/grunwaldlab/poppr/issues/128).
-* The function `poppr()` no longer throws an error if the sample > 0 and the 
-  data has no population (see https://github.com/grunwaldlab/poppr/issues/130).
+  (see <https://github.com/grunwaldlab/poppr/issues/122>).
+* Haplodiploids imported in genalex files will be properly treated
+  (see <https://github.com/grunwaldlab/poppr/issues/124>).
+* `read.genalex()` will now implicitly check for the correct number of
+  individuals in the data (see <https://github.com/grunwaldlab/poppr/issues/128>).
+* The function `poppr()` no longer throws an error if the sample > 0 and the
+  data has no population (see <https://github.com/grunwaldlab/poppr/issues/130>).
 * A bug where round-robin allele frequencies calculated with by_pop = TRUE were
   inaccurate for all but the first population was fixed. For details, see
-  https://github.com/grunwaldlab/poppr/issues/132.
+  <https://github.com/grunwaldlab/poppr/issues/132>.
 * A potential integer overflow was fixed in `SEXP association_index_haploid`.
-  This was a ghost from https://github.com/grunwaldlab/poppr/issues/100.
+  This was a ghost from <https://github.com/grunwaldlab/poppr/issues/100>.
 * PROTECT statements were placed around allocation statements. For details, see
-  https://github.com/grunwaldlab/poppr/issues/133.
+  <https://github.com/grunwaldlab/poppr/issues/133>.
   
 MISC
 ----
 
 * The documentation for `bitwise.dist()` clarifies the role of the
-  `differences_only` flag (see https://github.com/grunwaldlab/poppr/issues/119).
+  `differences_only` flag (see <https://github.com/grunwaldlab/poppr/issues/119>).
 * Interruptions in C code is now handled gracefully via `R_CheckUserInterrupt()`.
-  The benefit is that long-running calculations are interrupted near instantly, 
+  The benefit is that long-running calculations are interrupted near instantly,
   but at the cost of a few more milliseconds of computation time.
-  (see https://github.com/grunwaldlab/poppr/issues/86)
+  (see <https://github.com/grunwaldlab/poppr/issues/86>)
 * Bruvo's distance now has complete tests for recursion as of commit 4e4fa40d16
 
 poppr 2.3.0
@@ -530,10 +536,10 @@ poppr 2.3.0
 NEW FUNCTIONS
 ------------
 
-* The function `bootgen2genind()` will help users take advantage of 
-  bootstrapping distance functions from other packages that require genind 
-  objects. For details, see https://github.com/grunwaldlab/poppr/issues/112 and
-  https://github.com/grunwaldlab/poppr/issues/111
+* The function `bootgen2genind()` will help users take advantage of
+  bootstrapping distance functions from other packages that require genind
+  objects. For details, see <https://github.com/grunwaldlab/poppr/issues/112> and
+  <https://github.com/grunwaldlab/poppr/issues/111>
 
 NEW FEATURES
 ------------
@@ -541,7 +547,7 @@ NEW FEATURES
 * There is now a `plot` parameter for the genotype curve to enable or suppress
   plotting.
 * Progress bars are now automatically suppressed when running non-interactively.
-  to turn them on when running non-interactively, use 
+  to turn them on when running non-interactively, use
   `options(poppr.debug = TRUE)`.
 * The progress bar for `ia()` and `poppr()` will now show estimated time. This
   is from dplyr's `progress_estimated()`.
@@ -553,10 +559,10 @@ MISC
 * The x axis for the `genotype_curve()` plot is now numeric, allowing you to
   fit a smoothing function over the points without having to use the hack
   `geom_smooth(aes(group = 1))`. This is thanks to Kara Woo for pointing this
-  out on twitter (https://twitter.com/kara_woo/status/783336540407685120).
+  out on twitter (<https://twitter.com/kara_woo/status/783336540407685120>).
 * The "show" method for genclone objects now delimits populations and strata
   by a comma, avoiding confusion with multi-word population names. Thanks to
-  @knausb for the fix in https://github.com/grunwaldlab/poppr/pull/116.  
+  @knausb for the fix in <https://github.com/grunwaldlab/poppr/pull/116>.  
 * Documentation for `poppr.amova` now contains a note about significance testing
   with the ade4 function `randtest.amova`.
 
@@ -565,11 +571,11 @@ BUG FIX
 
 * The subsetting methods will now properly handle mlgs when using sample names
   to subset genclone and snpclone objects. See
-  https://github.com/grunwaldlab/poppr/issues/114 for details.
+  <https://github.com/grunwaldlab/poppr/issues/114> for details.
 * A plotting bug for `mlg.table()` was fixed so that the plots now show the
   maximum value.
-* Bugs with subsetting bootgen and bruvomat objects with no loci specified were 
-  fixed. See https://github.com/grunwaldlab/poppr/issues/118 for details.
+* Bugs with subsetting bootgen and bruvomat objects with no loci specified were
+  fixed. See <https://github.com/grunwaldlab/poppr/issues/118> for details.
 
 poppr 2.2.1
 ===========
@@ -577,8 +583,8 @@ poppr 2.2.1
 BUG FIX
 -----------
 
-* A problem exporting haploid sequence data to genalex format was fixed 
-  (see https://github.com/grunwaldlab/poppr/issues/108)
+* A problem exporting haploid sequence data to genalex format was fixed
+  (see <https://github.com/grunwaldlab/poppr/issues/108>)
 * Data without population structure no longer throws an error in `imsn()`
 
 NEW FEATURES
@@ -586,15 +592,15 @@ NEW FEATURES
 
 * You can now specify layout parameters in `imsn()`
 * The *.msn functions will now take into account whether or not your data is set
-  to collapsed MLGs. (see https://github.com/grunwaldlab/poppr/issues/107)
+  to collapsed MLGs. (see <https://github.com/grunwaldlab/poppr/issues/107>)
 
 MISC
 ----
 
-* Errors from mlg.filter now make more sense. 
-  (see https://github.com/grunwaldlab/poppr/issues/109)
+* Errors from mlg.filter now make more sense.
+  (see <https://github.com/grunwaldlab/poppr/issues/109>)
 * The vignette poppr_manual has been converted to HTML format.
-  (see https://github.com/grunwaldlab/poppr/issues/113)
+  (see <https://github.com/grunwaldlab/poppr/issues/113>)
 
 poppr 2.2.0
 ===========
@@ -607,34 +613,33 @@ NEW FUNCTIONS
 NEW FEATURES
 -----------
 
-* Threshold argument added to `filter_stats()` 
-  (see https://github.com/grunwaldlab/poppr/issues/94) 
-* The pipe operator (`%>%`) is now exported from magrittr to make chaining 
+* Threshold argument added to `filter_stats()`
+  (see <https://github.com/grunwaldlab/poppr/issues/94>)
+* The pipe operator (`%>%`) is now exported from magrittr to make chaining
   commands easier.
 * `mlg.filter()` can now return multiple statistics.
-* The user can now control the size of the labels in the index of association 
+* The user can now control the size of the labels in the index of association
   plots with the labsize and linesize arguments in the plot method.
 * `private_alleles()` gains a drop argument.
 * `recode_polyploids()` can now take haplodiploid data.
-  
   
 BUG FIX
 -----------
 
 * An issue that caused errors in the `imsn()` code output was fixed
-  (see https://github.com/grunwaldlab/poppr/issues/93)
+  (see <https://github.com/grunwaldlab/poppr/issues/93>)
 * Caught bug where the `mlg.filter()` assignment method was using `nei.dist()`
   instead of `diss.dist()` when no distance was specified.
 * A bug that resulted in significantly negative values from `bitwise.ia()` with
   large sample sizes was fixed. Spotted by @knausb
-  (see https://github.com/grunwaldlab/poppr/issues/100)
-* Fixed issue where `plot_filter_stats()` wasn't displaying the full range of 
+  (see <https://github.com/grunwaldlab/poppr/issues/100>)
+* Fixed issue where `plot_filter_stats()` wasn't displaying the full range of
   MLGs
-* Color vectors are now correctly parsed when passed to msn functions 
-  (see https://github.com/grunwaldlab/poppr/issues/55) for details. Long color
+* Color vectors are now correctly parsed when passed to msn functions
+  (see <https://github.com/grunwaldlab/poppr/issues/55>) for details. Long color
   vectors are now accepted, albiet with warning.
 * An issue where `mll.reset()` did not reset non-MLG class objects in the mlg
-  slot was fixed. 
+  slot was fixed.
   
 MISC
 -----------
@@ -651,10 +656,10 @@ NEW FEATURES
 
 * `imsn()` now has collapsible side panels
 * `nmll()` and `mll()` will now handle genind and genlight objects
-* `rraf()` now gives options for minor allele correction encompassed in the 
-  internal function `rare_allele_correction()`. This extends also to `pgen()` 
-  and `psex()`, which must correct minor allele frequencies by default. See 
-    https://github.com/grunwaldlab/poppr/issues/81 for details.
+* `rraf()` now gives options for minor allele correction encompassed in the
+  internal function `rare_allele_correction()`. This extends also to `pgen()`
+  and `psex()`, which must correct minor allele frequencies by default. See
+    <https://github.com/grunwaldlab/poppr/issues/81> for details.
 
 MISC
 -----------
@@ -666,8 +671,8 @@ MISC
 * documentation improvements
 * the show method for snpclone objects now looks distinct from genlight
 * genlight objects no longer get passed to `missingno()` in `filter_stats()`
-* `filter_stats()` now returns invisibly when plot = TRUE; see 
-  https://github.com/grunwaldlab/poppr/issues/87 for details.
+* `filter_stats()` now returns invisibly when plot = TRUE; see
+  <https://github.com/grunwaldlab/poppr/issues/87> for details.
 
 BUG FIX
 ------------
@@ -675,9 +680,9 @@ BUG FIX
 * When supplied an object with no strata, `clonecorrect()` will default to
   `strata = NA`.
 * `read.genalex()` will no longer fail if missing data is not coded as zero;
-  see https://github.com/grunwaldlab/poppr/issues/84 for details
+  see <https://github.com/grunwaldlab/poppr/issues/84> for details
 * `missingno()` no longer removes genotypes AT specified threshold;
-  see https://github.com/grunwaldlab/poppr/issues/90 for details
+  see <https://github.com/grunwaldlab/poppr/issues/90> for details
 
 poppr 2.1.0
 ===========
@@ -695,20 +700,20 @@ NEW FEATURES
 
 * `poppr.msn`, `bruvo.msn`, and `plot_poppr_msn` gain the ability to take
   character vectors for color palettes. See issue #55
-  (https://github.com/grunwaldlab/poppr/issues/55) for details.
+  (<https://github.com/grunwaldlab/poppr/issues/55>) for details.
 * `plot_poppr_msn` returns the modified graph.
 * All functions related to Bruvo's distance can now take a named vector of
   repeat lengths in any order. See issue #61
-  (https://github.com/grunwaldlab/poppr/issues/61) for details.
+  (<https://github.com/grunwaldlab/poppr/issues/61>) for details.
 * `aboot` gains the argument strata so that you can automatically convert genind
   to genpop.
 * `genotype_curve` can now take in loci objects from pegas.
 * You can now specify the maximum number of loci to analyze in `genotype_curve`.
 * `filter_stats` can now optionally plot a histogram in the background.
 * `bruvo.dist` can now optionally return distance matrices by locus. This is
-  addresed in issue #60 (https://github.com/grunwaldlab/poppr/issues/60)
+  addresed in issue #60 (<https://github.com/grunwaldlab/poppr/issues/60>)
 * `aboot` can now handle matrices as previously specified in the documentation.
-* `aboot` can now take custom functions to calculate distance for genlight 
+* `aboot` can now take custom functions to calculate distance for genlight
   objects.
 * `poppr.amova` can now perform amova using the pegas implementation.
 
@@ -750,7 +755,7 @@ BUG FIX
 * Edge case where a missing cell in the genalex matrix was interpreted as a
   literal "NA" was fixed.
 * msn functions now return nodes that are correctly named. See Issue #66
-  (https://github.com/grunwaldlab/poppr/issues/66) for details.
+  (<https://github.com/grunwaldlab/poppr/issues/66>) for details.
 
 poppr 2.0.2
 ===========
@@ -1371,12 +1376,13 @@ BUG FIXES
 
 poppr 0.2
 =========
+
 NEW FEATURES
 -----------
 
 * Added NEWS file and will now be incrementing version number (3/15/2013)
 
-
 poppr 0.1
 =========
+
 * First development version of poppr (2012 - 3/2013)
