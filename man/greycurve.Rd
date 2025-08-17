@@ -15,7 +15,7 @@ greycurve(
 \arguments{
 \item{data}{a sequence of numbers to be converted to greyscale.}
 
-\item{glim}{"grey limit". Two numbers between zero and one. They determine 
+\item{glim}{"grey limit". Two numbers between zero and one. They determine
 the upper and lower limits for the \code{\link{gray}} function. Default is 0
 (black) and 0.8 (20\% black).}
 
@@ -33,8 +33,8 @@ plotted. The purpose of this is for adding a scale bar to minimum spanning
 networks produced in earlier versions of poppr.}
 }
 \value{
-A plot displaying a grey gradient from 0.001 to 1 with minimum and 
-maximum values displayed as yellow lines, and an equation for the correction 
+A plot displaying a grey gradient from 0.001 to 1 with minimum and
+maximum values displayed as yellow lines, and an equation for the correction
 displayed in red.
 }
 \description{

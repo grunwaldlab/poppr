@@ -72,9 +72,9 @@ supply a distance matrix.}
 separated by to be considered different. Defaults to 0, which will reflect
 the original (naive) MLG definition.}
 
-\item{algorithm}{determines the type of clustering to be done. 
+\item{algorithm}{determines the type of clustering to be done.
 \describe{
-  \item{"farthest_neighbor"}{\emph{ (default) }merges clusters based on the 
+  \item{"farthest_neighbor"}{\emph{ (default) }merges clusters based on the
   maximum distance between points in either cluster. This is the strictest of
   the three.}
   \item{"nearest_neighbor"}{ merges clusters based on the minimum distance

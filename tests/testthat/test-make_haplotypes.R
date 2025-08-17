@@ -26,7 +26,7 @@ test_that("make_haplotypes will work for genlight objects", {
   expect_warning(res <- make_haplotypes(gl), "No strata")
   expect_equal(nInd(res), 20L)
   strata(gl) <- data.frame(pop = pop(gl))
-  res2       <- make_haplotypes(gl)
+  res2 <- make_haplotypes(gl)
   expect_identical(res, res2)
   # haploids are rejected
   expect_warning(hap <- make_haplotypes(gl1), "haploid")

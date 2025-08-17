@@ -34,9 +34,9 @@ plot_poppr_msn(
 \code{\link[adegenet:genlight-class]{genlight}}, or \code{\linkS4class{snpclone}} object from
 which \code{poppr_msn} was derived.}
 
-\item{poppr_msn}{a \code{list} produced from either \code{\link{poppr.msn}} 
-or \code{\link{bruvo.msn}}. This list should contain a graph, a vector of 
-population names and a vector of hexadecimal color definitions for each 
+\item{poppr_msn}{a \code{list} produced from either \code{\link{poppr.msn}}
+or \code{\link{bruvo.msn}}. This list should contain a graph, a vector of
+population names and a vector of hexadecimal color definitions for each
 population.}
 
 \item{gscale}{"grey scale". If this is \code{TRUE}, this will scale the color
@@ -47,11 +47,11 @@ darker for more related nodes. See \code{\link{greycurve}} for details.}
 will serve as the exponent to the edge weight to scale the grey value to
 represent that weight.}
 
-\item{mlg.compute}{if the multilocus genotypes are set to "custom" (see 
-\code{\link{mll.custom}} for details) in your genclone object, this will 
+\item{mlg.compute}{if the multilocus genotypes are set to "custom" (see
+\code{\link{mll.custom}} for details) in your genclone object, this will
 specify which mlg level to calculate the nodes from. See details.}
 
-\item{glim}{"grey limit". Two numbers between zero and one. They determine 
+\item{glim}{"grey limit". Two numbers between zero and one. They determine
 the upper and lower limits for the \code{\link{gray}} function. Default is 0
 (black) and 0.8 (20\% black).}
 
@@ -60,8 +60,8 @@ will be weighted to emphasize the differences between closely related nodes.
 If it is 2, the grey scale will be weighted to emphasize the differences
 between more distantly related nodes.}
 
-\item{wscale}{"width scale". If this is \code{TRUE}, the edge widths will be 
-scaled proportional to the inverse of the observed distance , with the 
+\item{wscale}{"width scale". If this is \code{TRUE}, the edge widths will be
+scaled proportional to the inverse of the observed distance , with the
 lines becoming thicker for more related nodes.}
 
 \item{nodescale}{a \code{numeric} indicating how to scale the node sizes (scales by area).}
@@ -69,7 +69,7 @@ lines becoming thicker for more related nodes.}
 \item{nodebase}{\strong{deprecated} a \code{numeric} indicating what base logarithm should be
 used to scale the node sizes. Defaults to 1.15. See details.}
 
-\item{nodelab}{an \code{integer} specifying the smallest size of node to 
+\item{nodelab}{an \code{integer} specifying the smallest size of node to
 label. See details.}
 
 \item{inds}{a \code{character} or \code{numeric} vector indicating which
@@ -80,22 +80,22 @@ multilocus genotype. When \code{FALSE} (default), nodes will be labeled by
 sample names.}
 
 \item{quantiles}{\code{logical}. When set to \code{TRUE} (default), the scale
-bar will be composed of the quantiles from the observed edge weights. When 
-set to \code{FALSE}, the scale bar will be composed of a smooth gradient 
+bar will be composed of the quantiles from the observed edge weights. When
+set to \code{FALSE}, the scale bar will be composed of a smooth gradient
 from the minimum edge weight to the maximum edge weight.}
 
-\item{cutoff}{a number indicating the longest distance to display in your 
-graph. This is performed by removing edges with weights greater than this 
+\item{cutoff}{a number indicating the longest distance to display in your
+graph. This is performed by removing edges with weights greater than this
 number.}
 
-\item{palette}{a function or character corresponding to a specific palette 
-you want to use to delimit your populations. The default is whatever 
+\item{palette}{a function or character corresponding to a specific palette
+you want to use to delimit your populations. The default is whatever
 palette was used to produce the original graph.}
 
-\item{layfun}{a function specifying the layout of nodes in your graph. It 
+\item{layfun}{a function specifying the layout of nodes in your graph. It
 defaults to \code{\link[igraph:layout_nicely]{layout.auto}}.}
 
-\item{beforecut}{if \code{TRUE}, the layout of the graph will be computed 
+\item{beforecut}{if \code{TRUE}, the layout of the graph will be computed
 before any edges are removed with \code{cutoff}. If \code{FALSE} (Default),
 the layout will be computed after any edges are removed.}
 
@@ -111,30 +111,30 @@ corner of the graph. Setting \code{size.leg = FALSE} disables this legend.}
 appear under the graph. Setting \code{scale.leg = FALSE} suppresses this
 bar. See details.}
 
-\item{...}{any other parameters to be passed on to 
+\item{...}{any other parameters to be passed on to
 \code{\link[igraph]{plot.igraph}}.}
 }
 \value{
 the modified msn list, invisibly.
 }
 \description{
-This function allows you to take the output of poppr.msn and bruvo.msn and 
-customize the plot by labeling groups of individuals, size of nodes, and 
+This function allows you to take the output of poppr.msn and bruvo.msn and
+customize the plot by labeling groups of individuals, size of nodes, and
 adjusting the palette and scale bar.
 }
 \details{
 The previous incarnation of msn plotting in poppr simply plotted the
-  minimum spanning network with the legend of populations, but did not 
-  provide a scale bar and it did not provide the user a simple way of 
-  manipulating the layout or labels. This function allows the user to 
-  manipulate many facets of graph creation, making the creation of minimum 
-  spanning networks ever so slightly more user friendly. 
-  
-  This function must have both the source data and the output msn to work. 
-  The source data must contain the same population structure as the graph. 
+  minimum spanning network with the legend of populations, but did not
+  provide a scale bar and it did not provide the user a simple way of
+  manipulating the layout or labels. This function allows the user to
+  manipulate many facets of graph creation, making the creation of minimum
+  spanning networks ever so slightly more user friendly.
+
+  This function must have both the source data and the output msn to work.
+  The source data must contain the same population structure as the graph.
   Every other parameter has a default setting.
-  
-  \subsection{Parameter details}{ \itemize{ 
+
+  \subsection{Parameter details}{ \itemize{
   \item \code{inds} By default, the graph will label each node (circle) with
   all of the samples (individuals) that are contained within that node. As
   each node represents a single multilocus genotype (MLG) or individuals (n
@@ -159,9 +159,9 @@ The previous incarnation of msn plotting in poppr simply plotted the
   \code{cutoff} argument. This works best if you set a seed before you run
   the function.
   }}
-  
+
   \subsection{mlg.compute}{
-  Each node on the graph represents a different multilocus genotype. 
+  Each node on the graph represents a different multilocus genotype.
   The edges on the graph represent genetic distances that connect the
   multilocus genotypes. In genclone objects, it is possible to set the
   multilocus genotypes to a custom definition. This creates a problem for
@@ -171,9 +171,9 @@ The previous incarnation of msn plotting in poppr simply plotted the
   clone correction will be done via the computed multilocus genotypes, either
   "original" or "contracted". This is specified in the \code{mlg.compute}
   argument, above.}
-  
-  \subsection{legends}{ To avoid drawing the legend over the graph, legends 
-  are separated by different plotting areas. This means that if legends are 
+
+  \subsection{legends}{ To avoid drawing the legend over the graph, legends
+  are separated by different plotting areas. This means that if legends are
   included, you cannot plot multiple MSNs in a single plot. The scale bar (to
   be added in manually) can be obtained from \code{\link{greycurve}} and the
   legend can be plotted with \code{\link{legend}}.}
@@ -202,7 +202,7 @@ plot_poppr_msn(Aeut, amsn, inds = "none", gadj = 15, beforecut = TRUE, cutoff = 
 # Labelling individual #57 because it is an MLG that crosses populations
 # Showing clusters of MLGS with at most 5\% variation
 # Notice that the Mt. Vernon population appears to be more clonal
-set.seed(50) 
+set.seed(50)
 plot_poppr_msn(Aeut, amsn, gadj = 15, cutoff = 0.05, inds = "057")
 
 
@@ -211,8 +211,8 @@ pcmsn <- bruvo.msn(partial_clone, replen = rep(1, 10))
 
 # You can plot using a color palette or a vector of named colors
 # Here's a way to define the colors beforehand
-pc_colors <- nPop(partial_clone) \%>\% 
-  RColorBrewer::brewer.pal("Set2") \%>\% 
+pc_colors <- nPop(partial_clone) \%>\%
+  RColorBrewer::brewer.pal("Set2") \%>\%
   setNames(popNames(partial_clone))
 
 pc_colors
@@ -225,7 +225,7 @@ plot_poppr_msn(partial_clone, pcmsn, palette = pc_colors, inds = 9)
 set.seed(999)
 plot_poppr_msn(partial_clone, pcmsn, palette = pc_colors, inds = "sim 20")
 
-# Note that this is case sensitive. Nothing is labeled. 
+# Note that this is case sensitive. Nothing is labeled.
 set.seed(999)
 plot_poppr_msn(partial_clone, pcmsn, palette = pc_colors, inds = "Sim 20")
 
@@ -234,24 +234,24 @@ data(microbov)
 mdist <- diss.dist(microbov, percent = TRUE)
 micmsn <- poppr.msn(microbov, mdist, showplot = FALSE)
 
-plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", inds = "n", 
+plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", inds = "n",
   quantiles = FALSE)
-plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", inds = "n", 
+plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", inds = "n",
   cutoff = 0.3, quantiles = FALSE)
-  
+
 ### Utilizing vectors for palettes
 
 data(Pram)
 Pram_sub <- popsub(Pram, exclude = c("Nursery_CA", "Nursery_OR"))
 
 # Creating the network for the forest
-min_span_net_sub <- bruvo.msn(Pram_sub, replen = other(Pram)$REPLEN, 
-                              add = TRUE, loss = TRUE, showplot = FALSE, 
+min_span_net_sub <- bruvo.msn(Pram_sub, replen = other(Pram)$REPLEN,
+                              add = TRUE, loss = TRUE, showplot = FALSE,
                               include.ties = TRUE)
-                              
+
 # Creating the network with nurseries
-min_span_net     <- bruvo.msn(Pram, replen = other(Pram)$REPLEN, 
-                              add = TRUE, loss = TRUE, showplot = FALSE, 
+min_span_net     <- bruvo.msn(Pram, replen = other(Pram)$REPLEN,
+                              add = TRUE, loss = TRUE, showplot = FALSE,
                               include.ties = TRUE)
 
 # Only forest genotypes

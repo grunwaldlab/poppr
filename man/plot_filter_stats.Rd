@@ -26,14 +26,14 @@ set 1)}
 \item{nclone}{see \code{\link{filter_stats}}}
 }
 \value{
-a plot depicting how many MLLs are collapsed as the genetic distance 
+a plot depicting how many MLLs are collapsed as the genetic distance
   increases for each algorithm.
 }
 \description{
 Plot the results of filter_stats
 }
 \note{
-This function originally appeared in 
+This function originally appeared in
   \doi{10.5281/zenodo.17424}
 }
 \references{
@@ -42,7 +42,7 @@ Material for Frontiers Plant Genetics and Genomics 'Novel R tools for
 analysis of genome-wide population genetic data with emphasis on clonality'.
 DOI: \doi{10.5281/zenodo.17424}
 
-Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of 
+Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of
 genome-wide population genetic data with emphasis on clonality. Front. Genet.
 6:208. doi:
 \doi{10.3389/fgene.2015.00208}

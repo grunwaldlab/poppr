@@ -82,7 +82,7 @@ plot(res, type = "l")
 # Converting chromosomal coordinates to tidy data
 library("dplyr")
 library("tidyr")
-res_tidy <- res \%>\% 
+res_tidy <- res \%>\%
   tibble(rd = ., chromosome = names(.)) \%>\% # create two column data frame
   separate(chromosome, into = c("chromosome", "position")) \%>\% # get the position info
   mutate(position = as.integer(position)) \%>\% # force position as integers
@@ -96,7 +96,7 @@ ggplot(res_tidy, aes(x = position, y = rd, color = chromosome)) +
   facet_wrap(~chromosome, nrow = 1) +
   ylab(expression(bar(r)[d])) +
   xlab("terminal position of sliding window") +
-  labs(caption = "window size: 100bp") + 
+  labs(caption = "window size: 100bp") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
   theme(legend.position = "top")
 

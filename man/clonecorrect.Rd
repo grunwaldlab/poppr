@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_subset.r
 \name{clonecorrect}
 \alias{clonecorrect}
-\title{Remove potential bias caused by cloned genotypes in genind or genclone 
+\title{Remove potential bias caused by cloned genotypes in genind or genclone
 object.}
 \usage{
 clonecorrect(pop, strata = 1, combine = FALSE, keep = 1)
@@ -18,23 +18,23 @@ columns of the data frame in the strata slot to use.}
 to create a new population for the clone-corrected genind or genclone
 object.}
 
-\item{keep}{\code{integer}. When \code{combine} is set to \code{FALSE}, you 
-can use this flag to choose the levels of your population strata. For 
-example: if your clone correction strata is set to "Pop", "Subpop", and 
-"Year", and you want to analyze your populations with respect to year, you 
+\item{keep}{\code{integer}. When \code{combine} is set to \code{FALSE}, you
+can use this flag to choose the levels of your population strata. For
+example: if your clone correction strata is set to "Pop", "Subpop", and
+"Year", and you want to analyze your populations with respect to year, you
 can set \code{keep = c(1,3)}.}
 }
 \value{
-a clone corrected \code{\linkS4class{genclone}}, 
+a clone corrected \code{\linkS4class{genclone}},
   \code{\linkS4class{snpclone}}, or \code{\link[adegenet:genind-class]{genind}} object.
 }
 \description{
-This function removes any duplicated multilocus genotypes from any specified 
+This function removes any duplicated multilocus genotypes from any specified
 population strata.
 }
 \details{
-This function will clone correct based on the stratification 
-  provided. To clone correct indiscriminately of population structure, set 
+This function will clone correct based on the stratification
+  provided. To clone correct indiscriminately of population structure, set
   \code{strata = NA}.
 }
 \examples{
@@ -83,7 +83,7 @@ sum(strata(country, ~country) == "China") # 79
 # Something a little more complicated. (This could take a few minutes on
 # slower computers)
 
-# setting the hierarchy to be Country > Year > Month  
+# setting the hierarchy to be Country > Year > Month
 c.y.m <- clonecorrect(H3N2, strata =  ~year/month/country)
 
 # How many isolates in the original data set?

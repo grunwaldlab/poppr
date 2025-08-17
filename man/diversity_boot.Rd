@@ -65,7 +65,7 @@ samples from the data.
 sampling n.boot samples from a multinomial distribution weighted by the
 proportion of each MLG in the data.
 
-\\item if `n.boot` is less than 2, bootstrapping is performed by 
+\\item if `n.boot` is less than 2, bootstrapping is performed by
 sampling N samples from a multinomial distribution weighted by the
 proportion of each MLG in the data.
 }\if{html}{\out{</div>}}

@@ -4,37 +4,37 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #
-# This software was authored by Zhian N. Kamvar and Javier F. Tabima, graduate 
+# This software was authored by Zhian N. Kamvar and Javier F. Tabima, graduate
 # students at Oregon State University; Jonah C. Brooks, undergraduate student at
 # Oregon State University; and Dr. Nik Grünwald, an employee of USDA-ARS.
 #
 # Permission to use, copy, modify, and distribute this software and its
-# documentation for educational, research and non-profit purposes, without fee, 
+# documentation for educational, research and non-profit purposes, without fee,
 # and without a written agreement is hereby granted, provided that the statement
 # above is incorporated into the material, giving appropriate attribution to the
 # authors.
 #
 # Permission to incorporate this software into commercial products may be
-# obtained by contacting USDA ARS and OREGON STATE UNIVERSITY Office for 
+# obtained by contacting USDA ARS and OREGON STATE UNIVERSITY Office for
 # Commercialization and Corporate Development.
 #
 # The software program and documentation are supplied "as is", without any
-# accompanying services from the USDA or the University. USDA ARS or the 
-# University do not warrant that the operation of the program will be 
-# uninterrupted or error-free. The end-user understands that the program was 
-# developed for research purposes and is advised not to rely exclusively on the 
+# accompanying services from the USDA or the University. USDA ARS or the
+# University do not warrant that the operation of the program will be
+# uninterrupted or error-free. The end-user understands that the program was
+# developed for research purposes and is advised not to rely exclusively on the
 # program for any reason.
 #
-# IN NO EVENT SHALL USDA ARS OR OREGON STATE UNIVERSITY BE LIABLE TO ANY PARTY 
+# IN NO EVENT SHALL USDA ARS OR OREGON STATE UNIVERSITY BE LIABLE TO ANY PARTY
 # FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING
-# LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, 
-# EVEN IF THE OREGON STATE UNIVERSITY HAS BEEN ADVISED OF THE POSSIBILITY OF 
-# SUCH DAMAGE. USDA ARS OR OREGON STATE UNIVERSITY SPECIFICALLY DISCLAIMS ANY 
-# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
-# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY 
+# LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION,
+# EVEN IF THE OREGON STATE UNIVERSITY HAS BEEN ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE. USDA ARS OR OREGON STATE UNIVERSITY SPECIFICALLY DISCLAIMS ANY
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY
 # WARRANTY OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS"
 # BASIS, AND USDA ARS AND OREGON STATE UNIVERSITY HAVE NO OBLIGATIONS TO PROVIDE
-# MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS. 
+# MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
@@ -49,49 +49,49 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #==============================================================================#
 
-
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # GENERIC METHODS
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
-
-
 #==============================================================================#
 #' Methods used for MLG objects
-#' 
+#'
 #' Default methods for accessing and subsetting MLG objects.
-#' 
+#'
 #' @rdname MLG-method
 #' @param .Object a character, "MLG"
-#' @param mlg a vector where each element assigns the multilocus genotype of 
+#' @param mlg a vector where each element assigns the multilocus genotype of
 #'   that individual in the data set.
 #' @keywords internal
 #' @docType methods
 #' @seealso \code{\linkS4class{MLG}} \code{\linkS4class{genclone}}
-#'   \code{\linkS4class{snpclone}} \code{\link{visible}} 
+#'   \code{\linkS4class{snpclone}} \code{\link{visible}}
 #'   \code{\link{unique,MLG-method}} \code{\link{levels,MLG-method}}
-#'   
+#'
 #' @author Zhian N. Kamvar
 #==============================================================================#
-setMethod(      
+setMethod(
   f = "initialize",
   signature("MLG"),
-  definition = function(.Object, mlg){
-    if (missing(mlg)){
+  definition = function(.Object, mlg) {
+    if (missing(mlg)) {
       return(.Object)
     }
-    if (is.vector(mlg)){
-      mlg <- data.frame(list(expanded = mlg, original = mlg, 
-                  contracted = mlg, custom = factor(mlg)))
-    } else if (class(mlg) %in% "MLG"){
-      return(mlg)  
+    if (is.vector(mlg)) {
+      mlg <- data.frame(list(
+        expanded = mlg,
+        original = mlg,
+        contracted = mlg,
+        custom = factor(mlg)
+      ))
+    } else if (class(mlg) %in% "MLG") {
+      return(mlg)
     }
-    slot(.Object, "cutoff")   <- c(expanded = 0.0, contracted = 0.0) 
-    slot(.Object, "mlg")      <- mlg
-    slot(.Object, "visible")  <- "original"
+    slot(.Object, "cutoff") <- c(expanded = 0.0, contracted = 0.0)
+    slot(.Object, "mlg") <- mlg
+    slot(.Object, "visible") <- "original"
     slot(.Object, "distname") <- "diss.dist"
-    slot(.Object, "distenv")  <- .GlobalEnv
+    slot(.Object, "distenv") <- .GlobalEnv
     slot(.Object, "distargs") <- list()
     slot(.Object, "distalgo") <- "farthest_neighbor"
     return(.Object)
@@ -108,23 +108,26 @@ setMethod(
 setMethod(
   f = "[",
   signature = "MLG",
-  definition = function(x, i, j, ..., all = FALSE, drop = TRUE){
-    if (missing(i)) i <- TRUE
+  definition = function(x, i, j, ..., all = FALSE, drop = TRUE) {
+    if (missing(i)) {
+      i <- TRUE
+    }
 
-    if (missing(j) & all){ # Retain the state of the MLG object, 
-      x@mlg <- x@mlg[i, ]  # but return the subset rows.
+    if (missing(j) & all) {
+      # Retain the state of the MLG object,
+      x@mlg <- x@mlg[i, ] # but return the subset rows.
       return(x)
-    } else if (missing(j)){
+    } else if (missing(j)) {
       j <- x@visible
     }
-    
+
     return(x@mlg[i, j, ..., drop = drop])
   }
 )
 
 #==============================================================================#
 #' @rdname MLG-method
-#' @param j One of 
+#' @param j One of
 #' \itemize{
 #'  \item "original"
 #'  \item "expanded"
@@ -136,9 +139,13 @@ setMethod(
 setReplaceMethod(
   f = "[",
   signature = "MLG",
-  definition = function(x, i, j, value){
-    if (missing(j)) j <- x@visible
-    if (missing(i)) i <- TRUE
+  definition = function(x, i, j, value) {
+    if (missing(j)) {
+      j <- x@visible
+    }
+    if (missing(i)) {
+      i <- TRUE
+    }
     x@mlg[i, j] <- value
     return(x)
   }
@@ -151,17 +158,21 @@ setReplaceMethod(
 setMethod(
   f = "show",
   signature("MLG"),
-  definition = function(object){
-    if (nrow(object@mlg) == 0){
+  definition = function(object) {
+    if (nrow(object@mlg) == 0) {
       print("an empty MLG object")
       return()
     }
-    cutoff <- ifelse(!object@visible %in% c("original", "custom"), 
-                      paste(" mlgs with a cutoff of", object@cutoff[object@visible]),
-                      " mlgs")
-    dist <- ifelse(object@visible != "contracted", 
-                   ".", 
-                   paste(" based on the function", object@distname))
+    cutoff <- ifelse(
+      !object@visible %in% c("original", "custom"),
+      paste(" mlgs with a cutoff of", object@cutoff[object@visible]),
+      " mlgs"
+    )
+    dist <- ifelse(
+      object@visible != "contracted",
+      ".",
+      paste(" based on the function", object@distname)
+    )
     cat(length(object), " ", object@visible, cutoff, dist, "\n", sep = "")
     print(object@mlg[[object@visible]])
   }
@@ -172,11 +183,10 @@ setMethod(
 setMethod(
   f = "length",
   signature("MLG"),
-  definition = function(x){
+  definition = function(x) {
     callGeneric(x@mlg[[x@visible]])
-  })
-
-
+  }
+)
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
@@ -189,9 +199,9 @@ setMethod(
 #' @param e2 a number
 #==============================================================================#
 setMethod(
-  f = "Ops", 
+  f = "Ops",
   signature = "MLG",
-  definition = function(e1, e2){
+  definition = function(e1, e2) {
     callGeneric(e1@mlg[[e1@visible]], e2)
   }
 )
@@ -199,9 +209,9 @@ setMethod(
 #' @rdname MLG-method
 #==============================================================================#
 setMethod(
-  f = "Math", 
+  f = "Math",
   signature = "MLG",
-  definition = function(x){
+  definition = function(x) {
     callGeneric(x@mlg[[x@visible]])
   }
 )
@@ -210,9 +220,9 @@ setMethod(
 #' @param digits the number of digits to retain
 #==============================================================================#
 setMethod(
-  f = "Math2", 
+  f = "Math2",
   signature = "MLG",
-  definition = function(x, digits){
+  definition = function(x, digits) {
     callGeneric(x@mlg[[x@visible]], digits)
   }
 )
@@ -222,13 +232,12 @@ setMethod(
 #' @param na.rm passed on to summary methods
 #==============================================================================#
 setMethod(
-  f = "Summary", 
+  f = "Summary",
   signature = "MLG",
-  definition = function(x, ..., na.rm = FALSE){
+  definition = function(x, ..., na.rm = FALSE) {
     callGeneric(x@mlg[[x@visible]], ..., na.rm)
   }
 )
-
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
@@ -238,9 +247,9 @@ setMethod(
 setGeneric("unique")
 #==============================================================================#
 #' Unique and Duplicated implementations for MLG objects
-#' 
+#'
 #' internal use
-#' 
+#'
 #' @rdname unique-methods
 #' @aliases unique,MLG-method
 #' @aliases unique,MLG,ANY-method
@@ -248,16 +257,16 @@ setGeneric("unique")
 #' @param ... options passed on to the base function \link{unique} or \link{duplicated}.
 #' @export
 #' @keywords internal
-#' @seealso \code{\link{visible}} \code{\linkS4class{MLG}} 
-#' \code{\link{genclone}} \code{\link{snpclone}} 
+#' @seealso \code{\link{visible}} \code{\linkS4class{MLG}}
+#' \code{\link{genclone}} \code{\link{snpclone}}
 #' \code{\link{initialize,MLG-method}} \code{\link{levels,MLG-method}}
-#' 
+#'
 #' @docType methods
 #==============================================================================#
 setMethod(
   f = "unique",
   signature("MLG"),
-  definition = function(x, incomparables = FALSE, ...){
+  definition = function(x, incomparables = FALSE, ...) {
     unique(x@mlg[[x@visible]], incomparables, ...)
   }
 )
@@ -272,35 +281,35 @@ setGeneric("duplicated")
 setMethod(
   f = "duplicated",
   signature("MLG"),
-  definition = function(x, incomparables = FALSE, ...){
+  definition = function(x, incomparables = FALSE, ...) {
     duplicated(x@mlg[[x@visible]], incomparables, ...)
-  } 
+  }
 )
 
 setGeneric("levels")
 
 #==============================================================================#
 #' Unique and Duplicated implementations for MLG objects
-#' 
+#'
 #' internal use
-#' 
+#'
 #' @rdname levels-methods
 #' @aliases levels,MLG-method
 #' @param x an MLG object
-#' @return a character vector showing the levels of custom MLGs or NULL if the 
+#' @return a character vector showing the levels of custom MLGs or NULL if the
 #'   visible slot is not set to "custom"
 #' @export
 #' @keywords internal
-#' @seealso \code{\link{visible}} \code{\linkS4class{MLG}} 
+#' @seealso \code{\link{visible}} \code{\linkS4class{MLG}}
 #' \code{\link{genclone}} \code{\link{snpclone}}
-#' 
+#'
 #' @docType methods
 #==============================================================================#
 setMethod(
   f = "levels",
   signature("MLG"),
-  definition = function(x){
-    return(levels(x[]))  
+  definition = function(x) {
+    return(levels(x[]))
   }
 )
 
@@ -315,9 +324,12 @@ setGeneric("levels<-")
 setMethod(
   f = "levels<-",
   signature("MLG"),
-  definition = function(x, value){
-    if (x@visible != "custom"){
-      warning("Cannot assign levels unless you have custom MLGs.", .immediate = TRUE)
+  definition = function(x, value) {
+    if (x@visible != "custom") {
+      warning(
+        "Cannot assign levels unless you have custom MLGs.",
+        .immediate = TRUE
+      )
     } else {
       levels(x@mlg[[x@visible]]) <- value
     }
@@ -326,63 +338,62 @@ setMethod(
 )
 
 
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # ACCESSORS
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 #==============================================================================#
 #' Accessors for the MLG object
-#' 
-#' \strong{This documentation is for developers of poppr.} The accessors here 
+#'
+#' \strong{This documentation is for developers of poppr.} The accessors here
 #' are preferred over accessing the elements via the @@ symbol. Please use these
 #' in your code when accessing MLG objects.
-#' 
+#'
 #' @param x an MLG object
 #' @param value see details
 #' @return see details
 #' @details These accessors are intended for internal use only. They only affect
-#'   MLG objects, not genind objects. Only visible and MLG2df are general for 
-#'   all forms of MLG. The distargs and cutoff are specific for use in 
+#'   MLG objects, not genind objects. Only visible and MLG2df are general for
+#'   all forms of MLG. The distargs and cutoff are specific for use in
 #'   mlg.filter or any function that offers filtering as an option. The argument
-#'   "value" will always take the type defined in the \code{\linkS4class{MLG}} 
+#'   "value" will always take the type defined in the \code{\linkS4class{MLG}}
 #'   class.
-#'   
+#'
 #' @rdname MLG-accessors
 #' @aliases visible,MLG-method
 #' @export
 #' @keywords internal
-#' @seealso \code{\link{MLG}} \code{\linkS4class{genclone}} 
+#' @seealso \code{\link{MLG}} \code{\linkS4class{genclone}}
 #'   \code{\link[adegenet:genlight-class]{genlight}} \code{\link{initialize,MLG-method}}
 #'   \code{\link{levels,MLG-method}} \code{\link{unique,MLG-method}}
-#'   
+#'
 #' @examples
-#' 
+#'
 #' \dontrun{
 #' # These examples will simply show you what you can do with these
 #' set.seed(5000)
 #' (x <- sample(10, 20, replace = TRUE))
 #' (m <- new("MLG", x))
-#' 
+#'
 #' # Visibility ------------------------------
 #' visible(m) # original
 #' visible(m) <- "contracted"
 #' m          # shows contracted MLGS
-#' 
+#'
 #' # Conversion to data frame ----------------
 #' MLG2df(m)  # Grab the internal data frame
-#' 
+#'
 #' # Distance function handling --------------
 #' distname(m) # nei.dist
 #' distargs(m) # list()
 #' distalgo(m) # farthest
 #' cutoff(m)
-#' 
+#'
 #' distname(m) <- substitute("diss.dist")
 #' distargs(m) <- list(percent = TRUE)
 #' distalgo(m) <- "average"
 #' cutoff(m)["contracted"] <- 0.2
-#' 
+#'
 #' }
 #==============================================================================#
 setGeneric("visible", function(x) {
@@ -390,11 +401,12 @@ setGeneric("visible", function(x) {
 })
 
 setMethod(
-  f = "visible", 
-  signature(x = "MLG"), 
+  f = "visible",
+  signature(x = "MLG"),
   definition = function(x) {
     return(x@visible)
-})
+  }
+)
 
 #==============================================================================#
 #' @rdname MLG-accessors
@@ -406,12 +418,13 @@ setGeneric("visible<-", function(x, value) {
 })
 
 setMethod(
-  f = "visible<-", 
-  signature(x = "MLG"), 
+  f = "visible<-",
+  signature(x = "MLG"),
   definition = function(x, value) {
     x@visible <- value
     return(x)
-})
+  }
+)
 
 #==============================================================================#
 #' @rdname MLG-accessors
@@ -423,11 +436,12 @@ setGeneric("MLG2df", function(x) {
 })
 
 setMethod(
-  f = "MLG2df", 
-  signature(x = "MLG"), 
+  f = "MLG2df",
+  signature(x = "MLG"),
   definition = function(x) {
     x@mlg
-})
+  }
+)
 
 
 #==============================================================================#
@@ -440,11 +454,12 @@ setGeneric("distname", function(x) {
 })
 
 setMethod(
-  f = "distname", 
-  signature(x = "MLG"), 
+  f = "distname",
+  signature(x = "MLG"),
   definition = function(x) {
     x@distname
-  })
+  }
+)
 
 #==============================================================================#
 #' @rdname MLG-accessors
@@ -456,11 +471,12 @@ setGeneric("distenv", function(x) {
 })
 
 setMethod(
-  f = "distenv", 
-  signature(x = "MLG"), 
+  f = "distenv",
+  signature(x = "MLG"),
   definition = function(x) {
     x@distenv
-  })
+  }
+)
 
 #==============================================================================#
 #' @rdname MLG-accessors
@@ -472,12 +488,13 @@ setGeneric("distname<-", function(x, value) {
 })
 
 setMethod(
-  f = "distname<-", 
-  signature(x = "MLG"), 
+  f = "distname<-",
+  signature(x = "MLG"),
   definition = function(x, value) {
     x@distname <- value
     return(x)
-  })
+  }
+)
 
 #==============================================================================#
 #' @rdname MLG-accessors
@@ -489,12 +506,13 @@ setGeneric("distenv<-", function(x, value) {
 })
 
 setMethod(
-  f = "distenv<-", 
-  signature(x = "MLG"), 
+  f = "distenv<-",
+  signature(x = "MLG"),
   definition = function(x, value) {
     x@distenv <- value
     return(x)
-  })
+  }
+)
 
 #==============================================================================#
 #' @rdname MLG-accessors
@@ -506,11 +524,12 @@ setGeneric("distargs", function(x) {
 })
 
 setMethod(
-  f = "distargs", 
-  signature(x = "MLG"), 
+  f = "distargs",
+  signature(x = "MLG"),
   definition = function(x) {
     x@distargs
-})
+  }
+)
 
 #==============================================================================#
 #' @rdname MLG-accessors
@@ -522,12 +541,13 @@ setGeneric("distargs<-", function(x, value) {
 })
 
 setMethod(
-  f = "distargs<-", 
-  signature(x = "MLG"), 
+  f = "distargs<-",
+  signature(x = "MLG"),
   definition = function(x, value) {
     x@distargs <- value
     return(x)
-  })
+  }
+)
 
 
 #==============================================================================#
@@ -540,11 +560,12 @@ setGeneric("distalgo", function(x) {
 })
 
 setMethod(
-  f = "distalgo", 
-  signature(x = "MLG"), 
+  f = "distalgo",
+  signature(x = "MLG"),
   definition = function(x) {
     x@distalgo
-  })
+  }
+)
 
 #==============================================================================#
 #' @rdname MLG-accessors
@@ -556,12 +577,13 @@ setGeneric("distalgo<-", function(x, value) {
 })
 
 setMethod(
-  f = "distalgo<-", 
-  signature(x = "MLG"), 
+  f = "distalgo<-",
+  signature(x = "MLG"),
   definition = function(x, value) {
     x@distalgo <- value
     return(x)
-  })
+  }
+)
 
 
 #==============================================================================#
@@ -574,11 +596,12 @@ setGeneric("cutoff", function(x) {
 })
 
 setMethod(
-  f = "cutoff", 
-  signature(x = "MLG"), 
+  f = "cutoff",
+  signature(x = "MLG"),
   definition = function(x) {
     x@cutoff
-  })
+  }
+)
 
 #==============================================================================#
 #' @rdname MLG-accessors
@@ -590,9 +613,10 @@ setGeneric("cutoff<-", function(x, value) {
 })
 
 setMethod(
-  f = "cutoff<-", 
-  signature(x = "MLG"), 
+  f = "cutoff<-",
+  signature(x = "MLG"),
   definition = function(x, value) {
     x@cutoff <- value
     return(x)
-  })
+  }
+)

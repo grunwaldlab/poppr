@@ -17,7 +17,7 @@
 
 \item{gen}{\code{"\link[adegenet:genind-class]{genind}"} object}
 
-\item{replen}{a vector of numbers indicating the repeat length for each 
+\item{replen}{a vector of numbers indicating the repeat length for each
 microsatellite locus.}
 
 \item{x}{a \code{"\linkS4class{bruvomat}"} object}

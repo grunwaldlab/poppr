@@ -73,17 +73,17 @@ TRUE`}
 \item{high}{(for pair.ia) a color to use for low values when `plot =
 TRUE`}
 
-\item{limits}{(for pair.ia) the limits to be used for the color scale. 
+\item{limits}{(for pair.ia) the limits to be used for the color scale.
 Defaults to `NULL`. If you want to use a custom range, supply two
 numbers between -1 and 1, (e.g. `limits = c(-0.15, 1)`)}
 
 \item{n}{an integer specifying the number of samples to be drawn. Defaults to
 \code{NULL}, which then uses the number of multilocus genotypes.}
 
-\item{reps}{an integer specifying the number of replicates to perform. 
+\item{reps}{an integer specifying the number of replicates to perform.
 Defaults to 999.}
 
-\item{use_psex}{a logical. If \code{TRUE}, the samples will be weighted by the value 
+\item{use_psex}{a logical. If \code{TRUE}, the samples will be weighted by the value
 of psex. Defaults to \code{FALSE}.}
 
 \item{...}{arguments passed on to \code{\link{psex}}}
@@ -188,16 +188,16 @@ with \eqn{{n \choose 2}\cdot{}m}{choose(n, 2) * m} values of \emph{d} and
 observed variances is fairly straightforward (modified from Agapow and
 Burt, 2001):
 
-\deqn{ V_O = \frac{\displaystyle \sum_{i=1}^{n \choose 2} D_{i}^2 - 
-\frac{(\displaystyle\sum_{i=1}^{n \choose 2} D_{i})^2}{{n \choose 2}}}{{n 
+\deqn{ V_O = \frac{\displaystyle \sum_{i=1}^{n \choose 2} D_{i}^2 -
+\frac{(\displaystyle\sum_{i=1}^{n \choose 2} D_{i})^2}{{n \choose 2}}}{{n
 \choose 2}}}{Vo = var(D)}
 
 Calculating the expected variance is the sum of each of the variances of the
 individual loci. The calculation at a single locus, \emph{j} is the same as
 the previous equation, substituting values of \emph{D} for \emph{d}:
 
-\deqn{ var_j = \frac{\displaystyle \sum_{i=1}^{n \choose 2} d_{i}^2 - 
-\frac{(\displaystyle\sum_{i=1}^{n \choose 2} d_i)^2}{{n \choose 2}}}{{n 
+\deqn{ var_j = \frac{\displaystyle \sum_{i=1}^{n \choose 2} d_{i}^2 -
+\frac{(\displaystyle\sum_{i=1}^{n \choose 2} d_i)^2}{{n \choose 2}}}{{n
 \choose 2}} }{Varj = var(dj)}
 
 The expected variance is then the sum of all the variances over all \emph{m}
@@ -210,8 +210,8 @@ of loci, so they came up with an approximation that is widely used,
 \eqn{\bar r_d}{rbarD}. For the derivation, see the manual for
 \emph{multilocus}.
 
-\deqn{ \bar r_d = \frac{V_O - V_E} {2\displaystyle 
-\sum_{j=1}^{m}\displaystyle \sum_{k \neq j}^{m}\sqrt{var_j\cdot{}var_k}} 
+\deqn{ \bar r_d = \frac{V_O - V_E} {2\displaystyle
+\sum_{j=1}^{m}\displaystyle \sum_{k \neq j}^{m}\sqrt{var_j\cdot{}var_k}}
 }{rbarD = (Vo - Ve)/(2*sum(sum(sqrt(var(dj)*var(dk))))}
 }
 \note{
@@ -237,7 +237,7 @@ resample.ia(Pinf, reps = 99)
 res <- pair.ia(partial_clone, sample = 999)
 head(res)
 
-# Plot the results of resampling rbarD. 
+# Plot the results of resampling rbarD.
 library("ggplot2")
 Pinf.resamp <- resample.ia(Pinf, reps = 999)
 ggplot(Pinf.resamp[2], aes(x = rbarD)) +

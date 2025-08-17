@@ -199,7 +199,7 @@ p + facet_wrap(~population, scales = "free_y", ncol = 1)
 poppr(nancycats, total=FALSE, H = FALSE, G = FALSE, lambda = FALSE, E5 = FALSE)
 
 # The previous version of poppr contained a definition of Hexp, which
-# was calculated as (N/(N - 1))*lambda. It basically looks like an unbiased 
+# was calculated as (N/(N - 1))*lambda. It basically looks like an unbiased
 # Simpson's index. This statistic was originally included in poppr because it
 # was originally included in the program multilocus. It was finally figured
 # to be an unbiased Simpson's diversity metric (Lande, 1996; Good, 1953).
@@ -221,11 +221,11 @@ poppr(Aeut, uSimp = uSimp)
 
 # Demonstration with viral data
 # Note: this is a larger data set that could take a couple of minutes to run
-# on slower computers. 
+# on slower computers.
 data(H3N2)
 strata(H3N2) <- data.frame(other(H3N2)$x)
 setPop(H3N2) <- ~country
-poppr(H3N2, total = FALSE, sublist=c("Austria", "China", "USA"), 
+poppr(H3N2, total = FALSE, sublist=c("Austria", "China", "USA"),
   clonecorrect = TRUE, strata = ~country/year)
 }
 }

@@ -20,10 +20,10 @@
 
 \item{...}{passed on to the \code{\link[adegenet:genind-class]{genind}} object.}
 
-\item{mlg}{a vector where each element assigns the multilocus genotype of 
+\item{mlg}{a vector where each element assigns the multilocus genotype of
 that individual in the data set.}
 
-\item{mlgclass}{a logical value specifying whether or not to translate the 
+\item{mlgclass}{a logical value specifying whether or not to translate the
 mlg object into an MLG class object.}
 
 \item{x}{a genclone object}

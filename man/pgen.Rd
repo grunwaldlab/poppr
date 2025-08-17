@@ -9,8 +9,8 @@ pgen(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL, ...)
 \arguments{
 \item{gid}{a genind or genclone object.}
 
-\item{pop}{either a formula to set the population factor from the 
-\code{\link[adegenet]{strata}} slot or a vector specifying the population factor for 
+\item{pop}{either a formula to set the population factor from the
+\code{\link[adegenet]{strata}} slot or a vector specifying the population factor for
 each sample. Defaults to \code{NULL}.}
 
 \item{by_pop}{When this is \code{TRUE} (default), the calculation will be
@@ -20,9 +20,9 @@ done by population.}
 returned will be log(Pgen). If \code{log = FALSE}, the values returned will
 be Pgen.}
 
-\item{freq}{a vector or matrix of allele frequencies. This defaults to 
-\code{NULL}, indicating that the frequencies will be determined via 
-round-robin approach in \code{\link{rraf}}. \strong{If this matrix or 
+\item{freq}{a vector or matrix of allele frequencies. This defaults to
+\code{NULL}, indicating that the frequencies will be determined via
+round-robin approach in \code{\link{rraf}}. \strong{If this matrix or
 vector is not provided, zero-value allele frequencies will automatically be
 corrected.} For details, please see the documentation on
 \link[=rare_allele_correction]{correcting rare alleles}.}
@@ -31,7 +31,7 @@ corrected.} For details, please see the documentation on
 alleles}. The default is to correct allele frequencies to 1/n}
 }
 \value{
-A vector containing Pgen values per locus for each genotype in the 
+A vector containing Pgen values per locus for each genotype in the
   object.
 }
 \description{
@@ -40,24 +40,24 @@ frequencies over all loci.
 }
 \details{
 Pgen is the probability of a given genotype occuring in a population
-  assuming HWE. Thus, the value for diploids is 
-  
-  \deqn{P_{gen} = \left(\prod_{i=1}^m p_i\right)2^h}{pgen = prod(p_i)*(2^h)} 
-  
+  assuming HWE. Thus, the value for diploids is
+
+  \deqn{P_{gen} = \left(\prod_{i=1}^m p_i\right)2^h}{pgen = prod(p_i)*(2^h)}
+
   where \eqn{p_i} are the allele frequencies and \emph{h} is the count of the
   number of heterozygous sites in the sample (Arnaud-Haond et al. 2007; Parks
   and Werth, 1993). The allele frequencies, by default, are calculated using
-  a round-robin approach where allele frequencies at a particular locus are 
+  a round-robin approach where allele frequencies at a particular locus are
   calculated on the clone-censored genotypes without that locus.
-  
-  To avoid issues with numerical precision of small numbers, this function 
-  calculates pgen per locus by adding up log-transformed values of allele 
+
+  To avoid issues with numerical precision of small numbers, this function
+  calculates pgen per locus by adding up log-transformed values of allele
   frequencies. These can easily be transformed to return the true value (see
   examples).
 }
 \note{
-For haploids, Pgen at a particular locus is the allele frequency. This 
-  function cannot handle polyploids. Additionally, when the argument 
+For haploids, Pgen at a particular locus is the allele frequency. This
+  function cannot handle polyploids. Additionally, when the argument
   \code{pop} is not \code{NULL}, \code{by_pop} is automatically \code{TRUE}.
 }
 \examples{
@@ -79,16 +79,16 @@ apply(pgen(Pram, log = FALSE), 1, prod, na.rm = TRUE)
 
 ## Rare Allele Correction ---------------------------------------------------
 ##
-# If you don't supply a table of frequencies, they are calculated with rraf 
-# with correction = TRUE. This is normally benign when analyzing large 
-# populations, but it can have a great effect on small populations. To help 
-# control this, you can supply arguments described in 
-# help("rare_allele_correction"). 
+# If you don't supply a table of frequencies, they are calculated with rraf
+# with correction = TRUE. This is normally benign when analyzing large
+# populations, but it can have a great effect on small populations. To help
+# control this, you can supply arguments described in
+# help("rare_allele_correction").
 
 
-# Default is to correct by 1/n per population. Since the calculation is 
+# Default is to correct by 1/n per population. Since the calculation is
 # performed on a smaller sample size due to round robin clone correction, it
-# would be more appropriate to correct by 1/rrmlg at each locus. This is 
+# would be more appropriate to correct by 1/rrmlg at each locus. This is
 # acheived by setting d = "rrmlg". Since this is a diploid, we would want to
 # account for the number of chromosomes, and so we set mul = 1/2
 head(pgen(Pram, log = FALSE, d = "rrmlg", mul = 1/2)) # compare with the output above
@@ -108,7 +108,7 @@ population of bracken fern, \emph{Pteridium aquilinum} (Dennstaedtiaceae).
 \emph{American Journal of Botany}, 537-544.
 }
 \seealso{
-\code{\link{psex}}, \code{\link{rraf}}, \code{\link{rrmlg}}, 
+\code{\link{psex}}, \code{\link{rraf}}, \code{\link{rrmlg}},
 \code{\link{rare_allele_correction}}
 }
 \author{

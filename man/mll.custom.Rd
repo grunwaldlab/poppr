@@ -46,7 +46,7 @@ pc <- as.genclone(partial_clone)
 mll.custom(pc) <- LETTERS[mll(pc)]
 mll(pc)
 
-# Let's say we had a mistake and the A mlg was actually B. 
+# Let's say we had a mistake and the A mlg was actually B.
 mll.levels(pc)[mll.levels(pc) == "A"] <- "B"
 mll(pc)
 

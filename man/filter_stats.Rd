@@ -24,7 +24,7 @@ filter_stats(
 
 \item{distance}{a distance function or matrix}
 
-\item{threshold}{a threshold to be passed to \code{\link{mlg.filter}} 
+\item{threshold}{a threshold to be passed to \code{\link{mlg.filter}}
 (Default: 1e6)}
 
 \item{stats}{what statistics should be calculated.}
@@ -34,16 +34,16 @@ filter_stats(
 \item{plot}{If the threshold is a maximum threshold, should the statistics be
 plotted (Figure 2)}
 
-\item{cols}{the colors to use for each algorithm (defaults to set1 of 
+\item{cols}{the colors to use for each algorithm (defaults to set1 of
 \pkg{RColorBrewer}).}
 
-\item{nclone}{the number of multilocus genotypes you expect for the data. 
-This will draw horizontal line on the graph at the value nclone and then 
+\item{nclone}{the number of multilocus genotypes you expect for the data.
+This will draw horizontal line on the graph at the value nclone and then
 vertical lines showing the cutoff thresholds for each algorithm.}
 
-\item{hist}{if you want a histogram to be plotted behind the statistics, 
-select a method here. Available methods are "sturges", "fd", or "scott" 
-(default) as documented in \code{\link[graphics]{hist}}. If you don't want 
+\item{hist}{if you want a histogram to be plotted behind the statistics,
+select a method here. Available methods are "sturges", "fd", or "scott"
+(default) as documented in \code{\link[graphics]{hist}}. If you don't want
 to plot the histogram, set \code{hist = NULL}.}
 
 \item{threads}{(unused) Previously the number of threads to be used. As of
@@ -56,11 +56,11 @@ a list of results from mlg.filter from the three
   algorithms. (returns invisibly if \code{plot = TRUE})
 }
 \description{
-This function is a wrapper to mlg.filter. It will calculate all of the stats 
+This function is a wrapper to mlg.filter. It will calculate all of the stats
 for mlg.filter utilizing all of the algorithms.
 }
 \note{
-This function originally appeared in 
+This function originally appeared in
   \doi{10.5281/zenodo.17424}
 }
 \examples{
@@ -74,28 +74,28 @@ print(bres) # shows all of the statistics
 # Use these results with cutoff_filter()
 print(thresh <- cutoff_predictor(bres$farthest$THRESHOLDS))
 mlg.filter(Pinf, distance = bruvo.dist, replen = pinfreps) <- thresh
-Pinf 
+Pinf
 
 # Different distances will give different results -----------------------
 nres <- filter_stats(Pinf, distance = nei.dist, plot = TRUE, threads = 1L, missing = "mean")
 print(thresh <- cutoff_predictor(nres$farthest$THRESHOLDS))
 mlg.filter(Pinf, distance = nei.dist, missing = "mean") <- thresh
-Pinf 
+Pinf
 }
 \references{
-ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary 
-  Material for Frontiers Plant Genetics and Genomics 'Novel R tools for 
+ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary
+  Material for Frontiers Plant Genetics and Genomics 'Novel R tools for
   analysis of genome-wide population genetic data with emphasis on
   clonality'. DOI:
   \doi{10.5281/zenodo.17424}
-  
-  Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of 
+
+  Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of
   genome-wide population genetic data with emphasis on clonality. Front.
-  Genet. 6:208. doi: 
+  Genet. 6:208. doi:
   \doi{10.3389/fgene.2015.00208}
 }
 \seealso{
-\code{\link{mlg.filter}} \code{\link{cutoff_predictor}} 
+\code{\link{mlg.filter}} \code{\link{cutoff_predictor}}
   \code{\link{bitwise.dist}} \code{\link{diss.dist}}
 }
 \author{

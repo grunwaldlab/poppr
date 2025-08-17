@@ -129,7 +129,7 @@ binnan <- aboot(nan9, dist = bindist)
 # Distances from other packages.
 #
 # Sometimes, distance functions from other packages will have the constraint
-# that the incoming data MUST be genind. Internally, aboot uses the 
+# that the incoming data MUST be genind. Internally, aboot uses the
 # bootgen class ( class?bootgen ) to shuffle loci, and will throw an error
 # The function bootgen2genind helps fix that. Here's an example of a function
 # that expects a genind class from above
@@ -167,7 +167,7 @@ aboot(Aeut.pop, sample = 1000) # compare to Grunwald et al. 2006
 set.seed(5000)
 aboot(Aeut.gc, strata = ~Pop/Subpop, sample = 1000)
 
-# And genlight objects 
+# And genlight objects
 # From glSim:
 ## 1,000 non structured SNPs, 100 structured SNPs
 x <- glSim(100, 1e3, n.snp.struc=100, ploid=2)

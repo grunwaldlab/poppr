@@ -24,25 +24,25 @@ bruvo.boot(
 \item{replen}{a \code{vector} of \code{integers} indicating the length of the
 nucleotide repeats for each microsatellite locus.}
 
-\item{add}{if \code{TRUE}, genotypes with zero values will be treated under 
+\item{add}{if \code{TRUE}, genotypes with zero values will be treated under
 the genome addition model presented in Bruvo et al. 2004.}
 
-\item{loss}{if \code{TRUE}, genotypes with zero values will be treated under 
+\item{loss}{if \code{TRUE}, genotypes with zero values will be treated under
 the genome loss model presented in Bruvo et al. 2004.}
 
-\item{sample}{an \code{integer} indicated the number of bootstrap replicates 
+\item{sample}{an \code{integer} indicated the number of bootstrap replicates
 desired.}
 
 \item{tree}{any function that can generate a tree from a distance matrix.
 Default is \code{\link{upgma}}.}
 
-\item{showtree}{\code{logical} if \code{TRUE}, a tree will be plotted with 
+\item{showtree}{\code{logical} if \code{TRUE}, a tree will be plotted with
 nodelabels.}
 
 \item{cutoff}{\code{integer} the cutoff value for bootstrap node label values
 (between 0 and 100).}
 
-\item{quiet}{\code{logical} defaults to \code{FALSE}. If \code{TRUE}, a 
+\item{quiet}{\code{logical} defaults to \code{FALSE}. If \code{TRUE}, a
 progress bar and messages will be suppressed.}
 
 \item{root}{\code{logical} This is a parameter passed on to
@@ -52,7 +52,7 @@ produces an unrooted tree (e.g. "nj"), then the value should be
 \code{FALSE}. By default, it is set to \code{NULL}, which will assume an
 unrooted phylogeny unless the function name contains "upgma".}
 
-\item{...}{any argument to be passed on to \code{\link[ape]{boot.phylo}}. eg. 
+\item{...}{any argument to be passed on to \code{\link[ape]{boot.phylo}}. eg.
 \code{quiet = TRUE}.}
 }
 \value{
@@ -78,7 +78,7 @@ This function will calculate a tree based off of Bruvo's distance
   THIS ESTIMATION.
 }
 \examples{
-# Please note that the data presented is assuming that the nancycat dataset 
+# Please note that the data presented is assuming that the nancycat dataset
 # contains all dinucleotide repeats, it most likely is not an accurate
 # representation of the data.
 
@@ -118,9 +118,9 @@ genotype distances irrespective of ploidy level. Molecular Ecology,
 13(7):2101-2106, 2004.
 }
 \seealso{
-\code{\link{bruvo.dist}}, \code{\link[adegenet]{nancycats}}, 
-  \code{\link{upgma}}, \code{\link[ape]{nj}}, \code{\link[ape]{boot.phylo}}, 
-  \code{\link[ape]{nodelabels}}, \code{\link[adegenet]{tab}}, 
+\code{\link{bruvo.dist}}, \code{\link[adegenet]{nancycats}},
+  \code{\link{upgma}}, \code{\link[ape]{nj}}, \code{\link[ape]{boot.phylo}},
+  \code{\link[ape]{nodelabels}}, \code{\link[adegenet]{tab}},
   \code{\link{missingno}}.
 }
 \author{

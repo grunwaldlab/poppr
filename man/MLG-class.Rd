@@ -12,13 +12,13 @@ for internal use only.
 \section{Slots}{
 
 \describe{
-\item{\code{mlg}}{a list containing four vectors, one for each type of MLG 
+\item{\code{mlg}}{a list containing four vectors, one for each type of MLG
 manipulation.}
 
-\item{\code{visible}}{a character specifying which MLG type is to be displayed and 
+\item{\code{visible}}{a character specifying which MLG type is to be displayed and
 accessed.}
 
-\item{\code{distname}}{the name of the distance function or matrix used to collapse 
+\item{\code{distname}}{the name of the distance function or matrix used to collapse
 mlgs.}
 
 \item{\code{distenv}}{the environment that contains the distance function or matrix}
@@ -27,7 +27,7 @@ mlgs.}
 
 \item{\code{distalgo}}{the algorithm used to contract multilocus genotypes.}
 
-\item{\code{cutoff}}{Two numbers specifying the cutoff value for expanding and 
+\item{\code{cutoff}}{Two numbers specifying the cutoff value for expanding and
 collapsing MLGs.}
 }}
 
@@ -39,20 +39,20 @@ set.seed(5000)
 (m <- new("MLG", x))
 
  visible(m) # original is always default
- 
- m[]       # adding braces after the object will always return a vector of 
+
+ m[]       # adding braces after the object will always return a vector of
            # the same type as defined in "visible"
-           
+
  m + 1     # You can do math on the numeric ones
- 
+
  visible(m) <- "custom"
  m + 2     # This should throw a warning
  # The types are stored in a data frame. You can retrieve them easily:
  visible(m) <- "original"
  m
  m[, "custom"]
- 
- # Important for subsetting, if you subset the object, normally, it will 
+
+ # Important for subsetting, if you subset the object, normally, it will
  # return a vector unless you specify all = TRUE
  m[1:10]             # original vector
  m[1:10, all = TRUE] # still class MLG

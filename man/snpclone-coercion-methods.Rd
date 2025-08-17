@@ -9,7 +9,7 @@
 as.snpclone(x, ..., parallel = FALSE, n.cores = NULL, mlg, mlgclass = TRUE)
 }
 \arguments{
-\item{x}{a \code{\link[adegenet:genlight-class]{genlight}} or \code{\linkS4class{snpclone}} 
+\item{x}{a \code{\link[adegenet:genlight-class]{genlight}} or \code{\linkS4class{snpclone}}
 object}
 
 \item{...}{arguments to be passed on to the genlight constructor. These are
@@ -36,7 +36,7 @@ Wrapper for snpclone initializer.
 system.time(x <- as.snpclone(glSim(1000, 1e5, ploid=2)))
 
 # With parallel processing... doesn't really save you much time.
-system.time(x <- as.snpclone(glSim(1000, 1e5, ploid=2, parallel = TRUE), 
+system.time(x <- as.snpclone(glSim(1000, 1e5, ploid=2, parallel = TRUE),
                              parallel = TRUE))
 }
 

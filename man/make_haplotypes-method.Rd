@@ -42,7 +42,7 @@ genind object.
 
 data(nancycats)
 nan9 <- nancycats[pop = 9]
-nan9hap <- make_haplotypes(nan9) 
+nan9hap <- make_haplotypes(nan9)
 nan9              # 9 individuals from population 9
 nan9hap           # 18 haplotypes
 strata(nan9hap)   # strata gains a new column: Individual
@@ -50,9 +50,9 @@ indNames(nan9hap) # individuals are renamed sequentially
 
 
 # Mix ploidy data can be split, but should be treated with caution --------
-# 
-# For example, the Pinf data set contains 86 tetraploid individuals, 
-# but there appear to only be diploids and triploid genotypes. When 
+#
+# For example, the Pinf data set contains 86 tetraploid individuals,
+# but there appear to only be diploids and triploid genotypes. When
 # we convert to haplotypes, those with all missing data are dropped.
 data(Pinf)
 Pinf

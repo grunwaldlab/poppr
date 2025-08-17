@@ -12,7 +12,7 @@ mll.reset(x, value)
 \arguments{
 \item{x}{a \linkS4class{genclone} or \linkS4class{snpclone} object.}
 
-\item{value}{a character vector that specifies which levels you wish to be 
+\item{value}{a character vector that specifies which levels you wish to be
 reset.}
 }
 \value{

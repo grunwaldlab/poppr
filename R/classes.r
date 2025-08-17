@@ -4,37 +4,37 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #
-# This software was authored by Zhian N. Kamvar and Javier F. Tabima, graduate 
+# This software was authored by Zhian N. Kamvar and Javier F. Tabima, graduate
 # students at Oregon State University; Jonah C. Brooks, undergraduate student at
 # Oregon State University; and Dr. Nik Grünwald, an employee of USDA-ARS.
 #
 # Permission to use, copy, modify, and distribute this software and its
-# documentation for educational, research and non-profit purposes, without fee, 
+# documentation for educational, research and non-profit purposes, without fee,
 # and without a written agreement is hereby granted, provided that the statement
 # above is incorporated into the material, giving appropriate attribution to the
 # authors.
 #
 # Permission to incorporate this software into commercial products may be
-# obtained by contacting USDA ARS and OREGON STATE UNIVERSITY Office for 
+# obtained by contacting USDA ARS and OREGON STATE UNIVERSITY Office for
 # Commercialization and Corporate Development.
 #
 # The software program and documentation are supplied "as is", without any
-# accompanying services from the USDA or the University. USDA ARS or the 
-# University do not warrant that the operation of the program will be 
-# uninterrupted or error-free. The end-user understands that the program was 
-# developed for research purposes and is advised not to rely exclusively on the 
+# accompanying services from the USDA or the University. USDA ARS or the
+# University do not warrant that the operation of the program will be
+# uninterrupted or error-free. The end-user understands that the program was
+# developed for research purposes and is advised not to rely exclusively on the
 # program for any reason.
 #
-# IN NO EVENT SHALL USDA ARS OR OREGON STATE UNIVERSITY BE LIABLE TO ANY PARTY 
+# IN NO EVENT SHALL USDA ARS OR OREGON STATE UNIVERSITY BE LIABLE TO ANY PARTY
 # FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING
-# LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, 
-# EVEN IF THE OREGON STATE UNIVERSITY HAS BEEN ADVISED OF THE POSSIBILITY OF 
-# SUCH DAMAGE. USDA ARS OR OREGON STATE UNIVERSITY SPECIFICALLY DISCLAIMS ANY 
-# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
-# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY 
+# LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION,
+# EVEN IF THE OREGON STATE UNIVERSITY HAS BEEN ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE. USDA ARS OR OREGON STATE UNIVERSITY SPECIFICALLY DISCLAIMS ANY
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY
 # WARRANTY OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS"
 # BASIS, AND USDA ARS AND OREGON STATE UNIVERSITY HAVE NO OBLIGATIONS TO PROVIDE
-# MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS. 
+# MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
@@ -48,82 +48,83 @@ setClassUnion("mlgORnumeric", c("MLG", "numeric"))
 #   methods currently exist for coercing from “MLG” to “mlgORnumeric”; they will be replaced.
 #==============================================================================#
 #' GENclone and SNPclone classes
-#' 
-#' @description \strong{GENclone} is an S4 class that extends the 
+#'
+#' @description \strong{GENclone} is an S4 class that extends the
 #'   \code{\link[adegenet:genind-class]{genind}} object.\cr \strong{SNPclone} is an S4 class
 #'   that extends the \code{\link[adegenet:genlight-class]{genlight}} object.\cr\cr They will have
 #'   all of the same attributes as their parent classes, but they will contain
 #'   one extra slot to store extra information about multilocus genotypes.
-#'   
-#' @section Extends: The \code{genclone} class extends class 
-#'   \code{"\link[adegenet:genind-class]{genind}"}, directly. \cr The \code{snpclone} class 
+#'
+#' @section Extends: The \code{genclone} class extends class
+#'   \code{"\link[adegenet:genind-class]{genind}"}, directly. \cr The \code{snpclone} class
 #'   extends class \code{"\link[adegenet:genlight-class]{genlight}"}, directly.
-#'   
-#' @details The genclone and snpclone classes will allow for more optimized 
+#'
+#' @details The genclone and snpclone classes will allow for more optimized
 #'   methods of clone correction.
-#'   
-#'   Previously for \link[adegenet:genind-class]{genind} and \link[adegenet:genlight-class]{genlight} objects, 
-#'   multilocus genotypes were not retained after a data set was subset by 
-#'   population. The new \strong{\code{mlg}} slot allows us to assign the 
-#'   multilocus genotypes and retain that information no matter how we subset 
-#'   the data set. This new slot can either contain numeric values for 
-#'   multilocus genotypes OR it can contain a special internal 
-#'   \code{\linkS4class{MLG}} class that allows for custom multilocus genotype 
+#'
+#'   Previously for \link[adegenet:genind-class]{genind} and \link[adegenet:genlight-class]{genlight} objects,
+#'   multilocus genotypes were not retained after a data set was subset by
+#'   population. The new \strong{\code{mlg}} slot allows us to assign the
+#'   multilocus genotypes and retain that information no matter how we subset
+#'   the data set. This new slot can either contain numeric values for
+#'   multilocus genotypes OR it can contain a special internal
+#'   \code{\linkS4class{MLG}} class that allows for custom multilocus genotype
 #'   definitions and filtering.
-#' 
-#' @note When calculating multilocus genotypes for genclone objects, a rank 
+#'
+#' @note When calculating multilocus genotypes for genclone objects, a rank
 #'   function is used, but calculation of multilocus genotypes for snpclone
-#'   objects is distance-based (via \code{\link{bitwise.dist}} and 
+#'   objects is distance-based (via \code{\link{bitwise.dist}} and
 #'   \code{\link{mlg.filter}}). This means that genclone objects are sensitive
 #'   to missing data, whereas snpclone objects are insensitive.
-#'   
+#'
 #' @name genclone-class
 #' @rdname genclone-class
 #' @aliases genclone
 #' @export
-#' @slot mlg a vector representing multilocus genotypes for the data set OR an 
+#' @slot mlg a vector representing multilocus genotypes for the data set OR an
 #'   object of class \code{\linkS4class{MLG}}.
 #' @author Zhian N. Kamvar
-#' @seealso \code{\link{as.genclone}} \code{\link{as.snpclone}} 
-#'   \code{\link[adegenet:genind-class]{genind}} \code{\link[adegenet:genlight-class]{genlight}} 
-#'   \code{\link[adegenet:accessors]{strata}} \code{\link[adegenet:accessors]{setPop}} 
+#' @seealso \code{\link{as.genclone}} \code{\link{as.snpclone}}
+#'   \code{\link[adegenet:genind-class]{genind}} \code{\link[adegenet:genlight-class]{genlight}}
+#'   \code{\link[adegenet:accessors]{strata}} \code{\link[adegenet:accessors]{setPop}}
 #'   \code{\link{MLG}} \code{\link{mll}} \code{\link{mlg.filter}}
 #' @import methods
 #' @examples
 #' \dontrun{
-#' 
+#'
 #' # genclone objects can be created from genind objects
 #' #
 #' data(partial_clone)
 #' partial_clone
 #' (pc <- as.genclone(partial_clone))
-#' 
+#'
 #' # snpclone objects can be created from genlight objects
 #' #
 #' set.seed(999)
 #' (gl <- glSim(100, 0, n.snp.struc = 1e3, ploidy = 2, parallel = FALSE))
 #' (sc <- as.snpclone(rbind(gl, gl, parallel = FALSE), parallel = FALSE))
-#' # 
+#' #
 #' # Use mlg.filter to create a distance threshold to define multilocus genotypes.
 #' mlg.filter(sc, threads = 1L) <- 0.25
 #' sc # 82 mlgs
-#' 
+#'
 #' }
 #==============================================================================#
-setClass("genclone", 
-         contains = "genind",
-         representation = representation(mlg = "mlgORnumeric"),
-         prototype(mlg = integer(0))
+setClass(
+  "genclone",
+  contains = "genind",
+  representation = representation(mlg = "mlgORnumeric"),
+  prototype(mlg = integer(0))
 )
 
-valid.genclone <- function(object){
-  slots   <- slotNames(object)
-  if (any(!"mlg" %in% slots)){
+valid.genclone <- function(object) {
+  slots <- slotNames(object)
+  if (any(!"mlg" %in% slots)) {
     return(FALSE)
   }
-  inds    <- adegenet::nInd(object)
-  mlgs    <- length(object@mlg)
-  if (mlgs != inds){  
+  inds <- adegenet::nInd(object)
+  mlgs <- length(object@mlg)
+  if (mlgs != inds) {
     message("Multilocus genotypes do not match the number of observations")
     return(FALSE)
   }
@@ -138,20 +139,21 @@ setValidity("genclone", valid.genclone)
 #' @aliases snpclone
 #' @export
 #==============================================================================#
-setClass("snpclone",
-         contains = "genlight",
-         representation = representation(mlg = "mlgORnumeric"),
-         prototype = prototype(mlg = integer(0))
+setClass(
+  "snpclone",
+  contains = "genlight",
+  representation = representation(mlg = "mlgORnumeric"),
+  prototype = prototype(mlg = integer(0))
 )
 
 setValidity("snpclone", valid.genclone)
 #==============================================================================#
 #' bruvomat object
-#' 
-#' An internal object used for bruvo's distance. 
+#'
+#' An internal object used for bruvo's distance.
 #' Not intended for user interaction.
-#' 
-#' 
+#'
+#'
 #' @name bruvomat-class
 #' @rdname bruvomat-class
 #' @export
@@ -165,9 +167,9 @@ setValidity("snpclone", valid.genclone)
 #' @import methods
 #==============================================================================#
 setClass(
-  Class = "bruvomat", 
+  Class = "bruvomat",
   representation = representation(
-    mat = "matrix", 
+    mat = "matrix",
     replen = "numeric",
     ploidy = "numeric",
     ind.names = "character"
@@ -182,12 +184,12 @@ setClass(
 
 #==============================================================================#
 #' Bootgen object
-#' 
+#'
 #' An internal object used for bootstrapping. Not intended for user interaction.
-#' 
-#' @section Extends: 
+#'
+#' @section Extends:
 #' Virtual Class \code{"\link[adegenet:gen-class]{gen}"}.
-#' 
+#'
 #' @name bootgen-class
 #' @rdname bootgen-class
 #' @export
@@ -201,17 +203,19 @@ setClass(
 #' @author Zhian N. Kamvar
 #' @import methods
 #==============================================================================#
-setClass("bootgen", 
-         contains = c("gen"),
-         representation = representation(
-                          type = "character",
-                          ploidy = "integer",
-                          names = "vector", 
-                          alllist = "list"),
-         prototype = prototype(
-          type = character(0),
-          ploidy = integer(0),
-          names = character(0),
-          alllist = list()
-          )
+setClass(
+  "bootgen",
+  contains = c("gen"),
+  representation = representation(
+    type = "character",
+    ploidy = "integer",
+    names = "vector",
+    alllist = "list"
+  ),
+  prototype = prototype(
+    type = character(0),
+    ploidy = integer(0),
+    names = character(0),
+    alllist = list()
+  )
 )

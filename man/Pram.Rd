@@ -5,20 +5,20 @@
 \alias{Pram}
 \title{Phytophthora ramorum data from OR Forests and Nurseries (OR and CA)}
 \format{
-a [genclone-class] object with 3 hierarchical levels 
-  called "SOURCE", "YEAR", and, "STATE". The \strong{other} slot contains a 
-  named vector of repeat lengths called \strong{"REPLEN"}, a matrix of xy 
-  coordinates for the forest samples called \strong{"xy"}, and a palette to 
+a [genclone-class] object with 3 hierarchical levels
+  called "SOURCE", "YEAR", and, "STATE". The \strong{other} slot contains a
+  named vector of repeat lengths called \strong{"REPLEN"}, a matrix of xy
+  coordinates for the forest samples called \strong{"xy"}, and a palette to
   color the ~SOURCE/STATE stratification called \strong{"comparePal"}.
 }
 \usage{
 data(Pram)
 }
 \description{
-This is the data set from 
-  \doi{10.5281/zenodo.13007}. It has been converted to the 
-  genclone object as of poppr version 2.0. It contains 729 samples of the 
-  Sudden Oak Death pathogen *Phytophthora ramorum* genotyped over five 
+This is the data set from
+  \doi{10.5281/zenodo.13007}. It has been converted to the
+  genclone object as of poppr version 2.0. It contains 729 samples of the
+  Sudden Oak Death pathogen *Phytophthora ramorum* genotyped over five
   microsatellite loci (Kamvar et. al., 2015). 513 samples were collected from
   forests in Curry County, OR from 2001 to mid-2014 (labeled by watershed
   region). The other 216 samples represents genotypes collected from
@@ -34,21 +34,21 @@ other(Pram)$REPLEN
 other(Pram)$comparePal
 }
 \references{
-Kamvar, Z. N., Larsen, M. M., Kanaskie, A. M., Hansen, E. M., & 
+Kamvar, Z. N., Larsen, M. M., Kanaskie, A. M., Hansen, E. M., &
   Grünwald, N. J. (2015). Spatial and temporal analysis of populations of the
-  sudden oak death pathogen in Oregon forests. Phytopathology 105:982-989. 
+  sudden oak death pathogen in Oregon forests. Phytopathology 105:982-989.
   doi:
   \doi{10.1094/PHYTO-12-14-0350-FI}
-  
-  
-  Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M. Hansen, & 
-  Niklaus J. Grünwald. 2014. Sudden_Oak_Death_in_Oregon_Forests: Spatial and 
-  temporal population dynamics of the sudden oak death epidemic in Oregon 
+
+
+  Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M. Hansen, &
+  Niklaus J. Grünwald. 2014. Sudden_Oak_Death_in_Oregon_Forests: Spatial and
+  temporal population dynamics of the sudden oak death epidemic in Oregon
   Forests. ZENODO, doi:
   \doi{10.5281/zenodo.13007}
-  
+
   Goss, E. M., Larsen, M., Chastagner, G. A., Givens, D. R., and Grünwald, N.
-  J. 2009. Population genetic analysis infers migration pathways of 
+  J. 2009. Population genetic analysis infers migration pathways of
   *Phytophthora ramorum* in US nurseries. PLoS Pathog. 5:e1000583. doi:
   \doi{10.1371/journal.ppat.1000583}
 }

@@ -3,7 +3,7 @@
 \name{poppr.msn}
 \alias{poppr.msn}
 \alias{msn.poppr}
-\title{Create a minimum spanning network of selected populations using a distance 
+\title{Create a minimum spanning network of selected populations using a distance
 matrix.}
 \usage{
 poppr.msn(
@@ -33,15 +33,15 @@ poppr.msn(
 
 \item{distmat}{a distance matrix that has been derived from your data set.}
 
-\item{palette}{a \code{vector} or \code{function} defining the color palette 
-to be used to color the populations on the graph. It defaults to 
+\item{palette}{a \code{vector} or \code{function} defining the color palette
+to be used to color the populations on the graph. It defaults to
 \code{\link{topo.colors}}. See examples for details.}
 
-\item{mlg.compute}{if the multilocus genotypes are set to "custom" (see 
-\code{\link{mll.custom}} for details) in your genclone object, this will 
+\item{mlg.compute}{if the multilocus genotypes are set to "custom" (see
+\code{\link{mll.custom}} for details) in your genclone object, this will
 specify which mlg level to calculate the nodes from. See details.}
 
-\item{sublist}{a \code{vector} of population names or indexes that the user 
+\item{sublist}{a \code{vector} of population names or indexes that the user
 wishes to keep. Default to "ALL".}
 
 \item{exclude}{a \code{vector} of population names or indexes that the user
@@ -50,38 +50,38 @@ wishes to discard. Default to \code{NULL}.}
 \item{blacklist}{DEPRECATED, use exclude.}
 
 \item{vertex.label}{a \code{vector} of characters to label each vertex. There
-are two defaults: \code{"MLG"} will label the nodes with the multilocus 
-genotype from the original data set and \code{"inds"} will label the nodes 
+are two defaults: \code{"MLG"} will label the nodes with the multilocus
+genotype from the original data set and \code{"inds"} will label the nodes
 with the representative individual names.}
 
 \item{gscale}{"grey scale". If this is \code{TRUE}, this will scale the color
 of the edges proportional to the observed distance, with the lines becoming
 darker for more related nodes. See \code{\link{greycurve}} for details.}
 
-\item{glim}{"grey limit". Two numbers between zero and one. They determine 
-the upper and lower limits for the \code{\link{gray}} function. Default is 
+\item{glim}{"grey limit". Two numbers between zero and one. They determine
+the upper and lower limits for the \code{\link{gray}} function. Default is
 0 (black) and 0.8 (20\% black). See \code{\link{greycurve}} for details.}
 
-\item{gadj}{"grey adjust". a positive \code{integer} greater than zero that 
-will serve as the exponent to the edge weight to scale the grey value to 
+\item{gadj}{"grey adjust". a positive \code{integer} greater than zero that
+will serve as the exponent to the edge weight to scale the grey value to
 represent that weight. See \code{\link{greycurve}} for details.}
 
-\item{gweight}{"grey weight". an \code{integer}. If it's 1, the grey scale 
-will be weighted to emphasize the differences between closely related 
-nodes. If it is 2, the grey scale will be weighted to emphasize the 
-differences between more distantly related nodes. See 
+\item{gweight}{"grey weight". an \code{integer}. If it's 1, the grey scale
+will be weighted to emphasize the differences between closely related
+nodes. If it is 2, the grey scale will be weighted to emphasize the
+differences between more distantly related nodes. See
 \code{\link{greycurve}} for details.}
 
-\item{wscale}{"width scale". If this is \code{TRUE}, the edge widths will be 
-scaled proportional to the inverse of the observed distance , with the 
+\item{wscale}{"width scale". If this is \code{TRUE}, the edge widths will be
+scaled proportional to the inverse of the observed distance , with the
 lines becoming thicker for more related nodes.}
 
-\item{showplot}{logical. If \code{TRUE}, the graph will be plotted. If 
+\item{showplot}{logical. If \code{TRUE}, the graph will be plotted. If
 \code{FALSE}, it will simply be returned.}
 
 \item{include.ties}{logical. If \code{TRUE}, the graph will include all edges
 that were arbitrarily passed over in favor of another edge of equal weight.
-If \code{FALSE}, which is the default, one edge will be arbitrarily 
+If \code{FALSE}, which is the default, one edge will be arbitrarily
 selected when two or more edges are tied, resulting in a pure minimum
 spanning network.}
 
@@ -101,15 +101,15 @@ override the algorithm in the data set. See Details.}
 \item{...}{any other arguments that could go into plot.igraph}
 }
 \value{
-\item{graph}{a minimum spanning network with nodes corresponding to 
-  MLGs within the data set. Colors of the nodes represent population 
-  membership. Width and color of the edges represent distance.} 
-  \item{populations}{a vector of the population names corresponding to the 
+\item{graph}{a minimum spanning network with nodes corresponding to
+  MLGs within the data set. Colors of the nodes represent population
+  membership. Width and color of the edges represent distance.}
+  \item{populations}{a vector of the population names corresponding to the
   vertex colors} \item{colors}{a vector of the hexadecimal representations of
   the colors used in the vertex colors}
 }
 \description{
-Create a minimum spanning network of selected populations using a distance 
+Create a minimum spanning network of selected populations using a distance
 matrix.
 }
 \details{
@@ -120,10 +120,10 @@ The minimum spanning network generated by this function is generated
   give the user a scale bar and the option to layout your data.
   \subsection{node sizes}{
   The area of the nodes are representative of the number of samples. Because
-  \pkg{igraph} scales nodes by radius, the node sizes in the graph are 
+  \pkg{igraph} scales nodes by radius, the node sizes in the graph are
   represented as the square root of the number of samples.}
   \subsection{mlg.compute}{
-  Each node on the graph represents a different multilocus genotype. 
+  Each node on the graph represents a different multilocus genotype.
   The edges on the graph represent genetic distances that connect the
   multilocus genotypes. In genclone objects, it is possible to set the
   multilocus genotypes to a custom definition. This creates a problem for
@@ -140,13 +140,13 @@ The minimum spanning network generated by this function is generated
   arguments \code{threshold} and \code{clustering.algorithm} to change the
   threshold or clustering algorithm used in the network. For example, if you
   have a data set that has a threshold of 0.1 and you wish to have a minimum
-  spanning network without a threshold, you can simply add 
-  \code{threshold = 0.0}, and no clustering will happen. 
-  
+  spanning network without a threshold, you can simply add
+  \code{threshold = 0.0}, and no clustering will happen.
+
   The \code{threshold} and \code{clustering.algorithm} arguments can also be
   used to filter un-contracted data sets.
-  
-  All filtering will use the distance matrix supplied in the argument 
+
+  All filtering will use the distance matrix supplied in the argument
   \code{distmat}.
   }
 }
@@ -184,12 +184,12 @@ data(microbov)
 micro.dist <- diss.dist(microbov, percent = TRUE)
 micro.msn <- poppr.msn(microbov, micro.dist, vertex.label=NA)
 
-# Let's plot it and show where individuals have < 15\% of their genotypes 
+# Let's plot it and show where individuals have < 15\% of their genotypes
 # different.
 
 edge_weight <- E(micro.msn$graph)$weight
 edge_labels <- ifelse(edge_weight < 0.15, round(edge_weight, 3), NA)
-plot.igraph(micro.msn$graph, edge.label = edge_labels, vertex.size = 2, 
+plot.igraph(micro.msn$graph, edge.label = edge_labels, vertex.size = 2,
 edge.label.color = "red")
 
 }

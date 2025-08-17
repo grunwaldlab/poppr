@@ -37,7 +37,7 @@ See details.}
 an object of the same type as x.
 }
 \description{
-The following methods allow the user to access and manipulate multilocus 
+The following methods allow the user to access and manipulate multilocus
 lineages in genclone or snpclone objects.
 }
 \details{

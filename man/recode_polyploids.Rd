@@ -7,7 +7,7 @@
 recode_polyploids(poly, newploidy = FALSE, addzero = FALSE)
 }
 \arguments{
-\item{poly}{a \code{\linkS4class{genclone}}, \code{\link[adegenet:genind-class]{genind}}, or 
+\item{poly}{a \code{\linkS4class{genclone}}, \code{\link[adegenet:genind-class]{genind}}, or
 \code{\link[adegenet:genpop-class]{genpop}} object that has a ploidy of > 2}
 
 \item{newploidy}{for genind or genclone objects: if \code{FALSE} (default),
@@ -24,41 +24,41 @@ a \code{\linkS4class{genclone}}, \code{\link[adegenet:genind-class]{genind}}, or
   \code{\link[adegenet:genpop-class]{genpop}} object.
 }
 \description{
-As the genind object requires ploidy to be consistent across loci, a 
-workaround to importing polyploid data was to code missing alleles as "0" 
-(for microsatellite data sets). The advantage of this is that users would be 
-able to calculate Bruvo's distance, the index of association, and genotypic 
-diversity statistics. The tradeoff was the fact that this broke all other 
-analyses as they relied on allele frequencies and the missing alleles are 
-treated as extra alleles. This function removes those alleles and returns a 
-\code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}} object where 
-allele frequencies are coded based on the number of alleles observed at a 
+As the genind object requires ploidy to be consistent across loci, a
+workaround to importing polyploid data was to code missing alleles as "0"
+(for microsatellite data sets). The advantage of this is that users would be
+able to calculate Bruvo's distance, the index of association, and genotypic
+diversity statistics. The tradeoff was the fact that this broke all other
+analyses as they relied on allele frequencies and the missing alleles are
+treated as extra alleles. This function removes those alleles and returns a
+\code{\linkS4class{genclone}} or \code{\link[adegenet:genind-class]{genind}} object where
+allele frequencies are coded based on the number of alleles observed at a
 single locus per individual. See the examples for more details.
 }
 \details{
-The genind object has two caveats that make it difficult to work 
-  with polyploid data sets: 
+The genind object has two caveats that make it difficult to work
+  with polyploid data sets:
   \enumerate{
-    \item ploidy must be constant throughout the data set 
+    \item ploidy must be constant throughout the data set
     \item missing data is treated as "all-or-none"
-  } In an ideal world, polyploid genotypes would be just as unambiguous as 
-  diploid or haploid genotypes. Unfortunately, the world we live in is far 
-  from ideal and a genotype of AB in a tetraploid organism could be AAAB, 
-  AABB, or ABBB. In order to get polyploid data in to \pkg{adegenet} or 
-  \pkg{poppr}, we must code all loci to have the same number of allelic 
-  states as the ploidy or largest observed heterozygote (if ploidy is 
+  } In an ideal world, polyploid genotypes would be just as unambiguous as
+  diploid or haploid genotypes. Unfortunately, the world we live in is far
+  from ideal and a genotype of AB in a tetraploid organism could be AAAB,
+  AABB, or ABBB. In order to get polyploid data in to \pkg{adegenet} or
+  \pkg{poppr}, we must code all loci to have the same number of allelic
+  states as the ploidy or largest observed heterozygote (if ploidy is
   unknown). The way to do this is to insert zeroes to pad the alleles. So, to
   import two genotypes of:
 
 \tabular{rrrr}{
 NA \tab 20 \tab 23 \tab 24\cr
 20 \tab 24 \tab 26 \tab 43
-} 
-they should be coded as: 
+}
+they should be coded as:
 \tabular{rrrr}{
  0 \tab 20 \tab 23 \tab 24\cr
 20 \tab 24 \tab 26 \tab 43
-} 
+}
 This zero is treated as an extra allele and is represented in the genind object as so:
 \tabular{rrrrrr}{
 \strong{0} \tab \strong{20} \tab \strong{23} \tab \strong{24} \tab \strong{26} \tab \strong{43}\cr
@@ -94,10 +94,10 @@ nAll(iPinf)
 \dontrun{
 library("ape")
 
-# Removing missing data. 
+# Removing missing data.
 setPop(Pinf) <- ~Country
 
-# Calculating Rogers' distance. 
+# Calculating Rogers' distance.
 rog <- rogers.dist(genind2genpop(Pinf))
 irog <- rogers.dist(recode_polyploids(genind2genpop(Pinf)))
 

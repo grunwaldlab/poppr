@@ -2,7 +2,7 @@ library("shiny")
 library("poppr")
 source("../utils.R", local = TRUE)
 #------------------------------------------------------------------------------#
-# Here, we query the user's R session to find all of the genind and genclone 
+# Here, we query the user's R session to find all of the genind and genclone
 # objects
 #------------------------------------------------------------------------------#
 globals <- get_globals(c("genind", "genclone", "genlight", "snpclone"))
@@ -30,62 +30,59 @@ globals <- get_globals(c("genind", "genclone", "genlight", "snpclone"))
 #   c. show the user the session information
 #==============================================================================|
 shinyServer(function(input, output, session) {
-  
   #----------------------------------------------------------------------------#
   # Data Processing -----------------------------------------------------------|
   # ---------------------------------------------------------------------------|
   #
   # These first steps are necessary to make sure that the user has submitted the
-  # data properly and that the custom functions work. 
+  # data properly and that the custom functions work.
   #============================================================================#
-  
+
   #-------------------------------------
-  # The first task is for the User to 
-  # choose a data set. Since the user can 
-  # choose a data set that exists within 
+  # The first task is for the User to
+  # choose a data set. Since the user can
+  # choose a data set that exists within
   # their R session, this has to be made
   # dynamically.
   #-------------------------------------
   output$selectUI <- renderUI({
-    selectInput("dataset", 
-                "choose dataset",
-                choices = c(globals,
-                            "Example: Pinf",
-                            "Example: partial_clone",
-                            "Example: Aeut",
-                            "Example: nancycats",
-                            "Example: microbov",
-                            "Example: H3N2"),
-                selected = "Example: partial_clone"
+    selectInput(
+      "dataset",
+      "choose dataset",
+      choices = c(
+        globals,
+        "Example: Pinf",
+        "Example: partial_clone",
+        "Example: Aeut",
+        "Example: nancycats",
+        "Example: microbov",
+        "Example: H3N2"
+      ),
+      selected = "Example: partial_clone"
     )
   })
 
   #-------------------------------------
-  # If the data set is an example, load 
+  # If the data set is an example, load
   # and return it, otherwise, get the
   # data set from the user's environment
   #-------------------------------------
   in_dataset <- reactive({
-    if (!is.null(input$dataset) && !grepl("<choose>", input$dataset)){
-      if(grepl("Example: ", input$dataset)){
+    if (!is.null(input$dataset) && !grepl("<choose>", input$dataset)) {
+      if (grepl("Example: ", input$dataset)) {
         env <- new.env()
-        if (input$dataset == "Example: microbov"){ 
-          data("microbov", package="adegenet", envir = env) 
-        }
-        else if (input$dataset == "Example: nancycats"){ 
-          data("nancycats", package="adegenet", envir = env) 
-        }
-        else if (input$dataset == "Example: H3N2"){ 
-          data("H3N2", package="adegenet", envir = env) 
-        }
-        else if (input$dataset == "Example: partial_clone"){ 
-          data("partial_clone", package="poppr", envir = env) 
-        }
-        else if (input$dataset == "Example: Aeut"){ 
-          data("Aeut", package="poppr", envir = env) 
-        }
-        else if (input$dataset == "Example: Pinf"){ 
-          data("Pinf", package="poppr", envir = env) 
+        if (input$dataset == "Example: microbov") {
+          data("microbov", package = "adegenet", envir = env)
+        } else if (input$dataset == "Example: nancycats") {
+          data("nancycats", package = "adegenet", envir = env)
+        } else if (input$dataset == "Example: H3N2") {
+          data("H3N2", package = "adegenet", envir = env)
+        } else if (input$dataset == "Example: partial_clone") {
+          data("partial_clone", package = "poppr", envir = env)
+        } else if (input$dataset == "Example: Aeut") {
+          data("Aeut", package = "poppr", envir = env)
+        } else if (input$dataset == "Example: Pinf") {
+          data("Pinf", package = "poppr", envir = env)
         }
         exam <- substr(input$dataset, start = 10, stop = nchar(input$dataset))
         dat <- get(exam, envir = env)
@@ -96,9 +93,9 @@ shinyServer(function(input, output, session) {
       dat <- new("genind")
     }
     if (input$genclone) {
-      if (inherits(dat, "genlight")){
+      if (inherits(dat, "genlight")) {
         dat <- as.snpclone(dat)
-      } else if(!inherits(dat, "genclone")) {
+      } else if (!inherits(dat, "genclone")) {
         dat <- as.genclone(dat)
       } else {
         # it already is a genclone object
@@ -106,21 +103,23 @@ shinyServer(function(input, output, session) {
     }
     return(dat)
   })
-  
+
   #-------------------------------------
   # This is the first field to change
   # dynamically with user input. It will
   # show the user a series of checkboxes
-  # representing the populations 
+  # representing the populations
   # available.
   #-------------------------------------
   output$selectPops <- renderUI({
     input$dataset
-    checkboxGroupInput("sublist",
-                "choose populations",
-                choices = popNames(in_dataset()),
-                inline = TRUE,
-                selected = popNames(in_dataset()))
+    checkboxGroupInput(
+      "sublist",
+      "choose populations",
+      choices = popNames(in_dataset()),
+      inline = TRUE,
+      selected = popNames(in_dataset())
+    )
   })
   #-------------------------------------
   # Simply a reactive for the input above.
@@ -129,13 +128,13 @@ shinyServer(function(input, output, session) {
     if (is.null(input$sublist)) NA else input$sublist
   })
   #-------------------------------------
-  # This parses the data according to 
+  # This parses the data according to
   # the selected populations. Notice that
-  # it is only controlled by the 
+  # it is only controlled by the
   # buttons and not the data set. If this
   # were controlled by the data set, it
   # would throw an error every time the
-  # user switches data sets. 
+  # user switches data sets.
   #-------------------------------------
   dataset <- reactive({
     input$`update-data`
@@ -149,8 +148,8 @@ shinyServer(function(input, output, session) {
   # for the command tab.
   #-------------------------------------
   dataname <- reactive({
-    if (!grepl("<choose>", input$dataset)){
-      if(grepl("Example: ", input$dataset)){
+    if (!grepl("<choose>", input$dataset)) {
+      if (grepl("Example: ", input$dataset)) {
         dat <- substr(input$dataset, start = 10, stop = nchar(input$dataset))
       } else {
         dat <- input$dataset
@@ -160,7 +159,7 @@ shinyServer(function(input, output, session) {
     }
     return(dat)
   })
-  
+
   #-------------------------------------
   # If the user selects "Custom" for the
   # distance function, they must supply
@@ -169,19 +168,23 @@ shinyServer(function(input, output, session) {
   # displayed.
   #-------------------------------------
   output$customDist <- renderUI({
-    textInput("custom_distance", label = "Custom Distance Function", "function(x) dist(tab(x))")
+    textInput(
+      "custom_distance",
+      label = "Custom Distance Function",
+      "function(x) dist(tab(x))"
+    )
   })
   #-------------------------------------
   # If the distance is a custom function,
   # it must be treated, otherwise it must
   # be translated.
   #-------------------------------------
-  distfun <- reactive({ 
-    if (input$distance == "Custom"){
+  distfun <- reactive({
+    if (input$distance == "Custom") {
       the_dist <- parse_distfun(input$custom_distance)
     } else {
-      the_dist <- get_dist(input$distance) 
-      if (inherits(in_dataset(), "genlight") && the_dist == "diss.dist"){
+      the_dist <- get_dist(input$distance)
+      if (inherits(in_dataset(), "genlight") && the_dist == "diss.dist") {
         the_dist <- "bitwise.dist"
       }
     }
@@ -189,7 +192,7 @@ shinyServer(function(input, output, session) {
   })
 
   #-------------------------------------
-  # All the functions have arguments 
+  # All the functions have arguments
   # associated with them. This displays
   # the arguments as text that can be
   # later parsed as proper R code.
@@ -197,24 +200,23 @@ shinyServer(function(input, output, session) {
   output$distargsUI <- renderUI({
     the_fun <- eval(parse(text = distfun()))
     the_args <- formals(the_fun)[-1]
-    the_args <- paste(names(the_args), the_args, sep = " = ", 
-                      collapse = ", ")
+    the_args <- paste(names(the_args), the_args, sep = " = ", collapse = ", ")
     textInput("distargs", label = "Distance arguments", the_args)
   })
   #-------------------------------------
   # Distance Arguments from above.
   #-------------------------------------
   distargs <- reactive({
-    input$distargs     
+    input$distargs
   })
   #-------------------------------------
   # Should the minimum spanning network
   # contain reticulate nodes?
   #-------------------------------------
   reticulation <- reactive({
-    input$reticulate        
+    input$reticulate
   })
-  
+
   #-------------------------------------
   # The below reactives represent the
   # situation in which the user chooses
@@ -222,22 +224,24 @@ shinyServer(function(input, output, session) {
   # case, since we know the specific
   # combination of the different models
   # is not immediately inherent, we give
-  # them the choice. 
+  # them the choice.
   #-------------------------------------
   addloss <- reactive({
-    switch(input$bruvo_model,
-           "Genome Addition" = "add = TRUE, loss = FALSE",
-           "Genome Loss" = "add = FALSE, loss = TRUE",
-           "Infinite" = "add = FALSE, loss = FALSE",
-           "Average Addition/Loss" = "add = TRUE, loss = TRUE")
+    switch(
+      input$bruvo_model,
+      "Genome Addition" = "add = TRUE, loss = FALSE",
+      "Genome Loss" = "add = FALSE, loss = TRUE",
+      "Infinite" = "add = FALSE, loss = FALSE",
+      "Average Addition/Loss" = "add = TRUE, loss = TRUE"
+    )
   })
   #-------------------------------------
   # The repeat lengths can be comma
   # separated numbers or any R expression
-  # or object that's valid. 
+  # or object that's valid.
   #-------------------------------------
   replen <- reactive({
-    if (!grepl("\\(", input$replen)){
+    if (!grepl("\\(", input$replen)) {
       paste0("replen = c(", input$replen, ")")
     } else {
       paste0("replen = ", input$replen)
@@ -247,10 +251,10 @@ shinyServer(function(input, output, session) {
   #----------------------------------------------------------------------------#
   # Distance Matrix and Minimum Spanning Network Construction -----------------|
   # ---------------------------------------------------------------------------|
-  # 
+  #
   # This single reactive controls the generation of both the distance matrix and
   # the minimum spanning network. This is controlled by the two buttons, reData
-  # and submit, but it's also controlled by the "reticulate" checkbox. 
+  # and submit, but it's also controlled by the "reticulate" checkbox.
   #
   # The reason why this is in one function is because it's much more efficient
   # to process the minimum spanning network with bruvo's distance using
@@ -266,11 +270,15 @@ shinyServer(function(input, output, session) {
   # displayed.
   #-------------------------------------
   output$customLayout <- renderUI({
-    textInput("custom_layout", label = "Custom Layout Function", "function(x) matrix(rnorm(igraph::vcount(x)*2), ncol = 2)")
+    textInput(
+      "custom_layout",
+      label = "Custom Layout Function",
+      "function(x) matrix(rnorm(igraph::vcount(x)*2), ncol = 2)"
+    )
   })
-  
-  layfun <- reactive({ 
-    if (input$layout == "Custom"){
+
+  layfun <- reactive({
+    if (input$layout == "Custom") {
       the_lay <- parse_distfun(input$custom_layout)
     } else {
       the_lay <- paste0("igraph::", input$layout)
@@ -290,19 +298,23 @@ shinyServer(function(input, output, session) {
     input$submit
     isolate({
       indist <- distfun()
-      ret    <- reticulation()
-      args   <- distargs()
-      if (input$distance == "Bruvo"){
+      ret <- reticulation()
+      args <- distargs()
+      if (input$distance == "Bruvo") {
         args <- paste(replen(), addloss(), sep = ", ")
-        fun <- paste0("bruvo.msn(dataset(), ", args, ", showplot = FALSE, include.ties = ret)")
+        fun <- paste0(
+          "bruvo.msn(dataset(), ",
+          args,
+          ", showplot = FALSE, include.ties = ret)"
+        )
         out <- eval(parse(text = fun))
       } else {
-        if (indist != "diss.dist" && inherits(dataset(), "genind")){
+        if (indist != "diss.dist" && inherits(dataset(), "genind")) {
           dat <- missingno(dataset(), "mean")
         } else {
           dat <- dataset()
         }
-        if (length(args) == 1 && args == ""){
+        if (length(args) == 1 && args == "") {
           fun <- paste0(indist, "(dat)")
         } else {
           fun <- paste0(indist, "(dat, ", args, ")")
@@ -317,7 +329,7 @@ shinyServer(function(input, output, session) {
   #----------------------------------------------------------------------------#
   # Aesthetic Processing ------------------------------------------------------|
   # ---------------------------------------------------------------------------|
-  # 
+  #
   # This section contains all of the reactive functions to return basic values
   # for plotting. They do not affect how the minimum spanning network is
   # constructed. I will not comment on the ones that are simply one-line
@@ -326,9 +338,9 @@ shinyServer(function(input, output, session) {
   slide <- reactive({
     input$greyslide
   })
-  
+
   seed <- reactive({
-    input$seed 
+    input$seed
   })
 
   nodescale <- reactive({
@@ -344,13 +356,13 @@ shinyServer(function(input, output, session) {
   #-------------------------------------
   inds <- reactive({
     inds <- strsplit(input$inds, "[[:blank:]]*,[[:blank:]]*")[[1]]
-    if (input$ind_or_mlg == "sample names" || inds == "ALL" || inds == ""){
+    if (input$ind_or_mlg == "sample names" || inds == "ALL" || inds == "") {
       return(inds)
     } else {
       return(as.numeric(inds))
     }
   })
-  
+
   #-------------------------------------
   # The user palette can be a custom
   # palette. I'm not sure why this is
@@ -361,7 +373,7 @@ shinyServer(function(input, output, session) {
     input$`update-graph`
     input$submit
     isolate({
-      if (input$pal == 'custom'){
+      if (input$pal == 'custom') {
         eval(parse(text = input$custom_pal))
       } else {
         input$pal
@@ -376,15 +388,17 @@ shinyServer(function(input, output, session) {
   sizeLeg <- reactive({
     input$size.leg
   })
-  
+
   scaleLeg <- reactive({
     input$scale.leg
   })
 
   cutoff <- reactive({
     cutoff <- as.numeric(input$cutoff)
-    if (is.na(cutoff)) cutoff <- NULL
-    cutoff      
+    if (is.na(cutoff)) {
+      cutoff <- NULL
+    }
+    cutoff
   })
 
   bcut <- reactive({
@@ -394,53 +408,85 @@ shinyServer(function(input, output, session) {
   #----------------------------------------------------------------------------#
   # User-facing Command Construction ------------------------------------------|
   # ---------------------------------------------------------------------------|
-  # 
+  #
   # The following reactives construct the command the user needs to recreate the
-  # minimum spanning network that has been created. 
+  # minimum spanning network that has been created.
   #============================================================================#
 
   #-------------------------------------
   # This constructs the command that
   # Processes the data, constructs the
   # distance, and constructs the minimum
-  # spanning network. 
+  # spanning network.
   #-------------------------------------
   distcmd <- reactive({
-    dat      <- dataname()
+    dat <- dataname()
     distfunk <- distfun()
-    args     <- distargs()
+    args <- distargs()
     the_pops <- popNames(in_dataset())
     match_pops <- the_pops %in% input$sublist
 
     # If the number of population selected is greater than half the total
     # populations, place the unselected populations in the exclude argument.
-    half <- ceiling(length(the_pops)/2)
-    if (sum(match_pops) < half){
-      first_dat <- paste0(dat, "_sub <- popsub(", dat, ", sublist = ", make_dput(input$sublist), ")\n")
+    half <- ceiling(length(the_pops) / 2)
+    if (sum(match_pops) < half) {
+      first_dat <- paste0(
+        dat,
+        "_sub <- popsub(",
+        dat,
+        ", sublist = ",
+        make_dput(input$sublist),
+        ")\n"
+      )
     } else {
-      first_dat <- paste0(dat, "_sub <- popsub(", dat, ", exclude = ", make_dput(the_pops[!match_pops]), ")\n")
+      first_dat <- paste0(
+        dat,
+        "_sub <- popsub(",
+        dat,
+        ", exclude = ",
+        make_dput(the_pops[!match_pops]),
+        ")\n"
+      )
     }
-    closer   <- paste0("showplot = FALSE, include.ties = ", reticulation(), ")")
+    closer <- paste0("showplot = FALSE, include.ties = ", reticulation(), ")")
     has_no_args <- length(args) == 1 && args == ""
-    if (distfunk == "bruvo.dist"){
+    if (distfunk == "bruvo.dist") {
       args <- paste(replen(), addloss(), sep = ", ")
       distfunk <- "min_span_net <- bruvo.msn"
       closer <- paste0(", ", args, ", ", closer)
       return_cmd <- paste0(distfunk, "(", dat, "_sub", closer)
-    } else { 
-      if (distfunk == "diss.dist"){
+    } else {
+      if (distfunk == "diss.dist") {
         missfunk <- character(0)
-        distfunk <- paste0(distfunk, "(", dat, "_sub, ", args, ")\n")        
+        distfunk <- paste0(distfunk, "(", dat, "_sub, ", args, ")\n")
       } else {
-        missfunk <- paste0(dat, "_nomiss <- ", "missingno(", dat, 
-                           ", type = 'mean')\n")
+        missfunk <- paste0(
+          dat,
+          "_nomiss <- ",
+          "missingno(",
+          dat,
+          ", type = 'mean')\n"
+        )
         args <- ifelse(has_no_args, "", paste0(", ", args))
-        distfunk <- paste0(distfunk, "(", dat, "_nomiss", args, ")\n")        
+        distfunk <- paste0(distfunk, "(", dat, "_nomiss", args, ")\n")
       }
-      msnfunk <- paste0("poppr.msn(", dat, "_sub, ", dat, "_dist, ", closer, "\n")
-      return_cmd <- paste0(missfunk, 
-                           dat, "_dist <- ", distfunk,
-                           "min_span_net <- ", msnfunk)
+      msnfunk <- paste0(
+        "poppr.msn(",
+        dat,
+        "_sub, ",
+        dat,
+        "_dist, ",
+        closer,
+        "\n"
+      )
+      return_cmd <- paste0(
+        missfunk,
+        dat,
+        "_dist <- ",
+        distfunk,
+        "min_span_net <- ",
+        msnfunk
+      )
     }
     return(paste0(first_dat, return_cmd))
   })
@@ -455,21 +501,61 @@ shinyServer(function(input, output, session) {
     dat <- dataname()
     pal <- ifelse(input$pal == 'custom', input$custom_pal, input$pal)
     padding <- paste(rep(" ", 15), collapse = "")
-    paste0("plot_poppr_msn(", dat, 
-           ",\n", padding, "min_span_net", 
-           ",\n", padding, "inds = ", make_dput(inds()), 
-           ",\n", padding, "mlg = ", input$mlgs,
-           ",\n", padding, "gadj = ", input$greyslide,
-           ",\n", padding, "nodescale = ", input$nodescale,
-           ",\n", padding, "palette = ", pal,
-           ",\n", padding, "cutoff = ", ifelse(is.null(cutoff()), "NULL", cutoff()),
-           ",\n", padding, "quantiles = FALSE",
-           ",\n", padding, "beforecut = ", bcut(), 
-           ",\n", padding, "pop.leg = ", popLeg(), 
-           ",\n", padding, "size.leg = ", sizeLeg(),
-           ",\n", padding, "scale.leg = ", scaleLeg(),
-           ",\n", padding, "layfun = ", layfun(), 
-           ")")
+    paste0(
+      "plot_poppr_msn(",
+      dat,
+      ",\n",
+      padding,
+      "min_span_net",
+      ",\n",
+      padding,
+      "inds = ",
+      make_dput(inds()),
+      ",\n",
+      padding,
+      "mlg = ",
+      input$mlgs,
+      ",\n",
+      padding,
+      "gadj = ",
+      input$greyslide,
+      ",\n",
+      padding,
+      "nodescale = ",
+      input$nodescale,
+      ",\n",
+      padding,
+      "palette = ",
+      pal,
+      ",\n",
+      padding,
+      "cutoff = ",
+      ifelse(is.null(cutoff()), "NULL", cutoff()),
+      ",\n",
+      padding,
+      "quantiles = FALSE",
+      ",\n",
+      padding,
+      "beforecut = ",
+      bcut(),
+      ",\n",
+      padding,
+      "pop.leg = ",
+      popLeg(),
+      ",\n",
+      padding,
+      "size.leg = ",
+      sizeLeg(),
+      ",\n",
+      padding,
+      "scale.leg = ",
+      scaleLeg(),
+      ",\n",
+      padding,
+      "layfun = ",
+      layfun(),
+      ")"
+    )
   })
 
   #-------------------------------------
@@ -483,7 +569,7 @@ shinyServer(function(input, output, session) {
   #----------------------------------------------------------------------------#
   # Output --------------------------------------------------------------------|
   # ---------------------------------------------------------------------------|
-  # 
+  #
   # Below are all the tabs for output.
   #============================================================================#
 
@@ -500,39 +586,45 @@ shinyServer(function(input, output, session) {
     input$inds
     input$mlgs
     input$`update-graph`
-    if(!input$submit) {
-      plot.new() 
-      rect(0, 1, 1, 0.8, col = "indianred2", border = 'transparent' ) + 
-      text(x = 0.5, y = 0.9, "Please select data and click\nthe 'Go!' button.", 
-           cex = 1.6, col = "white")
+    if (!input$submit) {
+      plot.new()
+      rect(0, 1, 1, 0.8, col = "indianred2", border = 'transparent') +
+        text(
+          x = 0.5,
+          y = 0.9,
+          "Please select data and click\nthe 'Go!' button.",
+          cex = 1.6,
+          col = "white"
+        )
     } else {
       set.seed(seed())
-      plot_poppr_msn(dataset(), 
-                     minspan(), 
-                     ind = inds(), 
-                     gadj = slide(), 
-                     mlg = input$mlgs,
-                     palette = usrPal(), 
-                     cutoff = cutoff(), 
-                     quantiles = FALSE, 
-                     beforecut = bcut(), 
-                     nodescale = nodescale(),
-                     pop.leg = popLeg(), 
-                     size.leg = sizeLeg(),
-                     scale.leg = scaleLeg(),
-                     layfun = eval(parse(text = layfun()))
-                    )      
+      plot_poppr_msn(
+        dataset(),
+        minspan(),
+        ind = inds(),
+        gadj = slide(),
+        mlg = input$mlgs,
+        palette = usrPal(),
+        cutoff = cutoff(),
+        quantiles = FALSE,
+        beforecut = bcut(),
+        nodescale = nodescale(),
+        pop.leg = popLeg(),
+        size.leg = sizeLeg(),
+        scale.leg = scaleLeg(),
+        layfun = eval(parse(text = layfun()))
+      )
     }
   })
-  
+
   #-------------------------------------
   # For all the lines it took to create
-  # the user-facing commands, three 
+  # the user-facing commands, three
   # lines to print them seem pretty pithy
   #-------------------------------------
   output$cmd <- renderPrint({
     cat(paste0(distcmd(), "\n"))
-    cat(paste0("set.seed(", seed(),")\n"))
+    cat(paste0("set.seed(", seed(), ")\n"))
     cat(cmd())
   })
 
@@ -546,23 +638,24 @@ shinyServer(function(input, output, session) {
         # Generate a pdf
         pdf(file, width = input$pdf_plot_width, height = input$pdf_plot_height)
         set.seed(seed())
-        plot_poppr_msn(dataset(),
-                       minspan(),
-                       ind = inds(),
-                       gadj = slide(),
-                       mlg = input$mlgs,
-                       palette = usrPal(),
-                       cutoff = cutoff(),
-                       quantiles = FALSE, 
-                       beforecut = bcut(),
-                       nodescale = nodescale(),
-                       pop.leg = popLeg(),
-                       size.leg = sizeLeg(),
-                       scale.leg = scaleLeg(),
-                       layfun = eval(parse(text = layfun()))
-                      )
+        plot_poppr_msn(
+          dataset(),
+          minspan(),
+          ind = inds(),
+          gadj = slide(),
+          mlg = input$mlgs,
+          palette = usrPal(),
+          cutoff = cutoff(),
+          quantiles = FALSE,
+          beforecut = bcut(),
+          nodescale = nodescale(),
+          pop.leg = popLeg(),
+          size.leg = sizeLeg(),
+          scale.leg = scaleLeg(),
+          layfun = eval(parse(text = layfun()))
+        )
         dev.off()
-      })      
+      })
     }
   )
 
@@ -576,23 +669,24 @@ shinyServer(function(input, output, session) {
         # Generate a png
         png(file, width = input$png_plot_width, height = input$png_plot_height)
         set.seed(seed())
-        plot_poppr_msn(dataset(),
-                       minspan(),
-                       ind = inds(),
-                       gadj = slide(),
-                       mlg = input$mlgs,
-                       palette = usrPal(),
-                       cutoff = cutoff(),
-                       quantiles = FALSE, 
-                       beforecut = bcut(),
-                       nodescale = nodescale(),
-                       pop.leg = popLeg(),
-                       size.leg = sizeLeg(),
-                       scale.leg = scaleLeg(),
-                       layfun = eval(parse(text = layfun()))
-                      )
+        plot_poppr_msn(
+          dataset(),
+          minspan(),
+          ind = inds(),
+          gadj = slide(),
+          mlg = input$mlgs,
+          palette = usrPal(),
+          cutoff = cutoff(),
+          quantiles = FALSE,
+          beforecut = bcut(),
+          nodescale = nodescale(),
+          pop.leg = popLeg(),
+          size.leg = sizeLeg(),
+          scale.leg = scaleLeg(),
+          layfun = eval(parse(text = layfun()))
+        )
         dev.off()
-      })      
+      })
     }
   )
   #-------------------------------------
