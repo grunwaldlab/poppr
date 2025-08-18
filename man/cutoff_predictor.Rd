@@ -7,31 +7,31 @@
 cutoff_predictor(thresholds, fraction = 0.5)
 }
 \arguments{
-\item{thresholds}{a vector of numerics coming from mlg.filter where the 
+\item{thresholds}{a vector of numerics coming from mlg.filter where the
 threshold has been set to the maximum threshold theoretically possible.}
 
 \item{fraction}{the fraction of the data to seek the threshold.}
 }
 \value{
-a numeric value representing the threshold at which multilocus 
+a numeric value representing the threshold at which multilocus
   lineages should be defined.
 }
 \description{
-Given a series of thresholds for a data set that collapse it into one giant 
-cluster, this will search the top fraction of threshold differences to find 
-the largest difference. The average between the thresholds spanning that 
+Given a series of thresholds for a data set that collapse it into one giant
+cluster, this will search the top fraction of threshold differences to find
+the largest difference. The average between the thresholds spanning that
 difference is the cutoff threshold defining the clonal lineage threshold.
 }
 \note{
-This function originally appeared in 
-  \doi{10.5281/zenodo.17424}. 
+This function originally appeared in
+  \doi{10.5281/zenodo.17424}.
   This is a bit of a blunt instrument.
 }
 \examples{
 
 data(Pinf)
 pinfreps <- fix_replen(Pinf, c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2))
-pthresh  <- filter_stats(Pinf, distance = bruvo.dist, replen = pinfreps, 
+pthresh  <- filter_stats(Pinf, distance = bruvo.dist, replen = pinfreps,
                          plot = TRUE, stats = "THRESHOLD", threads = 1L)
 
 # prediction for farthest neighbor
@@ -47,7 +47,7 @@ Material for Frontiers Plant Genetics and Genomics 'Novel R tools for
 analysis of genome-wide population genetic data with emphasis on clonality'.
 DOI: \doi{10.5281/zenodo.17424}
 
-Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of 
+Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of
 genome-wide population genetic data with emphasis on clonality. Front. Genet.
 6:208. doi:
 \doi{10.3389/fgene.2015.00208}

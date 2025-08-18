@@ -36,12 +36,12 @@ the user to choose a specified file regardless of path.
 x <- getfile()
 poppr(x$files)
 
-y <- getfile(multi=TRUE, pattern="^.+?dat$") 
+y <- getfile(multi=TRUE, pattern="^.+?dat$")
 #useful for reading in multiple FSTAT formatted files.
 
 yfiles <- poppr.all(y$files)
 
-}  
+}
 }
 \author{
 Zhian N. Kamvar

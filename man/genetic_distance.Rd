@@ -28,12 +28,12 @@ prevosti.dist
 \arguments{
 \item{x}{a \link[adegenet:genind-class]{genind}, \linkS4class{genclone}, or matrix object.}
 
-\item{warning}{If \code{TRUE}, a warning will be printed if any infinite 
-values are detected and replaced. If \code{FALSE}, these values will be 
+\item{warning}{If \code{TRUE}, a warning will be printed if any infinite
+values are detected and replaced. If \code{FALSE}, these values will be
 replaced without warning. See Details below.}
 }
 \value{
-an object of class dist with the same number of observations as the 
+an object of class dist with the same number of observations as the
   number of individuals in your data.
 }
 \description{
@@ -41,21 +41,21 @@ These functions are modified from the function \link[adegenet]{dist.genpop} to
 be applicable for distances between individuals.
 }
 \details{
-It is important to be careful with the interpretation of these 
-  distances as they were originally intended for calculation of 
-  between-population distance. As Nei's distance is the negative log of 0:1, 
-  this means that it is very possible to obtain distances of infinity. When 
+It is important to be careful with the interpretation of these
+  distances as they were originally intended for calculation of
+  between-population distance. As Nei's distance is the negative log of 0:1,
+  this means that it is very possible to obtain distances of infinity. When
   this happens, infinite values are corrected to be 10 * max(D) where D is
   the distance matrix without infinite values.
 }
 \note{
-Prevosti's distance is identical to \code{\link{diss.dist}}, except 
-  that \code{\link{diss.dist}} is optimized for a larger number of 
+Prevosti's distance is identical to \code{\link{diss.dist}}, except
+  that \code{\link{diss.dist}} is optimized for a larger number of
   individuals (n > 125) at the cost of required memory. Both
   \code{prevosti.dist} and \code{provesti.dist} are the same function,
   \code{provesti.dist} is a spelling error and exists for backwards
   compatibility.
-  
+
   These distances were adapted from the \pkg{adegenet} function
   \code{\link[adegenet]{dist.genpop}} to work with \code{\link[adegenet:genind-class]{genind}} objects.
 }
@@ -72,20 +72,20 @@ data(nancycats)
 }
 \references{
 Nei, M. (1972) Genetic distances between populations. American Naturalist,
-106, 283-292. 
+106, 283-292.
 
 Nei M. (1978) Estimation of average heterozygosity and genetic
-distance from a small number of individuals. Genetics, 23, 341-369. 
+distance from a small number of individuals. Genetics, 23, 341-369.
 
 Avise, J. C. (1994) Molecular markers, natural history and evolution. Chapman & Hall,
 London.
 
 Edwards, A.W.F. (1971) Distance between populations on the basis of gene
-frequencies. Biometrics, 27, 873-881. 
+frequencies. Biometrics, 27, 873-881.
 
 Cavalli-Sforza L.L. and Edwards A.W.F.
 (1967) Phylogenetic analysis: models and estimation procedures. Evolution,
-32, 550-570. 
+32, 550-570.
 
 Hartl, D.L. and Clark, A.G. (1989) Principles of population
 genetics. Sinauer Associates, Sunderland, Massachussetts (p. 303).
@@ -95,23 +95,23 @@ coancestry coefficient: basis for a short-term genetic distance. Genetics,
 105, 767-779.
 
 Rogers, J.S. (1972) Measures of genetic similarity and genetic distances.
-Studies in Genetics, Univ. Texas Publ., 7213, 145-153. 
+Studies in Genetics, Univ. Texas Publ., 7213, 145-153.
 
 Avise, J. C. (1994)
 Molecular markers, natural history and evolution. Chapman & Hall, London.
 
 Prevosti A. (1974) La distancia genetica entre poblaciones. Miscellanea
-Alcobe, 68, 109-118. 
+Alcobe, 68, 109-118.
 
 Prevosti A., Ocana J. and Alonso G. (1975) Distances
 between populations of Drosophila subobscura, based on chromosome
-arrangements frequencies. Theoretical and Applied Genetics, 45, 231-241. 
+arrangements frequencies. Theoretical and Applied Genetics, 45, 231-241.
 
-For more information on dissimilarity indexes: 
+For more information on dissimilarity indexes:
 
 Gower J. and Legendre P. (1986)
 Metric and Euclidean properties of dissimilarity coefficients. Journal of
-Classification, 3, 5-48 
+Classification, 3, 5-48
 
 Legendre P. and Legendre L. (1998) Numerical Ecology,
 Elsevier Science B.V. 20, pp274-288.

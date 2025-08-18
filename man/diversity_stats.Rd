@@ -34,7 +34,7 @@ genotypes per population.
 This function will calculate any diversity statistic for counts of
 multilocus genotypes per population. This does not count allelic diversity.
 The calculations of H, G, and lambda are all performed by
-\code{\link[vegan:diversity]{vegan::diversity()}}. E5 is calculated as \deqn{E_{5} = 
+\code{\link[vegan:diversity]{vegan::diversity()}}. E5 is calculated as \deqn{E_{5} =
   \frac{(1/\lambda) - 1}{e^{H} - 1}}{(G - 1)/(exp(H) - 1)}.
 }
 \examples{

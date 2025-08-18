@@ -34,14 +34,14 @@
 \arguments{
 \item{.Object}{a character, "MLG"}
 
-\item{mlg}{a vector where each element assigns the multilocus genotype of 
+\item{mlg}{a vector where each element assigns the multilocus genotype of
 that individual in the data set.}
 
 \item{x}{an MLG object}
 
 \item{i}{a vector of integers or logical values to index the MLG vector.}
 
-\item{j}{One of 
+\item{j}{One of
 \itemize{
  \item "original"
  \item "expanded"
@@ -71,7 +71,7 @@ Default methods for accessing and subsetting MLG objects.
 }
 \seealso{
 \code{\linkS4class{MLG}} \code{\linkS4class{genclone}}
-  \code{\linkS4class{snpclone}} \code{\link{visible}} 
+  \code{\linkS4class{snpclone}} \code{\link{visible}}
   \code{\link{unique,MLG-method}} \code{\link{levels,MLG-method}}
 }
 \author{

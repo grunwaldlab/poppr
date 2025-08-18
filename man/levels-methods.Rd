@@ -14,14 +14,14 @@
 \item{x}{an MLG object}
 }
 \value{
-a character vector showing the levels of custom MLGs or NULL if the 
+a character vector showing the levels of custom MLGs or NULL if the
   visible slot is not set to "custom"
 }
 \description{
 internal use
 }
 \seealso{
-\code{\link{visible}} \code{\linkS4class{MLG}} 
+\code{\link{visible}} \code{\linkS4class{MLG}}
 \code{\link{genclone}} \code{\link{snpclone}}
 }
 \keyword{internal}

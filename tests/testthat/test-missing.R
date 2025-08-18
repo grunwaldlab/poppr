@@ -6,12 +6,18 @@ mat[lower.tri(mat)] <- NA
 dat <- adegenet::df2genind(mat, ploidy = 1)
 
 test_that("missingno removes genotypes", {
-  expect_message(genmiss <- missingno(dat, "geno", cutoff = 0.5), "4 genotypes contained missing values greater than 50%")
+  expect_message(
+    genmiss <- missingno(dat, "geno", cutoff = 0.5),
+    "4 genotypes contained missing values greater than 50%"
+  )
   expect_that(nInd(genmiss), equals(6))
 })
 
 test_that("missingno removes loci", {
-  expect_message(locmiss <- missingno(dat, "loci", cutoff = 0.5), "4 loci contained missing values greater than 50%")
+  expect_message(
+    locmiss <- missingno(dat, "loci", cutoff = 0.5),
+    "4 loci contained missing values greater than 50%"
+  )
   expect_that(nLoc(locmiss), equals(6))
 })
 

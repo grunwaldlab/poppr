@@ -9,18 +9,18 @@ rraf(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRUE, ...)
 \arguments{
 \item{gid}{a genind or genclone object}
 
-\item{pop}{either a formula to set the population factor from the 
-\code{\link[adegenet]{strata}} slot or a vector specifying the population factor for 
+\item{pop}{either a formula to set the population factor from the
+\code{\link[adegenet]{strata}} slot or a vector specifying the population factor for
 each sample. Defaults to \code{NULL}.}
 
 \item{res}{either "list" (default), "vector", or "data.frame".}
 
-\item{by_pop}{When this is \code{TRUE}, the calculation will be done by 
+\item{by_pop}{When this is \code{TRUE}, the calculation will be done by
 population. Defaults to \code{FALSE}}
 
-\item{correction}{a logical indicating whether or not zero-valued allele 
-frequencies should be corrected using the methods outlined in 
-\link[=rare_allele_correction]{correcting rare alleles}. 
+\item{correction}{a logical indicating whether or not zero-valued allele
+frequencies should be corrected using the methods outlined in
+\link[=rare_allele_correction]{correcting rare alleles}.
 (Default: \code{TRUE})}
 
 \item{...}{options from \link[=rare_allele_correction]{correcting rare
@@ -30,30 +30,30 @@ alleles}. The default is to correct allele frequencies to 1/n}
 a vector or list of allele frequencies
 }
 \description{
-This function utilizes \code{\link{rrmlg}} to calculate multilocus genotypes 
-and then subsets each locus by the resulting MLGs to calculate the 
+This function utilizes \code{\link{rrmlg}} to calculate multilocus genotypes
+and then subsets each locus by the resulting MLGs to calculate the
 round-robin allele frequencies used for pgen and psex.
 }
 \details{
 Calculating allele frequencies for clonal populations is a difficult
-  task. Frequencies calculated on non-clone-corrected data suffer from bias 
-  due to non-independent samples. On the other hand, frequencies calculated 
-  on clone-corrected data artificially increases the significance of rare 
+  task. Frequencies calculated on non-clone-corrected data suffer from bias
+  due to non-independent samples. On the other hand, frequencies calculated
+  on clone-corrected data artificially increases the significance of rare
   alleles. The method of round-robin allele frequencies as presented in Parks
-  and Werth (1993) provides a method of calculating allele frequencies in a 
-  way that minimizes both of these effects. 
+  and Werth (1993) provides a method of calculating allele frequencies in a
+  way that minimizes both of these effects.
   \subsection{Rare Alleles}{Allele frequencies at a given locus are
   calculated based on samples that are \strong{clone corrected without that
   locus}. When this happens, rare alleles have a high likelihood of dropping
   out, giving them a frequency of "0". For some analyses, this is a perfectly
   fine outcome, but for analyses such as \code{\link{pgen}} and
-  \code{\link{psex}}, this could result in undefined values. Setting 
-  \code{correction = TRUE} will allow you to control how these zero-valued 
+  \code{\link{psex}}, this could result in undefined values. Setting
+  \code{correction = TRUE} will allow you to control how these zero-valued
   allele frequencies are corrected. For details, please see the documentation
   on \link[=rare_allele_correction]{correcting rare alleles} and examples.}
 }
 \note{
-When \code{by_pop = TRUE}, the output will be a matrix of allele 
+When \code{by_pop = TRUE}, the output will be a matrix of allele
   frequencies. Additionally, when the argument \code{pop} is not \code{NULL},
   \code{by_pop} is automatically \code{TRUE}.
 }
@@ -95,7 +95,7 @@ ggplot(Prdf, aes(y = allele, x = frequency)) +
 # By default, allele frequencies will be corrected by 1/n per population
 (Prbp <- rraf(Pram, by_pop = TRUE))
 
-# This might be problematic because populations like PistolRSF_OR has a 
+# This might be problematic because populations like PistolRSF_OR has a
 # population size of four.
 
 # By using the 'e' argument to rare_allele_correction, this can be set to a

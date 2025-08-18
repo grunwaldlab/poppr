@@ -82,7 +82,7 @@ A009	7_09_BB	224
 A006	7_09_BB	224	 
 A013	7_09_BB	224	 "
 
-missing_single <-  "13	6	1	6											
+missing_single <- "13	6	1	6											
 			7_09_BB											
 Ind	Pop	CHMFc4	CHMFc5	CHMFc12	SEA	SED	SEE	SEG	SEI	SEL	SEN	SEP	SEQ	SER
 A004	7_09_BB_A004	224	85	163	132	133	156	144	116	143	227	257	142	145
@@ -93,18 +93,20 @@ A006	7_09_BB_A006	224	97	159	160	133	156	126	119	147	235	261	134	149
 A013	7_09_BB_A013	224	97	163	160	133	156	126	119	147	235	257	134	149"
 
 test_that("basic text connections work", {
-	gen <- read.genalex(textConnection(y), sep = "\t")
-	expect_equivalent(tab(gen), tab(monpop[1:6, drop = TRUE]))
+  gen <- read.genalex(textConnection(y), sep = "\t")
+  expect_equivalent(tab(gen), tab(monpop[1:6, drop = TRUE]))
 })
 
 test_that("names are corrected properly", {
-	expect_warning(gen <- read.genalex(textConnection(yd), sep = "\t"),
-                 "duplicate labels detected")
+  expect_warning(
+    gen <- read.genalex(textConnection(yd), sep = "\t"),
+    "duplicate labels detected"
+  )
   expect_false(anyNA(strata(gen)))
   expect_named(other(gen), "original_names")
   expect_identical(indNames(gen), as.character(1:6))
   indNames(gen) <- sprintf("A%03d", c(4, 2, 11, 9, 6, 13))
-	expect_equivalent(tab(gen), tab(monpop[1:6, drop = TRUE]))
+  expect_equivalent(tab(gen), tab(monpop[1:6, drop = TRUE]))
 })
 
 test_that("missing rows and columns are eliminated", {
@@ -131,7 +133,10 @@ test_that("missing cells are converted to zeroes for polyploids", {
   gen <- read.genalex(textConnection(zna), sep = "\t", ploidy = 4L)
   expect_equivalent(nLoc(gen), 3L)
   expect_output(show(gen), "tetraploid")
-  expect_output(show(recode_polyploids(gen, newploidy = TRUE)), "triploid \\(1\\) and tetraploid \\(5\\)")
+  expect_output(
+    show(recode_polyploids(gen, newploidy = TRUE)),
+    "triploid \\(1\\) and tetraploid \\(5\\)"
+  )
 })
 
 test_that("haplodiploids can be imported correctly", {
@@ -139,7 +144,10 @@ test_that("haplodiploids can be imported correctly", {
   gen <- read.genalex(textConnection(hapdip), sep = "\t")
   expect_equivalent(nLoc(gen), 6L)
   expect_output(show(gen), "diploid")
-  expect_output(show(recode_polyploids(gen, newploidy = TRUE)), "haploid \\(1\\) and diploid \\(3\\)")
+  expect_output(
+    show(recode_polyploids(gen, newploidy = TRUE)),
+    "haploid \\(1\\) and diploid \\(3\\)"
+  )
 })
 
 test_that("duplicate columns are flagged and fixed", {
@@ -157,8 +165,10 @@ Ind,Pop,RM127, ,RM22, ,RM22, ,RM127,
 
 test_that("missing samples do not shift strata", {
   skip_on_cran()
-  expect_warning(ms <- read.genalex(textConnection(missing_single), sep = "\t"), 
-    "[Ii]ndividual[s(][ s][)]?(deleted|with no scored loci have been removed)")
+  expect_warning(
+    ms <- read.genalex(textConnection(missing_single), sep = "\t"),
+    "[Ii]ndividual[s(][ s][)]?(deleted|with no scored loci have been removed)"
+  )
   expect_equal(as.character(strata(ms)$Pop), as.character(pop(ms)))
   expect_equal(rownames(strata(ms)), indNames(ms))
 })
@@ -166,7 +176,10 @@ test_that("missing samples do not shift strata", {
 test_that("missing samples do not shift strata, even with duplicated names", {
   skip_on_cran()
   missing_single2 <- gsub("A004\t", "A011\t", missing_single)
-  expect_warning(ms <- read.genalex(textConnection(missing_single2), sep = "\t"), "duplicate labels detected")
+  expect_warning(
+    ms <- read.genalex(textConnection(missing_single2), sep = "\t"),
+    "duplicate labels detected"
+  )
   expect_equal(as.character(strata(ms)$Pop), as.character(pop(ms)))
   expect_equal(rownames(strata(ms)), indNames(ms))
 })
@@ -174,7 +187,7 @@ test_that("missing samples do not shift strata, even with duplicated names", {
 test_that("improperly-formatted data causes an error", {
   skip_on_cran()
   msg <- "^.+?6 individuals.+?5 rows.+?Please inspect "
-  tcmsg  <- paste0(msg, "textConnection\\(bad_genalex\\).+?$")
+  tcmsg <- paste0(msg, "textConnection\\(bad_genalex\\).+?$")
   expect_error(read.genalex(textConnection(bad_genalex), sep = "\t"), tcmsg)
   skip_on_os("windows")
   f <- tempfile()
@@ -193,24 +206,26 @@ rock,7_09_BB,224,97
 bat'leth,7_09_BB,224,97
 paper,7_09_BB,224,97
 scissors,7_09_BB,224,97"
-  
+
   res <- poppr::read.genalex(textConnection(better_than_yar))
   expect_is(res, "genclone")
   expect_equal(nInd(res), 5L)
   expect_equal(nLoc(res), 1L)
-  expect_equal(indNames(res), c("phaser", "rock", "bat'leth", "paper", "scissors"))
+  expect_equal(
+    indNames(res),
+    c("phaser", "rock", "bat'leth", "paper", "scissors")
+  )
 })
 
 test_that("loci with entirely T loci are not converted to TRUE", {
   # https://github.com/grunwaldlab/poppr/issues/214
   tea <- read.genalex(test_path("genalex", "test.txt"))
   expected <- list(
-    `605-4471` = c("T", "C"), 
-    `681-4471` = c("G", "T"), 
+    `605-4471` = c("T", "C"),
+    `681-4471` = c("G", "T"),
     `682-4471` = c("G", "T")
   )
   expect_equal(alleles(tea), expected)
-
 })
 
 context("Data export tests")
@@ -226,19 +241,79 @@ test_that("genind2genalex() handles snp data appropriately", {
   # context: https://github.com/grunwaldlab/poppr/issues/231
   tmp <- tempfile(fileext = ".csv")
   on.exit(unlink(tmp), add = TRUE)
-  x <- new("genind", tab = structure(c(NA, 2L, 2L, 2L, 2L, NA, 0L, 0L,
-0L, 0L, NA, 2L, 2L, 2L, 2L, NA, 0L, 0L, 0L, 0L, 1L, 1L, 2L, 2L,
-1L, 1L, 1L, 0L, 0L, 1L), .Dim = 5:6, .Dimnames = list(c("TT056001.trim",
-"TT060001.trim", "TT062001.trim", "TT063001.trim", "TT064001.trim"
-), c("loc87_pos30.A", "loc87_pos30.G", "loc106_pos31.G", "loc106_pos31.T",
-"loc345_pos27.G", "loc345_pos27.T"))), loc.fac = structure(c(1L,
-1L, 2L, 2L, 3L, 3L), .Label = c("loc87_pos30", "loc106_pos31",
-"loc345_pos27"), class = "factor"), loc.n.all = c(loc87_pos30 = 2L,
-loc106_pos31 = 2L, loc345_pos27 = 2L), all.names = list(loc87_pos30 = c("A",
-"G"), loc106_pos31 = c("G", "T"), loc345_pos27 = c("G", "T")),
-    ploidy = c(2L, 2L, 2L, 2L, 2L), type = "codom", other = list(),
+  x <- new(
+    "genind",
+    tab = structure(
+      c(
+        NA,
+        2L,
+        2L,
+        2L,
+        2L,
+        NA,
+        0L,
+        0L,
+        0L,
+        0L,
+        NA,
+        2L,
+        2L,
+        2L,
+        2L,
+        NA,
+        0L,
+        0L,
+        0L,
+        0L,
+        1L,
+        1L,
+        2L,
+        2L,
+        1L,
+        1L,
+        1L,
+        0L,
+        0L,
+        1L
+      ),
+      .Dim = 5:6,
+      .Dimnames = list(
+        c(
+          "TT056001.trim",
+          "TT060001.trim",
+          "TT062001.trim",
+          "TT063001.trim",
+          "TT064001.trim"
+        ),
+        c(
+          "loc87_pos30.A",
+          "loc87_pos30.G",
+          "loc106_pos31.G",
+          "loc106_pos31.T",
+          "loc345_pos27.G",
+          "loc345_pos27.T"
+        )
+      )
+    ),
+    loc.fac = structure(
+      c(1L, 1L, 2L, 2L, 3L, 3L),
+      .Label = c("loc87_pos30", "loc106_pos31", "loc345_pos27"),
+      class = "factor"
+    ),
+    loc.n.all = c(loc87_pos30 = 2L, loc106_pos31 = 2L, loc345_pos27 = 2L),
+    all.names = list(
+      loc87_pos30 = c("A", "G"),
+      loc106_pos31 = c("G", "T"),
+      loc345_pos27 = c("G", "T")
+    ),
+    ploidy = c(2L, 2L, 2L, 2L, 2L),
+    type = "codom",
+    other = list(),
     call = .local(x = x, i = i, j = j, loc = ..1, drop = drop),
-    pop = NULL, strata = NULL, hierarchy = NULL)
+    pop = NULL,
+    strata = NULL,
+    hierarchy = NULL
+  )
   expect_output(genind2genalex(x, tmp), "Extracting the table ...")
   y <- read.genalex(tmp)
   expect_equal(genind2df(x, pop = FALSE), genind2df(y, pop = FALSE))
@@ -246,7 +321,7 @@ loc106_pos31 = 2L, loc345_pos27 = 2L), all.names = list(loc87_pos30 = c("A",
 
 test_that("fill_zero() works with character and numeric data", {
   char <- "A"
-  num  <- "13"
+  num <- "13"
 
   # Default
   expect_equal(fill_zero(char, 2), "0/A")
@@ -267,39 +342,50 @@ test_that("genind2genalex will prevent a file from being overwritten", {
   skip_on_cran()
   f <- tempfile()
   writeLines("hey!\n", f)
-  expect_error(genind2genalex(monpop, filename = f, quiet = TRUE), "exists and will not be overwritten")
+  expect_error(
+    genind2genalex(monpop, filename = f, quiet = TRUE),
+    "exists and will not be overwritten"
+  )
   expect_match(readLines(f)[1], "hey")
 })
 
 test_that("genclone objects can be saved and restored", {
-	mp <- file()
-	genind2genalex(monpop, filename = mp, quiet = TRUE)
-	gen <- read.genalex(mp)
-	close(mp)
-	
-	expect_equal(gen@tab, monpop@tab)
+  mp <- file()
+  genind2genalex(monpop, filename = mp, quiet = TRUE)
+  gen <- read.genalex(mp)
+  close(mp)
+
+  expect_equal(gen@tab, monpop@tab)
 })
 
 test_that("genalex will give a warning if user asks for geo data when there is none", {
   skip_on_cran()
   mp <- file()
-  expect_warning(genind2genalex(monpop, filename = mp, quiet = TRUE, geo = TRUE), 
-                 "monpop@other")
+  expect_warning(
+    genind2genalex(monpop, filename = mp, quiet = TRUE, geo = TRUE),
+    "monpop@other"
+  )
   close(mp)
 })
 
 test_that("polyploids can be saved", {
-	skip_on_cran()
-	file1 <- tempfile()
-	file2 <- tempfile()
-	genind2genalex(Pinf, filename = file1, quiet = TRUE)
-	genind2genalex(pr, filename = file2, quiet = TRUE)
-	Pinf2 <- read.genalex(file1, ploidy = 4)
-	pr2   <- read.genalex(file2, ploidy = 3)
-	expect_equal(summary(Pinf, verbose = FALSE)$He, summary(Pinf2, verbose = FALSE)$He)
-	expect_equal(summary(pr2, verbose = FALSE)$NA.perc, summary(Pinf, verbose = FALSE)$NA.perc)
-	expect_true(all(ploidy(pr2) == 3))
-	expect_true(all(ploidy(Pinf2) == 4))
+  skip_on_cran()
+  file1 <- tempfile()
+  file2 <- tempfile()
+  genind2genalex(Pinf, filename = file1, quiet = TRUE)
+  genind2genalex(pr, filename = file2, quiet = TRUE)
+  Pinf2 <- read.genalex(file1, ploidy = 4)
+  pr2 <- read.genalex(file2, ploidy = 3)
+  expect_equal(
+    summary(Pinf, verbose = FALSE)$He,
+    summary(Pinf2, verbose = FALSE)$He
+  )
+  expect_equal(
+    summary(pr2, verbose = FALSE)$NA.perc,
+    summary(Pinf, verbose = FALSE)$NA.perc
+  )
+  expect_true(all(ploidy(pr2) == 3))
+  expect_true(all(ploidy(Pinf2) == 4))
 })
 
 test_that("diploid missing data is handled correctly", {
@@ -308,19 +394,33 @@ test_that("diploid missing data is handled correctly", {
   file1 <- tempfile()
   genind2genalex(nancycats, file1, quiet = TRUE)
   nan <- read.genalex(file1, genclone = FALSE)
-  expect_equal(summary(nancycats, verbose = FALSE), summary(nan, verbose = FALSE))
+  expect_equal(
+    summary(nancycats, verbose = FALSE),
+    summary(nan, verbose = FALSE)
+  )
 })
 
 test_that("sequence data is handled correctly", {
   skip_on_cran()
   tmp <- tempfile()
   htab <- tab(H3N2[1:10, loc = 1:10, drop = TRUE])
-  genind2genalex(H3N2[1:10, loc = 1:10], filename = tmp, quiet = TRUE, overwrite = TRUE)
+  genind2genalex(
+    H3N2[1:10, loc = 1:10],
+    filename = tmp,
+    quiet = TRUE,
+    overwrite = TRUE
+  )
   h3n2 <- read.genalex(tmp)
   # The alleles are imported in a different order, so I have to resort with the
   # column names.
   expect_equivalent(htab, tab(h3n2)[, colnames(htab)])
-  genind2genalex(H3N2[1:10, loc = 1:10], filename = tmp, sequence = TRUE, quiet = TRUE, overwrite = TRUE)
+  genind2genalex(
+    H3N2[1:10, loc = 1:10],
+    filename = tmp,
+    sequence = TRUE,
+    quiet = TRUE,
+    overwrite = TRUE
+  )
   h3n2numbers <- read.genalex(tmp)
   # The sequence option converts letters to numbers. If the last test worked,
   # then this test should work, too.
@@ -328,140 +428,197 @@ test_that("sequence data is handled correctly", {
 })
 
 test_that("errors are reported", {
-	skip_on_cran()
-	file1 <- tempfile()
-	file2 <- tempfile()
-	genind2genalex(Pinf, filename = file1, quiet = TRUE)
-	genind2genalex(pr, filename = file2, quiet = TRUE)
-	expect_error(Pinf2 <- read.genalex(file1, ploidy = 4), NA)
+  skip_on_cran()
+  file1 <- tempfile()
+  file2 <- tempfile()
+  genind2genalex(Pinf, filename = file1, quiet = TRUE)
+  genind2genalex(pr, filename = file2, quiet = TRUE)
+  expect_error(Pinf2 <- read.genalex(file1, ploidy = 4), NA)
 
-	expect_error(Pinf2 <- read.genalex(file1), "set the flag?")
-	expect_error(Pinf2 <- read.genalex(file1, geo = TRUE), "geo = TRUE")
-	expect_error(Pinf2 <- read.genalex(file1, region = TRUE), "region = TRUE")
+  expect_error(Pinf2 <- read.genalex(file1), "set the flag?")
+  expect_error(Pinf2 <- read.genalex(file1, geo = TRUE), "geo = TRUE")
+  expect_error(Pinf2 <- read.genalex(file1, region = TRUE), "region = TRUE")
 })
 
 context("Extra info data import tests")
 
 test_that("genalex data can be imported with region data to genind and genclone", {
-	skip_on_cran()
-	rr1 <- system.file("files/rootrot.csv", package = "poppr")
-	rr2 <- system.file("files/rootrot2.csv", package = "poppr")
-	Xcoord <- rnorm(187)
-	Ycoord <- rnorm(187)
-	rrg <- read.csv(rr2, header = FALSE) 
-	blank <- rep("", nrow(rrg))
-	rrg <- cbind(rrg, blank, data.frame(X = c(NA, NA, "x", Xcoord), 
-	                                    Y = c(NA, NA, "y", Ycoord)))
-	rrfile <- tempfile()
-	write.table(rrg, file = rrfile, quote = FALSE, sep = ",", row.names = FALSE,
-	            col.names = FALSE, na = "")
-	root1gc <- read.genalex(rr1)
-	root1gd <- read.genalex(rr1, genclone = FALSE)
-	
-	root2gc <- read.genalex(rr2)
-	root2gd <- read.genalex(rr2, genclone = FALSE)
-	
-	root2re <- read.genalex(rr2, region = TRUE)
+  skip_on_cran()
+  rr1 <- system.file("files/rootrot.csv", package = "poppr")
+  rr2 <- system.file("files/rootrot2.csv", package = "poppr")
+  Xcoord <- rnorm(187)
+  Ycoord <- rnorm(187)
+  rrg <- read.csv(rr2, header = FALSE)
+  blank <- rep("", nrow(rrg))
+  rrg <- cbind(
+    rrg,
+    blank,
+    data.frame(X = c(NA, NA, "x", Xcoord), Y = c(NA, NA, "y", Ycoord))
+  )
+  rrfile <- tempfile()
+  write.table(
+    rrg,
+    file = rrfile,
+    quote = FALSE,
+    sep = ",",
+    row.names = FALSE,
+    col.names = FALSE,
+    na = ""
+  )
+  root1gc <- read.genalex(rr1)
+  root1gd <- read.genalex(rr1, genclone = FALSE)
 
-	root2reg <- read.genalex(rrfile, region = TRUE, geo = TRUE)
-	
-	expect_is(root1gc, "genclone")
-	expect_is(root1gd, "genind")
+  root2gc <- read.genalex(rr2)
+  root2gd <- read.genalex(rr2, genclone = FALSE)
 
-	expect_is(root2gc, "genclone")
-	expect_is(root2gd, "genind")
+  root2re <- read.genalex(rr2, region = TRUE)
 
-	expect_is(root2reg, "genclone")
-	
-	expect_equal(length(nameStrata(root2gc)), 1L)
-	expect_equal(length(nameStrata(root2re)), 2L)
-	expect_identical(nameStrata(root2re), c("Pop", "Region"))
-	expect_identical(nameStrata(root2reg), c("Pop", "Region"))
-	expect_equivalent(other(root2reg)$xy, 
-	                  data.frame(x = Xcoord, y = Ycoord))
+  root2reg <- read.genalex(rrfile, region = TRUE, geo = TRUE)
+
+  expect_is(root1gc, "genclone")
+  expect_is(root1gd, "genind")
+
+  expect_is(root2gc, "genclone")
+  expect_is(root2gd, "genind")
+
+  expect_is(root2reg, "genclone")
+
+  expect_equal(length(nameStrata(root2gc)), 1L)
+  expect_equal(length(nameStrata(root2re)), 2L)
+  expect_identical(nameStrata(root2re), c("Pop", "Region"))
+  expect_identical(nameStrata(root2reg), c("Pop", "Region"))
+  expect_equivalent(other(root2reg)$xy, data.frame(x = Xcoord, y = Ycoord))
 })
 
 test_that("genalex data can be imported with a region column", {
   skip_on_cran()
-  yr <- read.table(textConnection(y), sep = "\t", header = FALSE, row.names = NULL)
+  yr <- read.table(
+    textConnection(y),
+    sep = "\t",
+    header = FALSE,
+    row.names = NULL
+  )
   yr <- as.matrix(yr)
   yrnums <- yr[1, 1:4]
   region <- c("", "", "Region", rep(c("one", "two"), 3))
   blank <- rep("", 9)
   Xcoords <- rnorm(6)
-  X       <- c("", "", "x", Xcoords)
+  X <- c("", "", "x", Xcoords)
   Ycoords <- rnorm(6)
-  Y       <- c("", "", "y", Ycoords)
-  yrg         <- yr
-  yr          <- cbind(yr[, 2], region, yr[, -c(1:2)], blank, yr[, 1])
-  yr[1, ]     <- c(yrnums, rep("", ncol(yr) - 4))
-  yr[1, 5:7]  <- c("2", "3", "3")
-  yr[2, 6:7]  <- c("one", "two")
-  yrg         <- cbind(yr, X, Y)
-  yrfile  <- tempfile()
+  Y <- c("", "", "y", Ycoords)
+  yrg <- yr
+  yr <- cbind(yr[, 2], region, yr[, -c(1:2)], blank, yr[, 1])
+  yr[1, ] <- c(yrnums, rep("", ncol(yr) - 4))
+  yr[1, 5:7] <- c("2", "3", "3")
+  yr[2, 6:7] <- c("one", "two")
+  yrg <- cbind(yr, X, Y)
+  yrfile <- tempfile()
   yrgfile <- tempfile()
-  write.table(yr, file = yrfile, quote = FALSE, sep = ",", row.names = FALSE,
-              col.names = FALSE)
-  write.table(yrg, file = yrgfile, quote = FALSE, sep = ",", row.names = FALSE,
-              col.names = FALSE)
-  
-  genind_region     <- read.genalex(yrfile, region = TRUE)
+  write.table(
+    yr,
+    file = yrfile,
+    quote = FALSE,
+    sep = ",",
+    row.names = FALSE,
+    col.names = FALSE
+  )
+  write.table(
+    yrg,
+    file = yrgfile,
+    quote = FALSE,
+    sep = ",",
+    row.names = FALSE,
+    col.names = FALSE
+  )
+
+  genind_region <- read.genalex(yrfile, region = TRUE)
   genind_region_geo <- read.genalex(yrgfile, region = TRUE, geo = TRUE)
-  
+
   expect_is(genind_region, "genclone")
   expect_is(genind_region_geo, "genclone")
-  
+
   expect_equal(nameStrata(genind_region), c("Pop", "Region"))
   expect_equal(nameStrata(genind_region_geo), c("Pop", "Region"))
-  
+
   setPop(genind_region) <- ~Region
   setPop(genind_region_geo) <- ~Region
-  
+
   expect_equal(popNames(genind_region), c("one", "two"))
   expect_equal(popNames(genind_region_geo), c("one", "two"))
-  
-  expect_equivalent(other(genind_region_geo)$xy, 
-                    data.frame(x = Xcoords, y = Ycoords))
+
+  expect_equivalent(
+    other(genind_region_geo)$xy,
+    data.frame(x = Xcoords, y = Ycoords)
+  )
 })
 
 
 test_that("genalex can import geographic information", {
-	skip_on_cran()
+  skip_on_cran()
   skip_on_os("windows")
-	data("Pram", package = "poppr")
-	filepram <- tempfile()
-	sourpram <- tempfile()
-	staypram <- tempfile()
-	custpram <- tempfile()
-	custpop  <- sample(.genlab("p", 10), nInd(Pram), replace = TRUE)
+  data("Pram", package = "poppr")
+  filepram <- tempfile()
+  sourpram <- tempfile()
+  staypram <- tempfile()
+  custpram <- tempfile()
+  custpop <- sample(.genlab("p", 10), nInd(Pram), replace = TRUE)
 
-	expect_output(show(genind2genalex(Pram, filename = filepram, geo = TRUE)), filepram)
-	expect_output(show(genind2genalex(Pram, pop = ~SOURCE, allstrata = FALSE, filename = sourpram, geo = TRUE)), sourpram)
-	expect_output(show(genind2genalex(Pram, pop = ~STATE/YEAR, allstrata = FALSE, filename = staypram, geo = TRUE)), staypram)
-	expect_output(show(genind2genalex(Pram, pop = custpop, allstrata = FALSE, filename = custpram, geo = TRUE)), custpram)
+  expect_output(
+    show(genind2genalex(Pram, filename = filepram, geo = TRUE)),
+    filepram
+  )
+  expect_output(
+    show(genind2genalex(
+      Pram,
+      pop = ~SOURCE,
+      allstrata = FALSE,
+      filename = sourpram,
+      geo = TRUE
+    )),
+    sourpram
+  )
+  expect_output(
+    show(genind2genalex(
+      Pram,
+      pop = ~ STATE / YEAR,
+      allstrata = FALSE,
+      filename = staypram,
+      geo = TRUE
+    )),
+    staypram
+  )
+  expect_output(
+    show(genind2genalex(
+      Pram,
+      pop = custpop,
+      allstrata = FALSE,
+      filename = custpram,
+      geo = TRUE
+    )),
+    custpram
+  )
 
-	expect_error(read.genalex(filepram))
-	pall <- read.genalex(filepram, geo = TRUE)
-	sour <- read.genalex(sourpram, geo = TRUE)
-	stay <- read.genalex(staypram, geo = TRUE)
-	cust <- read.genalex(custpram, geo = TRUE)
+  expect_error(read.genalex(filepram))
+  pall <- read.genalex(filepram, geo = TRUE)
+  sour <- read.genalex(sourpram, geo = TRUE)
+  stay <- read.genalex(staypram, geo = TRUE)
+  cust <- read.genalex(custpram, geo = TRUE)
 
-	splitStrata(pall) <- ~SOURCE/YEAR/STATE
-	nameStrata(sour)  <- ~SOURCE
-	splitStrata(stay) <- ~STATE/YEAR
+  splitStrata(pall) <- ~ SOURCE / YEAR / STATE
+  nameStrata(sour) <- ~SOURCE
+  splitStrata(stay) <- ~ STATE / YEAR
 
-	expect_equal(nInd(pall), nInd(Pram))
-	expect_equal(nInd(sour), nInd(Pram))
-	expect_equal(nInd(stay), nInd(Pram))
-	expect_equal(nInd(cust), nInd(Pram))
+  expect_equal(nInd(pall), nInd(Pram))
+  expect_equal(nInd(sour), nInd(Pram))
+  expect_equal(nInd(stay), nInd(Pram))
+  expect_equal(nInd(cust), nInd(Pram))
 
-	expect_equivalent(strata(pall), strata(Pram))
-	expect_equivalent(strata(sour), strata(Pram, ~SOURCE, combine = FALSE))
-	expect_equivalent(strata(stay), strata(Pram, ~STATE/YEAR, combine = FALSE))
+  expect_equivalent(strata(pall), strata(Pram))
+  expect_equivalent(strata(sour), strata(Pram, ~SOURCE, combine = FALSE))
+  expect_equivalent(strata(stay), strata(Pram, ~ STATE / YEAR, combine = FALSE))
 
-	expect_equivalent(other(pall)$xy[1:513, ], other(Pram)$xy)
-	expect_equivalent(other(sour)$xy[1:513, ], other(Pram)$xy)
-	expect_equivalent(other(stay)$xy[1:513, ], other(Pram)$xy)
-	expect_equivalent(other(cust)$xy[1:513, ], other(Pram)$xy)
-
+  expect_equivalent(other(pall)$xy[1:513, ], other(Pram)$xy)
+  expect_equivalent(other(sour)$xy[1:513, ], other(Pram)$xy)
+  expect_equivalent(other(stay)$xy[1:513, ], other(Pram)$xy)
+  expect_equivalent(other(cust)$xy[1:513, ], other(Pram)$xy)
 })

@@ -14,8 +14,8 @@ fix_replen(gid, replen, e = 1e-05, fix_some = TRUE)
 \item{e}{a number to be subtracted or added to inconsistent repeat lengths to
 allow for proper rounding.}
 
-\item{fix_some}{if \code{TRUE} (default), when there are inconsistent repeat 
-lengths that cannot be fixed by subtracting or adding e, those than can be 
+\item{fix_some}{if \code{TRUE} (default), when there are inconsistent repeat
+lengths that cannot be fixed by subtracting or adding e, those than can be
 fixed will. If \code{FALSE}, the original repeat lengths will not be fixed.}
 }
 \value{
@@ -25,7 +25,7 @@ a numeric vector of corrected repeat motif lengths.
 Attempts to fix inconsistent repeat lengths found by \code{test_replen}
 }
 \details{
-This function is modified from the version used in 
+This function is modified from the version used in
   \doi{10.5281/zenodo.13007}.\cr Before being fed into the
   algorithm to calculate Bruvo's distance, the amplicon length is divided by
   the repeat unit length. Because of the amplified primer sequence attached
@@ -53,7 +53,7 @@ fix_replen(Pram, Pram_replen)
 # that there are twenty alleles all 1 step apart:
 (x <- 1:20L * 4L)
 # These are the true lengths of the different alleles. Now, let's add the
-# primer sequence to them. 
+# primer sequence to them.
 (PxP <- x + 21 + 21)
 # Now we make sure that x / 4 is equal to 1:20, which we know each have
 # 1 difference.
@@ -69,17 +69,17 @@ diff(PxPcr) # we expect all 1s
 diff(PxPcr)
 }
 \references{
-Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M. 
+Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M.
   Hansen, & Niklaus J. Grünwald. Sudden_Oak_Death_in_Oregon_Forests: Spatial
   and temporal population dynamics of the sudden oak death epidemic in Oregon
   Forests. ZENODO, \doi{10.5281/zenodo.13007}, 2014.
-  
+
   Kamvar, Z. N., Larsen, M. M., Kanaskie, A. M., Hansen, E. M., & Grünwald,
   N. J. (2015). Spatial and temporal analysis of populations of the sudden
   oak death pathogen in Oregon forests. Phytopathology 105:982-989.
   doi: \doi{10.1094/PHYTO-12-14-0350-FI}
-  
-  Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and Hinrich 
+
+  Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and Hinrich
   Schulenburg. A simple method for the calculation of microsatellite genotype
   distances irrespective of ploidy level. Molecular Ecology, 13(7):2101-2106,
   2004.

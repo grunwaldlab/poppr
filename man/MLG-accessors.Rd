@@ -64,16 +64,16 @@ cutoff(x) <- value
 see details
 }
 \description{
-\strong{This documentation is for developers of poppr.} The accessors here 
+\strong{This documentation is for developers of poppr.} The accessors here
 are preferred over accessing the elements via the @ symbol. Please use these
 in your code when accessing MLG objects.
 }
 \details{
 These accessors are intended for internal use only. They only affect
-  MLG objects, not genind objects. Only visible and MLG2df are general for 
-  all forms of MLG. The distargs and cutoff are specific for use in 
+  MLG objects, not genind objects. Only visible and MLG2df are general for
+  all forms of MLG. The distargs and cutoff are specific for use in
   mlg.filter or any function that offers filtering as an option. The argument
-  "value" will always take the type defined in the \code{\linkS4class{MLG}} 
+  "value" will always take the type defined in the \code{\linkS4class{MLG}}
   class.
 }
 \examples{
@@ -106,7 +106,7 @@ cutoff(m)["contracted"] <- 0.2
 }
 }
 \seealso{
-\code{\link{MLG}} \code{\linkS4class{genclone}} 
+\code{\link{MLG}} \code{\linkS4class{genclone}}
   \code{\link[adegenet:genlight-class]{genlight}} \code{\link{initialize,MLG-method}}
   \code{\link{levels,MLG-method}} \code{\link{unique,MLG-method}}
 }

@@ -30,8 +30,8 @@
 
 \item{gen}{a genind, genclone, or genpop object}
 
-\item{na}{how missing data should be treated. Default is "mean", averaging 
-over other values in the matrix. Possible values are listed in 
+\item{na}{how missing data should be treated. Default is "mean", averaging
+over other values in the matrix. Possible values are listed in
 \code{\link[adegenet]{tab}}.}
 
 \item{freq}{if \code{TRUE}, the matrix will be a genotype frequency matrix.

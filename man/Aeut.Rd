@@ -14,13 +14,13 @@ a [genind()] object with two populations containing a data
 data(Aeut)
 }
 \description{
-The Aeut dataset consists of 187 isolates of the Oomycete root 
-  rot pathogen, *Aphanomyces euteiches* collected from two different 
+The Aeut dataset consists of 187 isolates of the Oomycete root
+  rot pathogen, *Aphanomyces euteiches* collected from two different
   fields in NW Oregon and W Washington, USA.
 }
 \references{
 Grunwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis of
-  Diversity, Selfing, and Genetic Differentiation in Populations of the 
+  Diversity, Selfing, and Genetic Differentiation in Populations of the
   Oomycete *Aphanomyces euteiches*. Phytopathology 96:1134-1141
   doi: \doi{10.1094/PHYTO-96-1134}
 }

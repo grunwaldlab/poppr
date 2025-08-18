@@ -6,23 +6,23 @@
 \alias{old_Pinf}
 \title{Phytophthora infestans data from Mexico and South America.}
 \format{
-a [genclone-class] object with 2 hierarchical levels 
-  called "Continent" and "Country" that contain 2 and 4 populations, 
+a [genclone-class] object with 2 hierarchical levels
+  called "Continent" and "Country" that contain 2 and 4 populations,
   respectively.
 }
 \usage{
 data(Pinf)
 }
 \description{
-The Pinf data set contains 86 isolates genotyped over 11 
-  microsatellite loci collected from Mexico, Peru, Columbia, and Ecuador. 
+The Pinf data set contains 86 isolates genotyped over 11
+  microsatellite loci collected from Mexico, Peru, Columbia, and Ecuador.
   This is a subset of the data used for the reference below.
 }
 \references{
-Goss, Erica M., Javier F. Tabima, David EL Cooke, Silvia 
-  Restrepo, William E. Fry, Gregory A. Forbes, Valerie J. Fieland, Martha 
-  Cardenas, and Niklaus J. Grünwald. "The Irish potato famine pathogen 
-  *Phytophthora infestans* originated in central Mexico rather than the 
+Goss, Erica M., Javier F. Tabima, David EL Cooke, Silvia
+  Restrepo, William E. Fry, Gregory A. Forbes, Valerie J. Fieland, Martha
+  Cardenas, and Niklaus J. Grünwald. "The Irish potato famine pathogen
+  *Phytophthora infestans* originated in central Mexico rather than the
   Andes." Proceedings of the National Academy of Sciences 111:8791-8796. doi:
   \doi{10.1073/pnas.1401884111}
 }

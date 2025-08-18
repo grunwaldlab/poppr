@@ -8,42 +8,42 @@
 \alias{snpclone}
 \title{GENclone and SNPclone classes}
 \description{
-\strong{GENclone} is an S4 class that extends the 
+\strong{GENclone} is an S4 class that extends the
   \code{\link[adegenet:genind-class]{genind}} object.\cr \strong{SNPclone} is an S4 class
   that extends the \code{\link[adegenet:genlight-class]{genlight}} object.\cr\cr They will have
   all of the same attributes as their parent classes, but they will contain
   one extra slot to store extra information about multilocus genotypes.
 }
 \details{
-The genclone and snpclone classes will allow for more optimized 
+The genclone and snpclone classes will allow for more optimized
   methods of clone correction.
-  
-  Previously for \link[adegenet:genind-class]{genind} and \link[adegenet:genlight-class]{genlight} objects, 
-  multilocus genotypes were not retained after a data set was subset by 
-  population. The new \strong{\code{mlg}} slot allows us to assign the 
-  multilocus genotypes and retain that information no matter how we subset 
-  the data set. This new slot can either contain numeric values for 
-  multilocus genotypes OR it can contain a special internal 
-  \code{\linkS4class{MLG}} class that allows for custom multilocus genotype 
+
+  Previously for \link[adegenet:genind-class]{genind} and \link[adegenet:genlight-class]{genlight} objects,
+  multilocus genotypes were not retained after a data set was subset by
+  population. The new \strong{\code{mlg}} slot allows us to assign the
+  multilocus genotypes and retain that information no matter how we subset
+  the data set. This new slot can either contain numeric values for
+  multilocus genotypes OR it can contain a special internal
+  \code{\linkS4class{MLG}} class that allows for custom multilocus genotype
   definitions and filtering.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{mlg}}{a vector representing multilocus genotypes for the data set OR an 
+\item{\code{mlg}}{a vector representing multilocus genotypes for the data set OR an
 object of class \code{\linkS4class{MLG}}.}
 }}
 
 \note{
-When calculating multilocus genotypes for genclone objects, a rank 
+When calculating multilocus genotypes for genclone objects, a rank
   function is used, but calculation of multilocus genotypes for snpclone
-  objects is distance-based (via \code{\link{bitwise.dist}} and 
+  objects is distance-based (via \code{\link{bitwise.dist}} and
   \code{\link{mlg.filter}}). This means that genclone objects are sensitive
   to missing data, whereas snpclone objects are insensitive.
 }
 \section{Extends}{
- The \code{genclone} class extends class 
-  \code{"\link[adegenet:genind-class]{genind}"}, directly. \cr The \code{snpclone} class 
+ The \code{genclone} class extends class
+  \code{"\link[adegenet:genind-class]{genind}"}, directly. \cr The \code{snpclone} class
   extends class \code{"\link[adegenet:genlight-class]{genlight}"}, directly.
 }
 
@@ -61,7 +61,7 @@ partial_clone
 set.seed(999)
 (gl <- glSim(100, 0, n.snp.struc = 1e3, ploidy = 2, parallel = FALSE))
 (sc <- as.snpclone(rbind(gl, gl, parallel = FALSE), parallel = FALSE))
-# 
+#
 # Use mlg.filter to create a distance threshold to define multilocus genotypes.
 mlg.filter(sc, threads = 1L) <- 0.25
 sc # 82 mlgs
@@ -69,9 +69,9 @@ sc # 82 mlgs
 }
 }
 \seealso{
-\code{\link{as.genclone}} \code{\link{as.snpclone}} 
-  \code{\link[adegenet:genind-class]{genind}} \code{\link[adegenet:genlight-class]{genlight}} 
-  \code{\link[adegenet:accessors]{strata}} \code{\link[adegenet:accessors]{setPop}} 
+\code{\link{as.genclone}} \code{\link{as.snpclone}}
+  \code{\link[adegenet:genind-class]{genind}} \code{\link[adegenet:genlight-class]{genlight}}
+  \code{\link[adegenet:accessors]{strata}} \code{\link[adegenet:accessors]{setPop}}
   \code{\link{MLG}} \code{\link{mll}} \code{\link{mlg.filter}}
 }
 \author{

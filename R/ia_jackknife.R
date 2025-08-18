@@ -1,10 +1,10 @@
 #==============================================================================#
 # bootjack is a function that will calculate values of the index of association
 # after sampling with or without replacement. The purpose of this function is
-# to help determine distributions of I_A under non-random mating by creating 
+# to help determine distributions of I_A under non-random mating by creating
 # exact copies of samples by sampling with replacement and also to derive a
 # distribution of the data by sampling a subset of the data (63% by default)
-# without replacement. 
+# without replacement.
 #
 # Since the data itself is not being changed, we can use the distances observed.
 # These distances are calculated per-locus and presented in a matrix (V) with the
@@ -16,63 +16,77 @@
 # remaining indices in the distance matrix is used to subset the distance-per-
 # locus matrix (V). Calculations are then performed on this matrix. It must be
 # noted that for sampling with replacement, duplicated indices must be
-# supplemented with rows of zeroes to indicate no distance.  
+# supplemented with rows of zeroes to indicate no distance.
 #==============================================================================#
 #' @rdname ia
 #' @param n an integer specifying the number of samples to be drawn. Defaults to
 #'   \code{NULL}, which then uses the number of multilocus genotypes.
-#' @param reps an integer specifying the number of replicates to perform. 
+#' @param reps an integer specifying the number of replicates to perform.
 #'   Defaults to 999.
-#' @param use_psex a logical. If \code{TRUE}, the samples will be weighted by the value 
+#' @param use_psex a logical. If \code{TRUE}, the samples will be weighted by the value
 #'   of psex. Defaults to \code{FALSE}.
 #' @param ... arguments passed on to \code{\link{psex}}
 #'
 #' @return \subsection{resample.ia()}{a data frame with the index of association and standardized index of
 #' association in columns. Number of rows represents the number of reps.}
 #' @export
-resample.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE, use_psex = FALSE, ...){
-  
-  quiet   <- should_poppr_be_quiet(quiet)
+resample.ia <- function(
+  gid,
+  n = NULL,
+  reps = 999,
+  quiet = FALSE,
+  use_psex = FALSE,
+  ...
+) {
+  quiet <- should_poppr_be_quiet(quiet)
   weights <- if (use_psex) psex(gid, ...) else NULL
-  N       <- nInd(gid)
+  N <- nInd(gid)
   numLoci <- nLoc(gid)
-  if (is.null(n)){
+  if (is.null(n)) {
     n <- suppressWarnings(nmll(gid))
   }
-  if (n >= N){
+  if (n >= N) {
     stop("n must be fewer than the number of observations", call. = FALSE)
   }
-  if (n < 3){
+  if (n < 3) {
     stop("n must be greater than 2 observations", call. = FALSE)
   }
-  if (gid@type == "codom"){
+  if (gid@type == "codom") {
     gid <- seploc(gid)
   }
-  
-  # Step 1: make a distance matrix defining the indices for the pairwise 
+
+  # Step 1: make a distance matrix defining the indices for the pairwise
   # distance matrix of loci.
-  np  <- choose(N, 2)
+  np <- choose(N, 2)
   dis <- seq.int(np)
   dis <- make_attributes(dis, N, seq(N), "dist", call("dist"))
   mat <- as.matrix(dis)
-  # Step 2: calculate the pairwise distances for each locus. 
-  V   <- pair_matrix(gid, numLoci, np)
-  np  <- choose(n, 2)
-  
+  # Step 2: calculate the pairwise distances for each locus.
+  V <- pair_matrix(gid, numLoci, np)
+  np <- choose(n, 2)
+
   if (quiet) {
     oh <- progressr::handlers()
     on.exit(progressr::handlers(oh))
     progressr::handlers("void")
   }
   progressr::with_progress({
-    sample.data <- run.jack(reps, V, mat, N, n, np, 
-      replace = FALSE, method = 'partial', weights = weights
+    sample.data <- run.jack(
+      reps,
+      V,
+      mat,
+      N,
+      n,
+      np,
+      replace = FALSE,
+      method = 'partial',
+      weights = weights
     )
   })
   return(data.frame(sample.data))
 }
 #' Bootstrap the index of association
-#' 
+#'
 #' This function will perform the index of association on a bootstrapped data
 #' set multiple times to create a distribution, showing the variation of the
 #' index due to repeat observations.
@@ -85,35 +99,34 @@ resample.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE, use_psex = FAL
 #'   is. Using `how = "psex"` will sample from the full data set after first
 #'   weighting the samples via the probability of encountering the nth occurence
 #'   of a particular multilocus genotype. See [psex()] for details.
-#' @param reps an integer specifying the number of replicates to perform. 
+#' @param reps an integer specifying the number of replicates to perform.
 #'   Defaults to 999.
 #' @param quiet a logical. If `FALSE`, a progress bar will be displayed. If
 #'   `TRUE`, the progress bar is suppressed.
 #' @param ... options passed on to [psex()]
-#'   
-#' @return a data frame with the index of association and standardized index of 
+#'
+#' @return a data frame with the index of association and standardized index of
 #'   association in columns. Number of rows represents the number of reps.
 #' @note This function is experimental. Please do not use this unless you know
 #'   what you are doing.
 #' @export
 #' @md
 #' @seealso
-#'   [ia()], 
+#'   [ia()],
 #'   [pair.ia()],
 #'   [psex()]
 #'
 #' @examples
 #' data(Pinf)
 #' boot.ia(Pinf, reps = 99)
-boot.ia <- function(gid, how = "partial", reps = 999, quiet = FALSE, ...){
-  
-  METHOD  <- match.arg(how, c("partial", "full", "psex"))
+boot.ia <- function(gid, how = "partial", reps = 999, quiet = FALSE, ...) {
+  METHOD <- match.arg(how, c("partial", "full", "psex"))
   weights <- if (METHOD == "psex") psex(gid, ...) else NULL
-  quiet   <- should_poppr_be_quiet(quiet)
-  N       <- nInd(gid)
+  quiet <- should_poppr_be_quiet(quiet)
+  N <- nInd(gid)
   numLoci <- nLoc(gid)
   if (METHOD == "partial") {
-    n   <- suppressWarnings(nmll(gid))
+    n <- suppressWarnings(nmll(gid))
     gid <- clonecorrect(gid, NA)
   } else {
     n <- N
@@ -124,47 +137,57 @@ boot.ia <- function(gid, how = "partial", reps = 999, quiet = FALSE, ...){
   if (gid@type == "codom") {
     gid <- seploc(gid)
   }
-  
-  # Step 1: make a distance matrix defining the indices for the pairwise 
+
+  # Step 1: make a distance matrix defining the indices for the pairwise
   # distance matrix of loci.
-  np  <- choose(n, 2)
+  np <- choose(n, 2)
   dis <- seq.int(np)
   dis <- make_attributes(dis, n, seq(n), "dist", call("dist"))
   mat <- as.matrix(dis)
-  # Step 2: calculate the pairwise distances for each locus. 
-  V   <- pair_matrix(gid, numLoci, np)
-  np  <- choose(N, 2)
-  
+  # Step 2: calculate the pairwise distances for each locus.
+  V <- pair_matrix(gid, numLoci, np)
+  np <- choose(N, 2)
+
   if (quiet) {
     oh <- progressr::handlers()
     on.exit(progressr::handlers(oh))
     progressr::handlers("void")
   }
   progressr::with_progress({
-    sample.data <- run.jack(reps, V, mat, N, n, np, 
-      replace = TRUE, method = METHOD, weights = weights
+    sample.data <- run.jack(
+      reps,
+      V,
+      mat,
+      N,
+      n,
+      np,
+      replace = TRUE,
+      method = METHOD,
+      weights = weights
     )
   })
   return(data.frame(sample.data))
 }
 
 
-bias.ia <- function(theta_hat, theta_star){
+bias.ia <- function(theta_hat, theta_star) {
   vapply(theta_star, mean, numeric(1), na.rm = TRUE) - theta_hat
 }
 
 #' @rdname ia
 #' @export
-jack.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE){
-  msg <- paste0("jack.ia() is deprecated and will be removed in future versions.\n",
-               "Please use resample.ia() instead.\n",
-               "I am returning the results of resample.ia()")
+jack.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE) {
+  msg <- paste0(
+    "jack.ia() is deprecated and will be removed in future versions.\n",
+    "Please use resample.ia() instead.\n",
+    "I am returning the results of resample.ia()"
+  )
   .Deprecated("resample.ia", msg = msg, package = "poppr")
   resample.ia(gid, n = n, reps = reps, quiet = quiet)
 }
 
 #' Helper function to calculate the index of association on reduced data.
-#' 
+#'
 #' Since the data itself is not being changed, we can use the distances
 #' observed. These distances are calculated per-locus and presented in a matrix
 #' (V) with the number of columns equal to the number of loci and the number of
@@ -175,7 +198,7 @@ jack.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE){
 #' without replacement. The remaining indices in the distance matrix is used to
 #' subset the distance-per-locus matrix (V). Calculations are then performed on
 #' this matrix. It must be noted that for sampling with replacement, duplicated
-#' indices must be supplemented with rows of zeroes to indicate no distance. 
+#' indices must be supplemented with rows of zeroes to indicate no distance.
 #' This implementation does not sample with replacement.
 #'
 #' @param res the allocated result matrix
@@ -197,11 +220,23 @@ jack.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE){
 #'
 #' @examples
 #' # No examples here
-run.jack <- function(reps, V, mat, N, n, np, replace = FALSE, method = "partial", weights = NULL){
-  res  <- matrix(numeric(reps*2), ncol = 2, nrow = reps)
+run.jack <- function(
+  reps,
+  V,
+  mat,
+  N,
+  n,
+  np,
+  replace = FALSE,
+  method = "partial",
+  weights = NULL
+) {
+  res <- matrix(numeric(reps * 2), ncol = 2, nrow = reps)
   p <- make_progress(reps, 50)
   for (i in seq(reps)) {
-    if (i %% p$step == 0) p$rog()
+    if (i %% p$step == 0) {
+      p$rog()
+    }
     if (replace && method == "partial") {
       # For the partial boot method. In this case, the incoming data is clone
       # censored, so N is the desired number of individuals and n is the observed
@@ -211,14 +246,14 @@ run.jack <- function(reps, V, mat, N, n, np, replace = FALSE, method = "partial"
     } else {
       inds <- sample(N, n, replace = replace, prob = weights)
     }
-    newmat  <- mat[inds, inds]
+    newmat <- mat[inds, inds]
     newInds <- newmat[lower.tri(newmat)]
 
     newV <- V[newInds, ]
-    VL   <- list(
-      d.vector  = colSums(newV), 
-      d2.vector = colSums(newV * newV), 
-      D.vector  = rowSums(newV)
+    VL <- list(
+      d.vector = colSums(newV),
+      d2.vector = colSums(newV * newV),
+      D.vector = rowSums(newV)
     )
     res[i, ] <- ia_from_d_and_D(VL, np)
   }
@@ -226,4 +261,3 @@ run.jack <- function(reps, V, mat, N, n, np, replace = FALSE, method = "partial"
   p$rog()
   res
 }
-

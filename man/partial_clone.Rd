@@ -7,20 +7,20 @@
 \title{Simulated data illustrating a Minimum Spanning Network based on Bruvo's
 Distance}
 \format{
-a [genind()] object with 50 individuals, 10 loci, and four 
+a [genind()] object with 50 individuals, 10 loci, and four
   populations.
 }
 \usage{
 data(partial_clone)
 }
 \description{
-These data were simulated using SimuPOP version 1.0.8 with 
+These data were simulated using SimuPOP version 1.0.8 with
   99.9\% clonal reproduction over 10,000 generations. Populations were
   assigned post-hoc and are simply present for the purposes of demonstrating
   a minimum spanning network with Bruvo's distance.
 }
 \references{
-Bo Peng and Christopher Amos (2008) Forward-time simulations of 
+Bo Peng and Christopher Amos (2008) Forward-time simulations of
   nonrandom mating populations using simuPOP. *bioinformatics*, 24 (11):
   1408-1409.
 }

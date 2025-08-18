@@ -142,9 +142,9 @@ For details, see \url{https://stats.stackexchange.com/q/156235/49413}.
 While it is possible to use custom functions with this, there are three
 important things to remember when using these functions:
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{1. The function must return a single value. 
-2. The function must allow for both matrix and vector inputs 
-3. The function name cannot match or partially match any arguments 
+\if{html}{\out{<div class="sourceCode">}}\preformatted{1. The function must return a single value.
+2. The function must allow for both matrix and vector inputs
+3. The function name cannot match or partially match any arguments
 from [boot::boot()]
 }\if{html}{\out{</div>}}
 
@@ -163,8 +163,8 @@ diversity_ci(Pinf, n = 100L, raw = FALSE)
 system.time(diversity_ci(Pinf, 10000L, parallel = "multicore", ncpus = 4L))
 system.time(diversity_ci(Pinf, 10000L))
 
-# We often get many requests for a clonal fraction statistic. As this is 
-# simply the number of observed MLGs over the number of samples, we 
+# We often get many requests for a clonal fraction statistic. As this is
+# simply the number of observed MLGs over the number of samples, we
 # recommended that people calculate it themselves. With this function, you
 # can add it in:
 

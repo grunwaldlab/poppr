@@ -151,7 +151,7 @@ information such as mycelial compatibility groups
 defined in \pkg{poppr}}
 }
 \note{
-The resulting matrix of `mlg.table` can be used for analysis with 
+The resulting matrix of `mlg.table` can be used for analysis with
 the \pkg{vegan} package.
 
 mlg.vector will recalculate the mlg vector for
@@ -168,9 +168,9 @@ data(Aeut)
 amlg <- mlg(Aeut)
 amlg # 119
 
-# show the multilocus genotype vector 
+# show the multilocus genotype vector
 avec <- mlg.vector(Aeut)
-avec 
+avec
 
 # Get a table
 atab <- mlg.table(Aeut, color = TRUE)
@@ -230,7 +230,7 @@ H.sub <- H.tab[, inds]
 H.sub <- mlg.table(H3N2, mlgsub = inds)
 
 # We can subset the original data set using the output of mlg.vector to
-# analyze only the MLGs that are duplicated across populations. 
+# analyze only the MLGs that are duplicated across populations.
 new.H <- H3N2[H.vec \%in\% inds, ]
 
 }

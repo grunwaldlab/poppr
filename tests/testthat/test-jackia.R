@@ -31,7 +31,7 @@ data("Pinf")
 
 test_that("the mean of the distribution is near the observed value of ia", {
   skip_on_cran()
-  rdsa  <- ia(Pinf[pop = 1])[[2]]
+  rdsa <- ia(Pinf[pop = 1])[[2]]
   set.seed(999)
   jrdsa <- resample.ia(Pinf[pop = 1])[["rbarD"]]
   testthat::expect_equal(rdsa, mean(jrdsa), tol = 1e-2)
@@ -39,6 +39,9 @@ test_that("the mean of the distribution is near the observed value of ia", {
 
 test_that("jack.ia is deprecated", {
   skip_on_cran()
-  expect_warning(x <- jack.ia(Pinf, reps = 9, quiet = TRUE), "jack.ia\\(\\) is deprecated")
+  expect_warning(
+    x <- jack.ia(Pinf, reps = 9, quiet = TRUE),
+    "jack.ia\\(\\) is deprecated"
+  )
   expect_is(x, "data.frame")
 })

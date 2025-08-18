@@ -9,20 +9,20 @@ diss.dist(x, percent = FALSE, mat = FALSE)
 \arguments{
 \item{x}{a \code{\link[adegenet]{genind}} object.}
 
-\item{percent}{\code{logical}. Should the distance be represented as a 
-percent? If set to \code{FALSE} (default), the distance will be reflected 
-as the number of alleles differing between to individuals. When set to 
-\code{TRUE}, These will be divided by the ploidy multiplied  by the number 
+\item{percent}{\code{logical}. Should the distance be represented as a
+percent? If set to \code{FALSE} (default), the distance will be reflected
+as the number of alleles differing between to individuals. When set to
+\code{TRUE}, These will be divided by the ploidy multiplied  by the number
 of loci.}
 
-\item{mat}{\code{logical}. Return a matrix object. Default set to 
+\item{mat}{\code{logical}. Return a matrix object. Default set to
 \code{FALSE}, returning a dist object. \code{TRUE} returns a matrix object.}
 }
 \value{
 Pairwise distances between individuals present in the genind object.
 }
 \description{
-diss.dist uses the same discrete dissimilarity matrix utilized by the index 
+diss.dist uses the same discrete dissimilarity matrix utilized by the index
 of association (see \code{\link{ia}} for details). By default, it returns a
 distance reflecting the number of allelic differences between two
 individuals. When \code{percent = TRUE}, it returns a ratio of the number of

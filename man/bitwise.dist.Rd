@@ -106,14 +106,14 @@ xdt
 # with 10\% missing data:
 
 set.seed(999)
-mat <- matrix(sample(c(0:2, NA), 
-                     100000 * 50, 
-                     replace = TRUE, 
+mat <- matrix(sample(c(0:2, NA),
+                     100000 * 50,
+                     replace = TRUE,
                      prob = c(0.3, 0.3, 0.3, 0.1)),
               nrow = 50)
 glite <- new("genlight", mat, ploidy = 2)
 
-# Default Euclidean distance 
+# Default Euclidean distance
 system.time(dist(glite))
 
 # Bitwise dist

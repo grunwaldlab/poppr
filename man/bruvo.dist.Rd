@@ -20,14 +20,14 @@ bruvo.between(
 \item{pop}{a \code{\link[adegenet]{genind}} or \code{\link{genclone}} object}
 
 \item{replen}{a \code{vector} of \code{integers} indicating the length of the
-nucleotide repeats for each microsatellite locus. E.g. a locus with a (CAT) 
+nucleotide repeats for each microsatellite locus. E.g. a locus with a (CAT)
 repeat would have a replen value of 3. (Also see \code{\link{fix_replen}})}
 
-\item{add}{if \code{TRUE}, genotypes with zero values will be treated under 
+\item{add}{if \code{TRUE}, genotypes with zero values will be treated under
 the genome addition model presented in Bruvo et al. 2004. See the
 \strong{Note} section for options.}
 
-\item{loss}{if \code{TRUE}, genotypes with zero values will be treated under 
+\item{loss}{if \code{TRUE}, genotypes with zero values will be treated under
 the genome loss model presented in Bruvo et al. 2004. See the
 \strong{Note} section for options.}
 
@@ -48,25 +48,25 @@ an object of class \code{\link{dist}} or a list of these objects if
 Calculate the average Bruvo's distance over all loci in a population.
 }
 \details{
-Bruvo's distance between two alleles is calculated as 
+Bruvo's distance between two alleles is calculated as
   \deqn{d = 1 - 2^{-\mid x \mid}}{d = 1 - (2^(-abs(x)))}, where \strong{x}
-  is the number of repeat units between the two alleles (see the Algorithms 
-  and Equations vignette for more details). These distances are calculated 
+  is the number of repeat units between the two alleles (see the Algorithms
+  and Equations vignette for more details). These distances are calculated
   over all combinations of alleles at a locus and then the minimum average
-  distance between allele combinations is taken as the distance for that 
+  distance between allele combinations is taken as the distance for that
   locus. All loci are then averaged over to obtain the distance between two
-  samples. Missing data is ignored (in the same fashion as 
+  samples. Missing data is ignored (in the same fashion as
   \code{mean(c(1:9, NA), na.rm = TRUE)}) if all alleles are missing. See the
   next section for other cases.
-  
+
   \subsection{Polyploids}{
-  Ploidy is irrelevant with respect to calculation of Bruvo's 
-  distance. However, since it makes a comparison between all alleles at a 
-  locus, it only makes sense that the two loci need to have the same ploidy 
+  Ploidy is irrelevant with respect to calculation of Bruvo's
+  distance. However, since it makes a comparison between all alleles at a
+  locus, it only makes sense that the two loci need to have the same ploidy
   level. Unfortunately for polyploids, it's often difficult to fully separate
   distinct alleles at each locus, so you end up with genotypes that appear to
   have a lower ploidy level than the organism.
-  
+
   To help deal with these situations, Bruvo has suggested three methods for
   dealing with these differences in ploidy levels: \itemize{ \item
   \strong{Infinite Model} - The simplest way to deal with it is to count all
@@ -86,17 +86,17 @@ Bruvo's distance between two alleles is calculated as
   values in the short genotype}. As with the Genome Addition Model, the
   resulting distances are averaged over the number of comparisons. \item
   \strong{Combination Model} - Combine and average the genome addition and
-  loss models. } 
-  
+  loss models. }
+
   As mentioned above, the infinite model is biased, but it is not nearly as
   computationally intensive as either of the other models. The reason for
   this is that both of the addition and loss models requires replacement of
   alleles and recalculation of Bruvo's distance. The number of replacements
   required is equal to n^k where where \emph{n} is the number of potential
   replacements and \emph{k} is the number of alleles to be replaced.
-  To reduce the number of calculations and assumptions otherwise, Bruvo's 
-  distance will be calculated using the largest observed ploidy in pairwise 
-  comparisons. This means that when comparing [69,70,71,0] and [59,60,0,0], 
+  To reduce the number of calculations and assumptions otherwise, Bruvo's
+  distance will be calculated using the largest observed ploidy in pairwise
+  comparisons. This means that when comparing [69,70,71,0] and [59,60,0,0],
   they will be treated as triploids.
   }
 }
@@ -120,11 +120,11 @@ Do not use missingno with this function.
   more missing alleles. This version of \pkg{poppr} considers all possible
   combinations when calculating Bruvo's distance for incomplete genotype with
   a negligable gain in computation time.
-  
+
   If you want to see the effect of this change on your data, you can use the
   global \pkg{poppr} option \code{old.bruvo.model}. Currently, this option is
-  \code{FALSE} and you can set it by using 
-  \code{options(old.bruvo.model = TRUE)}, but make sure to reset it to 
+  \code{FALSE} and you can set it by using
+  \code{options(old.bruvo.model = TRUE)}, but make sure to reset it to
   \code{FALSE} afterwards.
   }
   \subsection{Repeat Lengths (replen)}{
@@ -139,22 +139,22 @@ Do not use missingno with this function.
   length with the function \code{\link{fix_replen}}. Please consider using
   this before running Bruvo's distance.
   }
-  \subsection{Model Choice}{ The \code{add} and \code{loss} arguments 
-  modify the model choice accordingly: \itemize{ \item \strong{Infinite 
-  Model:}  \code{add = FALSE, loss = FALSE} \item \strong{Genome Addition 
-  Model:}  \code{add = TRUE, loss = FALSE} \item \strong{Genome Loss Model:} 
+  \subsection{Model Choice}{ The \code{add} and \code{loss} arguments
+  modify the model choice accordingly: \itemize{ \item \strong{Infinite
+  Model:}  \code{add = FALSE, loss = FALSE} \item \strong{Genome Addition
+  Model:}  \code{add = TRUE, loss = FALSE} \item \strong{Genome Loss Model:}
   \code{add = FALSE, loss = TRUE} \item \strong{Combination Model}
   \emph{(DEFAULT):}  \code{add = TRUE, loss = TRUE} } Details of each model
   choice are described in the \strong{Details} section, above. Additionally,
   genotypes containing all missing values at a locus will return a value of
   \code{NA} and not contribute to the average across loci. }
-  \subsection{Repeat Lengths}{ If the user does not provide a vector of 
-  appropriate length for \code{replen} , it will be estimated by taking the 
-  minimum difference among represented alleles at each locus. IT IS NOT 
+  \subsection{Repeat Lengths}{ If the user does not provide a vector of
+  appropriate length for \code{replen} , it will be estimated by taking the
+  minimum difference among represented alleles at each locus. IT IS NOT
   RECOMMENDED TO RELY ON THIS ESTIMATION. }
 }
 \examples{
-# Please note that the data presented is assuming that the nancycat dataset 
+# Please note that the data presented is assuming that the nancycat dataset
 # contains all dinucleotide repeats, it most likely is not an accurate
 # representation of the data.
 
@@ -175,14 +175,14 @@ bruvo.dist(popsub(nancycats, 1), replen = ssr)
 bruvo.dist(popsub(nancycats, 1), replen = ssr, by_locus = TRUE)
 
 # View each population as a heatmap.
-sapply(popNames(nancycats), function(x) 
+sapply(popNames(nancycats), function(x)
 heatmap(as.matrix(bruvo.dist(popsub(nancycats, x), replen = ssr)), symm=TRUE))
 }
 }
 \references{
-Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and 
-  Hinrich Schulenburg. A simple method for the calculation of microsatellite 
-  genotype distances irrespective of ploidy level. Molecular Ecology, 
+Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and
+  Hinrich Schulenburg. A simple method for the calculation of microsatellite
+  genotype distances irrespective of ploidy level. Molecular Ecology,
   13(7):2101-2106, 2004.
 }
 \seealso{

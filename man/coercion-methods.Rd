@@ -23,7 +23,7 @@ as.genambig(x)
 \arguments{
 \item{bg}{a bootgen object}
 
-\item{x}{a \code{\link[adegenet:genind-class]{genind}} or \code{\linkS4class{genclone}} 
+\item{x}{a \code{\link[adegenet:genind-class]{genind}} or \code{\linkS4class{genclone}}
 object}
 
 \item{...}{arguments passed on to the \code{\link[adegenet:genind-class]{genind}} constructor}
@@ -37,10 +37,10 @@ as.genclone will create a genclone object from a genind object OR anything
 that can be passed to the genind initializer.
 }
 \details{
-genclone2genind will remove the mlg slot from the genclone object, creating a 
+genclone2genind will remove the mlg slot from the genclone object, creating a
 genind object.
 
-as.genambig will convert a genind or genclone object to a polysat genambig 
+as.genambig will convert a genind or genclone object to a polysat genambig
 class.
 }
 \examples{

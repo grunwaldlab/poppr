@@ -29,7 +29,7 @@ are "missing" (Default) and "ploidy". See Description.}
 percentage of each cell. If \code{FALSE}, the table and plot will represent
 missing data as raw counts. (See details)}
 
-\item{plot}{\code{logical}. If \code{TRUE}, a simple heatmap will be 
+\item{plot}{\code{logical}. If \code{TRUE}, a simple heatmap will be
 produced. If \code{FALSE} (default), no heatmap will be produced.}
 
 \item{df}{\code{logical}. If \code{TRUE}, the data will be returned as a long
@@ -37,13 +37,13 @@ form data frame. If \code{FALSE} (default), a matrix with samples in rows
 and loci in columns will be returned.}
 
 \item{returnplot}{\code{logical}. If \code{TRUE}, a list is returned with two
-elements: \code{table} - the normal output and \code{plot} - the ggplot 
+elements: \code{table} - the normal output and \code{plot} - the ggplot
 object. If \code{FALSE}, the table is returned.}
 
-\item{low}{\code{character}. What color should represent no missing data or 
+\item{low}{\code{character}. What color should represent no missing data or
 lowest observed ploidy? (default: "blue")}
 
-\item{high}{\code{character}. What color should represent the highest amount 
+\item{high}{\code{character}. What color should represent the highest amount
 of missing data or observed ploidy? (default: "red")}
 
 \item{plotlab}{\code{logical}. (ONLY FOR \code{type = 'missing'}) If
@@ -56,7 +56,7 @@ in \code{high} will represent the highest observed value of missing data.
 If \code{FALSE}, the color specified in \code{high} will represent 100\%.}
 }
 \value{
-a matrix, data frame (\code{df = TRUE}), or a list (\code{returnplot 
+a matrix, data frame (\code{df = TRUE}), or a list (\code{returnplot
   = TRUE}) representing missing data per population (\code{type = 'missing'})
   or ploidy per individual (\code{type = 'ploidy'}) in a \link[adegenet:genind-class]{genind}
   or \linkS4class{genclone} object.
@@ -68,7 +68,7 @@ genclone object
 \details{
 Missing data is accounted for on a per-population level.\cr
   Ploidy is accounted for on a per-individual level.
-  
+
   \subsection{For type = 'missing'}{
   This data is potentially useful for identifying areas of systematic missing
   data. There are a few caveats to be aware of. \itemize{ \item
@@ -78,7 +78,7 @@ Missing data is accounted for on a per-population level.\cr
   locus. \item \strong{Regarding percentage missing data}: This percentage is
   \strong{relative to the population and locus}, not to the entire data set.
   The last column, "mean" represents the average percent of the population
-  with missing data per locus. }} 
+  with missing data per locus. }}
   \subsection{For type = 'ploidy'}{
   This option is useful for data that has been imported with mixed ploidies.
   It will summarize the relative levels of ploidy per individual per locus.

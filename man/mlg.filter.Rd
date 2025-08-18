@@ -44,17 +44,17 @@ mlg.filter(
 separated by to be considered different. Defaults to 0, which will reflect
 the original (naive) MLG definition.}
 
-\item{missing}{any method to be used by \code{\link{missingno}}: "mean", 
+\item{missing}{any method to be used by \code{\link{missingno}}: "mean",
 "zero", "loci", "genotype", or "asis" (default).}
 
-\item{memory}{whether this function should remember the last distance matrix 
-it generated. TRUE will attempt to reuse the last distance matrix if the 
-other parameters are the same. (default) FALSE will ignore any stored 
+\item{memory}{whether this function should remember the last distance matrix
+it generated. TRUE will attempt to reuse the last distance matrix if the
+other parameters are the same. (default) FALSE will ignore any stored
 matrices and not store any it generates.}
 
-\item{algorithm}{determines the type of clustering to be done. 
+\item{algorithm}{determines the type of clustering to be done.
 \describe{
-  \item{"farthest_neighbor"}{\emph{ (default) }merges clusters based on the 
+  \item{"farthest_neighbor"}{\emph{ (default) }merges clusters based on the
   maximum distance between points in either cluster. This is the strictest of
   the three.}
   \item{"nearest_neighbor"}{ merges clusters based on the minimum distance
@@ -63,13 +63,13 @@ matrices and not store any it generates.}
   between every pair of points between clusters.}
 }}
 
-\item{distance}{a character or function defining the distance to be applied 
+\item{distance}{a character or function defining the distance to be applied
 to pop. Defaults to \code{\link{diss.dist}} for genclone objects and
 \code{\link{bitwise.dist}} for snpclone objects. A matrix or table
-containing distances between individuals (such as the output of 
+containing distances between individuals (such as the output of
 \code{\link{rogers.dist}}) is also accepted for this parameter.}
 
-\item{threads}{(unused) Previously, this was the maximum number of parallel 
+\item{threads}{(unused) Previously, this was the maximum number of parallel
 threads to be used within this function. Default is 1 indicating that this
 function will run serially. Any other number will result in a warning.}
 
@@ -88,18 +88,18 @@ Default, a vector of collapsed multilocus genotypes. Otherwise, any
 \subsection{MLGs}{
   a numeric vector defining the multilocus genotype cluster of each
   individual in the dataset. Each genotype cluster is separated from every
-  other genotype cluster by at least the defined threshold value, as 
+  other genotype cluster by at least the defined threshold value, as
   calculated by the selected algorithm.
 }
 \subsection{THRESHOLDS}{
   A numeric vector representing the thresholds \strong{beyond} which clusters
-  of multilocus genotypes were collapsed. 
+  of multilocus genotypes were collapsed.
 }
 \subsection{DISTANCES}{
   A square matrix representing the distances between each cluster.
 }
 \subsection{SIZES}{
- The sizes of the multilocus genotype clusters in order. 
+ The sizes of the multilocus genotype clusters in order.
 }
 }
 \description{
@@ -118,7 +118,7 @@ means that if you define your own distance matrix or function, you must keep
 it in memory to further utilize mlg.filter.
 }
 \note{
-\code{mlg.vector} makes use of \code{mlg.vector} grouping prior to 
+\code{mlg.vector} makes use of \code{mlg.vector} grouping prior to
   applying the given threshold. Genotype numbers returned by
   \code{mlg.vector} represent the lowest numbered genotype (as returned by
   \code{mlg.vector}) in in each new multilocus genotype. Therefore
@@ -184,7 +184,7 @@ Pinf
 
 # It's important to remember that a threshold of 0 is equal to the original
 # MLG definition. This example will show a data set that contains genotypes
-# with missing data that share all alleles with other genotypes except for 
+# with missing data that share all alleles with other genotypes except for
 # the missing one.
 
 data(monpop)
@@ -192,8 +192,8 @@ monpop # 264 mlg
 mlg.filter(monpop) <- 0
 nmll(monpop) # 264 mlg
 
-# In order to merge these genotypes with missing data, we should set the 
-# threshold to be slightly higher than 0. We will use the smallest fraction 
+# In order to merge these genotypes with missing data, we should set the
+# threshold to be slightly higher than 0. We will use the smallest fraction
 # the computer can store.
 
 mlg.filter(monpop) <- .Machine$double.eps ^ 0.5
@@ -223,11 +223,11 @@ gc # 82 mlgs
 }
 }
 \seealso{
-\code{\link{filter_stats}}, 
-  \code{\link{cutoff_predictor}}, 
-  \code{\link{mll}}, 
-  \code{\link{genclone}}, 
-  \code{\link{snpclone}}, 
-  \code{\link{diss.dist}}, 
+\code{\link{filter_stats}},
+  \code{\link{cutoff_predictor}},
+  \code{\link{mll}},
+  \code{\link{genclone}},
+  \code{\link{snpclone}},
+  \code{\link{diss.dist}},
   \code{\link{bruvo.dist}}
 }

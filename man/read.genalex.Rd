@@ -90,10 +90,10 @@ Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 genalex2 <- read.genalex("genalex2.csv", geo=TRUE)
 # A genalex file with geographic coordinate data.
 
-genalex3 <- read.genalex("genalex3.csv", region=TRUE) 
+genalex3 <- read.genalex("genalex3.csv", region=TRUE)
 # A genalex file with regional information.
 
-genalex4 <- read.genalex("genalex4.csv", region=TRUE, geo=TRUE) 
+genalex4 <- read.genalex("genalex4.csv", region=TRUE, geo=TRUE)
 # A genalex file with both regional and geographic information.
 }
 }

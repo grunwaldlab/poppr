@@ -10,7 +10,7 @@ rrmlg(gid)
 \item{gid}{a genind, genclone, or loci object.}
 }
 \value{
-a matrix of multilocus genotype assignments by masked locus. There 
+a matrix of multilocus genotype assignments by masked locus. There
   will be n rows and m columns where n = number of samples and m = number of
   loci.
 }

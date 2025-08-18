@@ -63,5 +63,8 @@ test_that("cutoff returns the correct cutoff", {
 })
 
 test_that("you need to have custom MLGs to set levels", {
-  expect_warning(levels(m) <- c("A", "B", "C"), tr("Cannot assign levels unless you have custom MLGs."))
+  expect_warning(
+    levels(m) <- c("A", "B", "C"),
+    tr("Cannot assign levels unless you have custom MLGs.")
+  )
 })

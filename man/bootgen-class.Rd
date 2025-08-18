@@ -22,7 +22,7 @@ allele.}
 }}
 
 \section{Extends}{
- 
+
 Virtual Class \code{"\link[adegenet:gen-class]{gen}"}.
 }
 
