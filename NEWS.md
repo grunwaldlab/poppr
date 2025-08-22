@@ -15,6 +15,7 @@ MISC
 * compatibility fix for ggplot2 4.0.0 (reported: @teunbrand, #263,
   fixed: @zkamvar, #264)
 * CRAN maintenance: documentaiton fixes
+* internal code formatting has been applied with air
 
 poppr 2.9.6
 ===========
