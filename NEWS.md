@@ -15,6 +15,7 @@ MISC
 * compatibility fix for ggplot2 4.0.0 (reported: @teunbrand, #263,
   fixed: @zkamvar, #264)
 * CRAN maintenance: documentaiton fixes
+* internal code formatting has been applied with air
 
 poppr 2.9.6
 ===========
@@ -148,7 +149,7 @@ CRAN MAINTENANCE
 * The output from the `poppr()` function will no longer contain factor columns
   for the population names or the file names. This is due to R 4.0.0 changing
   behavior with the `stringsAsFactors` default in `data.frame()`. (See
-  <https://github.com/grunwaldlab/poppr/issue/212> for details).
+  <https://github.com/grunwaldlab/poppr/issues/212> for details).
 
 poppr 2.8.4
 ===========
